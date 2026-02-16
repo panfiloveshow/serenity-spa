@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { ReactNode, useRef, useEffect, useState } from 'react';
+import { ReactNode, useRef } from 'react';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface TiltCardProps {
   children: ReactNode;
@@ -17,8 +18,7 @@ export function TiltCard({
   glowColor = '#D4A574'
 }: TiltCardProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => { setIsMobile(window.innerWidth < 768); }, []);
+  const isMobile = useMediaQuery('(max-width: 767px)');
   
   const x = useMotionValue(0.5);
   const y = useMotionValue(0.5);
@@ -29,6 +29,10 @@ export function TiltCard({
   
   const glowX = useTransform(x, [0, 1], ['-50%', '50%']);
   const glowY = useTransform(y, [0, 1], ['-50%', '50%']);
+  const glowBg = useTransform(
+    [glowX, glowY],
+    ([latestX, latestY]) => `radial-gradient(circle at ${latestX} ${latestY}, ${glowColor}20, transparent 50%)`
+  );
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current || isMobile) return;
@@ -65,12 +69,7 @@ export function TiltCard({
       {/* Glow effect */}
       <motion.div
         className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-        style={{
-          background: useTransform(
-            [glowX, glowY],
-            ([latestX, latestY]) => `radial-gradient(circle at ${latestX} ${latestY}, ${glowColor}20, transparent 50%)`
-          ),
-        }}
+        style={{ background: glowBg }}
       />
       {children}
     </motion.div>

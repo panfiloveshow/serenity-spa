@@ -59,7 +59,6 @@ export function IslandNavbar() {
                       width={120} 
                       height={40} 
                       className="h-8 w-auto opacity-90 hover:opacity-100 transition-opacity"
-                      priority
                     />
                   </Link>
                 </motion.li>
@@ -100,6 +99,7 @@ export function IslandNavbar() {
             <li className="ml-1 pl-1 border-l border-[#7A8BA8]/20">
               <button
                 onClick={() => openBooking()}
+                aria-label="Открыть форму записи"
                 className="px-5 py-2.5 bg-[#E8DFD0] text-[#1B3A5C] rounded-full text-sm font-bold hover:bg-white transition-colors cursor-pointer"
               >
                 Записаться
@@ -118,17 +118,19 @@ export function IslandNavbar() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <Link href="#hero" onClick={() => { setActive(''); setMobileOpen(false); }}>
-            <Image src="/logo.svg" alt="Serenity Spa" width={100} height={32} className="h-7 w-auto opacity-90" priority />
+            <Image src="/logo.svg" alt="Serenity Spa" width={100} height={32} className="h-7 w-auto opacity-90" />
           </Link>
           <div className="flex items-center gap-2">
             <button
               onClick={() => openBooking()}
+              aria-label="Открыть форму записи"
               className="px-4 py-2 bg-[#C8956C] text-[#1B3A5C] rounded-xl text-xs font-bold cursor-pointer"
             >
               Записаться
             </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? 'Закрыть меню' : 'Открыть меню'}
               className="w-9 h-9 rounded-xl border border-[#7A8BA8]/15 flex items-center justify-center text-[#E8DFD0]/70 cursor-pointer"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

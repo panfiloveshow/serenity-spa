@@ -1,18 +1,17 @@
 'use client';
 
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
-import { useRef, useCallback, useState, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { useBooking } from '@/lib/booking-context';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 function useIsMobile() {
-  const [m, setM] = useState(false);
-  useEffect(() => {
-    const c = () => setM(window.innerWidth < 768);
-    c(); window.addEventListener('resize', c);
-    return () => window.removeEventListener('resize', c);
-  }, []);
-  return m;
+  return useMediaQuery('(max-width: 767px)');
+}
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(max, Math.max(min, value));
 }
 
 // Hardcoded particle positions to avoid SSR hydration mismatch
@@ -43,6 +42,9 @@ export function ModernHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { openBooking } = useBooking();
   const isMobile = useIsMobile();
+  const isLargeDesktop = useMediaQuery('(min-width: 1800px)');
+  const isUltraWide = useMediaQuery('(min-width: 1920px)');
+  const enableMouseTilt = !isMobile && !isUltraWide;
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ['start start', 'end start'],
@@ -60,40 +62,56 @@ export function ModernHero() {
   const orbScale = useTransform(scrollYProgress, [0, 1], [1, 1.5]);
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0, 0.6]);
 
-  // Client-only flag
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
   // Mouse-tracking 3D tilt — disabled on mobile
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const springConfig = { stiffness: 50, damping: 30 };
   const rotateXSpring = useSpring(mouseY, springConfig);
   const rotateYSpring = useSpring(mouseX, springConfig);
+  const contentRotateX = useTransform(rotateXSpring, (value) => value * 0.35);
+  const contentRotateY = useTransform(rotateYSpring, (value) => value * 0.35);
+
+  const tiltYLimit = isLargeDesktop ? 1.4 : 2.4;
+  const tiltXLimit = isLargeDesktop ? 0.9 : 1.6;
 
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!enableMouseTilt) return;
+
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const x = (e.clientX - rect.left - centerX) / centerX;
-    const y = (e.clientY - rect.top - centerY) / centerY;
-    mouseX.set(x * 5);
-    mouseY.set(-y * 3);
-  }, [mouseX, mouseY]);
+    if (centerX <= 0 || centerY <= 0) return;
+
+    const rawX = (e.clientX - rect.left - centerX) / centerX;
+    const rawY = (e.clientY - rect.top - centerY) / centerY;
+
+    const normalizedX = clamp(Number.isFinite(rawX) ? rawX : 0, -1, 1);
+    const normalizedY = clamp(Number.isFinite(rawY) ? rawY : 0, -1, 1);
+
+    mouseX.set(normalizedX * tiltYLimit);
+    mouseY.set(-normalizedY * tiltXLimit);
+  }, [enableMouseTilt, mouseX, mouseY, tiltYLimit, tiltXLimit]);
 
   const handleMouseLeave = useCallback(() => {
     mouseX.set(0);
     mouseY.set(0);
   }, [mouseX, mouseY]);
 
+  useEffect(() => {
+    if (enableMouseTilt) return;
+
+    mouseX.set(0);
+    mouseY.set(0);
+  }, [enableMouseTilt, mouseX, mouseY]);
+
   return (
     <section
       ref={containerRef}
       className="relative h-screen w-full overflow-hidden bg-[#152E4A]"
       id="hero"
-      onMouseMove={isMobile ? undefined : handleMouseMove}
-      onMouseLeave={isMobile ? undefined : handleMouseLeave}
+      onMouseMove={enableMouseTilt ? handleMouseMove : undefined}
+      onMouseLeave={enableMouseTilt ? handleMouseLeave : undefined}
     >
       {/* Layer 0: Deep background glow orbs — simplified on mobile */}
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -127,24 +145,26 @@ export function ModernHero() {
       {/* Layer 1: Photo with 3D tilt + parallax */}
       <motion.div
         className="absolute top-0 right-0 bottom-0 w-full lg:w-[65%] z-[2]"
-        style={isMobile ? {
-          y: imgY,
-          scale: imgScale,
-        } : {
+        style={enableMouseTilt ? {
           y: imgY,
           scale: imgScale,
           rotateY: rotateYSpring,
           rotateX: rotateXSpring,
           rotateZ: imgRotate,
           transformPerspective: 1200,
+        } : {
+          y: imgY,
+          scale: imgScale,
+          rotateZ: imgRotate,
         }}
       >
         <Image
-          src="/hero-woman.png"
+          src="/hero-woman.webp"
           alt="Serenity Spa"
           fill
           className="object-cover object-[50%_15%]"
           priority
+          quality={76}
           sizes="(min-width: 1024px) 65vw, 100vw"
         />
         <div className="absolute inset-0 bg-[#152E4A]/30 mix-blend-color" />
@@ -153,7 +173,7 @@ export function ModernHero() {
       </motion.div>
 
       {/* Layer 2: Floating golden particles — desktop only */}
-      {mounted && !isMobile && (
+      {!isMobile && (
         <div className="absolute inset-0 z-[3] pointer-events-none">
           {PARTICLES.slice(0, 10).map((p) => (
             <motion.div
@@ -225,13 +245,17 @@ export function ModernHero() {
         style={isMobile ? {
           opacity: contentOpacity,
           y: contentY,
+        } : enableMouseTilt ? {
+          opacity: contentOpacity,
+          y: contentY,
+          scale: contentScale,
+          rotateY: contentRotateY,
+          rotateX: contentRotateX,
+          transformPerspective: 1500,
         } : {
           opacity: contentOpacity,
           y: contentY,
           scale: contentScale,
-          rotateY: rotateYSpring,
-          rotateX: rotateXSpring,
-          transformPerspective: 1500,
         }}
       >
         <div className="container mx-auto px-6 md:px-12 lg:px-20">
@@ -260,9 +284,8 @@ export function ModernHero() {
                 src="/logo.svg"
                 alt="Serenity Spa"
                 width={500}
-                height={170}
+                height={282}
                 className="w-[260px] md:w-[340px] lg:w-[420px] h-auto relative z-10 drop-shadow-[0_0_30px_rgba(200,149,108,0.15)]"
-                priority
               />
             </motion.div>
 

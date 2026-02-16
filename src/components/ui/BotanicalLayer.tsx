@@ -49,8 +49,9 @@ const BOTANICAL_ELEMENTS = [
 ];
 
 export function BotanicalLayer() {
+  // Hidden on mobile via CSS — avoids loading 14 SVG images on small screens
   return (
-    <div className="absolute inset-0 w-full h-full pointer-events-none z-[15] overflow-visible">
+    <div className="absolute inset-0 w-full h-full pointer-events-none z-[15] overflow-visible hidden md:block">
       {BOTANICAL_ELEMENTS.map((el, i) => {
         const posStyle: React.CSSProperties = {
           position: 'absolute',
@@ -69,6 +70,10 @@ export function BotanicalLayer() {
             <img
               src="/botanical-pattern.svg"
               alt=""
+              aria-hidden="true"
+              role="presentation"
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-contain"
               draggable={false}
             />

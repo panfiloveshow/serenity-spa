@@ -85,8 +85,8 @@ export function ContactsSection() {
   return (
     <section className="bg-[#152E4A] relative py-32 px-6 overflow-hidden" id="contacts">
       {/* Background glows */}
-      <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none" />
-      <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#7A8BA8]/3 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[600px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none hidden md:block" />
+      <div className="absolute top-0 left-0 w-[300px] h-[300px] bg-[#7A8BA8]/3 blur-[150px] rounded-full pointer-events-none hidden md:block" />
 
       {/* Decorative corner lines */}
       <div className="absolute top-12 left-12 w-20 h-20 border-t border-l border-[#C8956C]/10 rounded-tl-2xl pointer-events-none" />

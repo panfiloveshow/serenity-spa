@@ -1,9 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, useVelocity } from 'framer-motion';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export function VelocityCursor() {
+  const isMobile = useMediaQuery('(max-width: 767px)');
+  const isTouch = useMediaQuery('(pointer: coarse)');
+  const shouldDisable = isMobile || isTouch;
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   
@@ -26,6 +31,7 @@ export function VelocityCursor() {
   });
 
   useEffect(() => {
+    if (shouldDisable) return;
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -33,7 +39,9 @@ export function VelocityCursor() {
     
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [mouseX, mouseY]);
+  }, [mouseX, mouseY, shouldDisable]);
+
+  if (shouldDisable) return null;
 
   return (
     <motion.div

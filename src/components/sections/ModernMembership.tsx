@@ -16,8 +16,8 @@ export function ModernMembership() {
   return (
     <section className="py-32 px-6 bg-[#1B3A5C] relative overflow-hidden" id="membership">
       {/* Background glows */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#7A8BA8]/3 blur-[180px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none hidden md:block" />
+      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#7A8BA8]/3 blur-[180px] rounded-full pointer-events-none hidden md:block" />
 
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Header */}

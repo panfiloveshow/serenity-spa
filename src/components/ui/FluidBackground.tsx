@@ -1,8 +1,16 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export function FluidBackground() {
+  const isMobile = useMediaQuery('(max-width: 767px)');
+
+  // On mobile: plain background color, no animated blobs, no SVG filters
+  if (isMobile) {
+    return <div className="fixed inset-0 z-0 pointer-events-none bg-[#152E4A]" />;
+  }
+
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#152E4A]">
       {/* SVG Filters for Liquid Effect */}

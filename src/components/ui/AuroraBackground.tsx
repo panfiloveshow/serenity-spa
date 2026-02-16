@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 interface AuroraBackgroundProps {
   color1?: string;
@@ -14,10 +14,7 @@ export function AuroraBackground({
   color2 = '#234A72', 
   color3 = '#C8956C' 
 }: AuroraBackgroundProps) {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-  }, []);
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   // On mobile: static gradient, no animation, no blur — saves GPU
   if (isMobile) {

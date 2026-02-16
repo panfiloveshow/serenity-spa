@@ -140,11 +140,11 @@ export function Footer() {
               </p>
 
               <div className="flex items-center gap-6">
-                <a href="#" className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
+                <a href="/privacy" className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
                   Конфиденциальность
                 </a>
                 <span className="w-0.5 h-0.5 rounded-full bg-[#7A8BA8]/15" />
-                <a href="#" className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
+                <a href="/terms" className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
                   Условия
                 </a>
               </div>
@@ -155,6 +155,7 @@ export function Footer() {
           <div className="flex justify-center mt-10">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              aria-label="Прокрутить страницу наверх"
               className="group flex flex-col items-center gap-2 text-[#7A8BA8]/20 hover:text-[#C8956C]/50 transition-colors duration-500 cursor-pointer"
             >
               <div className="w-8 h-8 rounded-full border border-current flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300">

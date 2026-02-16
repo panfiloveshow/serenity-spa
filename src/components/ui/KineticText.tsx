@@ -32,7 +32,7 @@ const wordVariants = {
 export function KineticText({ 
   children, 
   className = '', 
-  as: Tag = 'h1',
+  as: Tag = 'h2',
   split = true,
 }: KineticTextProps) {
   const { scrollY } = useScroll();

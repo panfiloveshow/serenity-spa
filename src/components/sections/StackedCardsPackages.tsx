@@ -47,11 +47,11 @@ export function StackedCardsPackages() {
 
       {/* Sticky stacking area with 3D parallax */}
       <div className="relative px-6">
-        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none" />
+        <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none hidden md:block" />
 
         <div className="container mx-auto relative z-10">
           {PACKAGES.map((pkg, i) => (
-            <PackageCard key={pkg.id} pkg={pkg} index={i} total={PACKAGES.length} />
+            <PackageCard key={pkg.id} pkg={pkg} index={i} />
           ))}
           <div className="h-[40vh]" />
         </div>
@@ -61,19 +61,19 @@ export function StackedCardsPackages() {
 }
 
 function useCard3DTransforms(scrollYProgress: MotionValue<number>, mobile: boolean) {
-  const m = mobile ? 0.5 : 1;
+  const m = mobile ? 0.4 : 1;
   return {
-    rotateX: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [18 * m, 6 * m, 0, 0, -3 * m]),
-    rotateY: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [-4 * m, -1 * m, 0, 0, 1 * m]),
-    scale: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [0.82, 0.94, 1, 1, 0.97]),
+    rotateX: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], mobile ? [0, 0, 0, 0, 0] : [18, 6, 0, 0, -3]),
+    rotateY: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], mobile ? [0, 0, 0, 0, 0] : [-4, -1, 0, 0, 1]),
+    scale: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [1 - 0.18 * m, 1 - 0.06 * m, 1, 1, 1 - 0.03 * m]),
     opacity: useTransform(scrollYProgress, [0, 0.25, 0.45, 0.85, 1], [0, 0.6, 1, 1, 0.5]),
     y: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [160 * m, 40 * m, 0, 0, -20 * m]),
     filter: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1],
-      [`blur(${12 * m}px)`, `blur(${3 * m}px)`, 'blur(0px)', 'blur(0px)', `blur(${2 * m}px)`]),
+      mobile ? ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'] : ['blur(12px)', 'blur(3px)', 'blur(0px)', 'blur(0px)', 'blur(2px)']),
   };
 }
 
-function PackageCard({ pkg, index, total }: { pkg: typeof PACKAGES[0]; index: number; total: number }) {
+function PackageCard({ pkg, index }: { pkg: typeof PACKAGES[0]; index: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
@@ -164,7 +164,7 @@ function PackageCard({ pkg, index, total }: { pkg: typeof PACKAGES[0]; index: nu
             
             {/* Background gradient orb */}
             <div
-              className="absolute -bottom-1/2 -right-1/4 w-[500px] h-[500px] rounded-full blur-[150px] opacity-10 pointer-events-none"
+              className="absolute -bottom-1/2 -right-1/4 w-[500px] h-[500px] rounded-full blur-[150px] opacity-10 pointer-events-none hidden md:block"
               style={{ backgroundColor: ORB_COLORS[index % ORB_COLORS.length] }}
             />
           </div>

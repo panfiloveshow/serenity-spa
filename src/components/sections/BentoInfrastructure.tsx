@@ -27,12 +27,12 @@ const INFRA_IMAGES: Record<string, string> = {
 function AnimatedCounter({ value, suffix = '' }: { value: string; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
-  const [display, setDisplay] = useState('0');
+  const parsedValue = Number.parseInt(value, 10);
+  const [display, setDisplay] = useState(() => (Number.isNaN(parsedValue) ? value : '0'));
   
   useEffect(() => {
     if (!isInView) return;
-    const num = parseInt(value);
-    if (isNaN(num)) { setDisplay(value); return; }
+    if (Number.isNaN(parsedValue)) return;
     
     let start = 0;
     const duration = 1500;
@@ -40,26 +40,26 @@ function AnimatedCounter({ value, suffix = '' }: { value: string; suffix?: strin
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.floor(eased * num).toString());
+      setDisplay(Math.floor(eased * parsedValue).toString());
       if (progress < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
-  }, [isInView, value]);
+  }, [isInView, parsedValue]);
 
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
 export function BentoInfrastructure() {
-  const items = INFRASTRUCTURE.map((item, i) => ({
+  const items = INFRASTRUCTURE.map((item) => ({
     ...item,
     title: item.titleRu || item.title,
     extra: EXTRA_DATA[item.id],
   }));
 
   return (
-    <section className="py-32 px-6 bg-[#1B3A5C] relative overflow-hidden">
+    <section id="infrastructure" className="py-32 px-6 bg-[#1B3A5C] relative overflow-hidden">
       {/* Section background glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none hidden md:block" />
       
       <div className="container mx-auto relative z-10">
         <motion.div 
@@ -128,7 +128,7 @@ export function BentoInfrastructure() {
 
           {/* Right column: 2 stacked cards */}
           <div className="flex flex-col gap-4 md:gap-5">
-            {[items[1], items[2]].map((item, idx) => (
+            {[items[1], items[2]].map((item) => (
               <motion.div key={item.id} className="h-[220px] md:flex-1" variants={staggerChild}>
                 <TiltCard className="h-full" tiltAmount={5} glowColor="#C8956C">
                   <div className="relative h-full rounded-2xl border border-[#7A8BA8]/10 bg-gradient-to-br from-[#1F4268]/80 to-[#263A5E]/60 overflow-hidden group cursor-pointer backdrop-blur-sm">

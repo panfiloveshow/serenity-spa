@@ -17,8 +17,8 @@ export function HorizontalServices() {
   return (
     <section className="bg-[#1B3A5C] relative py-32 px-6 overflow-hidden" id="services">
       {/* Background glows */}
-      <div className="absolute bottom-0 left-1/4 w-[600px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none" />
-      <div className="absolute top-1/4 right-0 w-[300px] h-[300px] bg-[#7A8BA8]/3 blur-[150px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-1/4 w-[600px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none hidden md:block" />
+      <div className="absolute top-1/4 right-0 w-[300px] h-[300px] bg-[#7A8BA8]/3 blur-[150px] rounded-full pointer-events-none hidden md:block" />
 
       <div className="container mx-auto max-w-6xl relative z-10">
         {/* Header */}

@@ -6,21 +6,20 @@ import { HorizontalServices } from '@/components/sections/HorizontalServices';
 import { StackedCardsPackages } from '@/components/sections/StackedCardsPackages';
 import { ModernMembership } from '@/components/sections/ModernMembership';
 import { ContactsSection } from '@/components/sections/ContactsSection';
-import { InstagramFeed } from '@/components/sections/InstagramFeed';
-import { VelocityCursor } from '@/components/ui/VelocityCursor';
-import { FluidBackground } from '@/components/ui/FluidBackground';
+import { LazyDesktopEffects } from '../components/ui/LazyDesktopEffects';
 import { ScrollSection3D } from '@/components/ui/ScrollSection3D';
 import { BotanicalLayer } from '@/components/ui/BotanicalLayer';
 import { BookingProvider } from '@/lib/booking-context';
-import { BookingModal } from '@/components/ui/BookingModal';
+import { LazyBookingModal } from '@/components/ui/LazyBookingModal';
+import { VisitorTracker } from '@/components/ui/VisitorTracker';
 
 export default function Home() {
   return (
     <BookingProvider>
+      <VisitorTracker />
       <div className="noise-overlay" />
-      <VelocityCursor />
-      <FluidBackground />
-      <BookingModal />
+      <LazyDesktopEffects />
+      <LazyBookingModal />
 
       <IslandNavbar />
       
@@ -30,6 +29,7 @@ export default function Home() {
         <BotanicalLayer />
 
         <main className="relative z-10">
+          <h1 className="sr-only">Serenity Spa — премиальный спа-центр в Ташкенте</h1>
           <ModernHero />
           
           <ScrollSection3D effect="rise">

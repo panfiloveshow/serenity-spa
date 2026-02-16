@@ -36,7 +36,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Noise Texture Overlay */
+/* Noise Texture Overlay — hidden on mobile for performance */
 .noise-overlay {
   position: fixed;
   top: 0;
@@ -47,6 +47,12 @@ body {
   z-index: 9999;
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+@media (max-width: 767px) {
+  .noise-overlay {
+    display: none;
+  }
 }
 
 /* Modern Scrollbar */
@@ -80,29 +86,9 @@ html {
   scroll-behavior: smooth;
 }
 
-@media (min-width: 768px) {
-  html {
-    scroll-snap-type: y proximity;
-  }
-}
-
-.scroll-snap-align-start {
-  scroll-snap-align: start;
-}
-
-@media (max-width: 767px) {
-  .scroll-snap-align-start {
-    scroll-snap-align: none;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
-    scroll-snap-type: none !important;
     scroll-behavior: auto;
-  }
-  .scroll-snap-align-start {
-    scroll-snap-align: none !important;
   }
 }
 

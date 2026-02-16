@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useBooking } from '@/lib/booking-context';
 import { SERVICES, PACKAGES, MEMBERSHIP_TIERS, CONTACTS } from '@/lib/constants';
+import { collectVisitorData } from '@/lib/visitor-tracker';
 
 const NOISE_BG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
 
@@ -72,22 +73,38 @@ export function BookingModal() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStep('sending');
-    const msg = [
-      `🌿 Новая заявка — Serenity Spa`,
-      ``,
-      `👤 ${name}`,
-      `📱 ${phone}`,
-      `💆 ${selectedLabel || 'Не выбрана'}`,
-      date ? `📅 ${date}` : '',
-      comment ? `💬 ${comment}` : '',
-    ].filter(Boolean).join('\n');
-    const tgUrl = `${CONTACTS.social.telegramUrl}?text=${encodeURIComponent(msg)}`;
-    await new Promise(r => setTimeout(r, 800));
-    setStep('success');
-    setTimeout(() => window.open(tgUrl, '_blank'), 1500);
+    try {
+      const visitor = collectVisitorData();
+      const res = await fetch('/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          phone,
+          service: selectedLabel || 'Не выбрана',
+          date: date || undefined,
+          comment: comment || undefined,
+          visitor,
+        }),
+      });
+      if (!res.ok) throw new Error('Failed');
+      setStep('success');
+    } catch {
+      // Fallback: open Telegram with pre-filled message
+      const msg = [
+        `🌿 Новая заявка — Serenity Spa`,
+        ``,
+        `👤 ${name}`,
+        `📱 ${phone}`,
+        `💆 ${selectedLabel || 'Не выбрана'}`,
+        date ? `📅 ${date}` : '',
+        comment ? `💬 ${comment}` : '',
+      ].filter(Boolean).join('\n');
+      const tgUrl = `${CONTACTS.social.telegramUrl}?text=${encodeURIComponent(msg)}`;
+      window.open(tgUrl, '_blank');
+      setStep('success');
+    }
   };
-
-  const minDate = new Date().toISOString().split('T')[0];
 
   return (
     <AnimatePresence>
@@ -114,8 +131,8 @@ export function BookingModal() {
             <div className="absolute inset-0 opacity-[0.025] mix-blend-overlay pointer-events-none rounded-[2rem]" style={{ backgroundImage: NOISE_BG }} />
 
             {/* Ambient glows */}
-            <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#C8956C]/6 blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#234A72]/30 blur-[100px] rounded-full pointer-events-none" />
+            <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#C8956C]/6 blur-[120px] rounded-full pointer-events-none hidden md:block" />
+            <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#234A72]/30 blur-[100px] rounded-full pointer-events-none hidden md:block" />
 
             {/* Close */}
             <button
@@ -586,7 +603,7 @@ function SuccessView() {
       <p className="text-[#7A8BA8]/60 text-sm leading-relaxed max-w-xs mx-auto mb-1">
         Мы свяжемся с вами для подтверждения записи
       </p>
-      <p className="text-[#7A8BA8]/30 text-xs">Перенаправляем в Telegram...</p>
+      <p className="text-[#7A8BA8]/30 text-xs">Спасибо за обращение!</p>
     </motion.div>
   );
 }

@@ -12,6 +12,9 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Local deployment artifacts should not be linted
+    "deployment-artifact/**",
+    "*.tar.gz",
   ]),
 ]);
 

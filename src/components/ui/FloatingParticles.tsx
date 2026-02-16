@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 
 interface Particle {
   id: number;
@@ -19,26 +19,29 @@ interface FloatingParticlesProps {
   colors?: string[];
 }
 
+const DEFAULT_PARTICLE_COLORS = ['#C8956C', '#D4A574', '#7A8BA8', '#E8DFD0'];
+
+function pseudoRandom(seed: number): number {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
+}
+
 export function FloatingParticles({ 
   count = 20,
-  colors = ['#C8956C', '#D4A574', '#7A8BA8', '#E8DFD0']
+  colors = DEFAULT_PARTICLE_COLORS
 }: FloatingParticlesProps) {
-  const [particles, setParticles] = useState<Particle[]>([]);
-
-  useEffect(() => {
-    setParticles(
-      Array.from({ length: count }, (_, i) => ({
-        id: i,
-        x: `${Math.random() * 100}%`,
-        y: `${Math.random() * 100}%`,
-        size: Math.random() * 4 + 2,
-        duration: Math.random() * 10 + 8,
-        delay: Math.random() * 5,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        drift: Math.random() * 20 - 10,
-      }))
-    );
-  }, [count, colors]);
+  const particles = useMemo<Particle[]>(() => (
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      x: `${pseudoRandom((i + 1) * 13) * 100}%`,
+      y: `${pseudoRandom((i + 1) * 17) * 100}%`,
+      size: pseudoRandom((i + 1) * 19) * 4 + 2,
+      duration: pseudoRandom((i + 1) * 23) * 10 + 8,
+      delay: pseudoRandom((i + 1) * 29) * 5,
+      color: colors[Math.floor(pseudoRandom((i + 1) * 31) * colors.length)] || DEFAULT_PARTICLE_COLORS[0],
+      drift: pseudoRandom((i + 1) * 37) * 20 - 10,
+    }))
+  ), [count, colors]);
 
   if (particles.length === 0) return null;
 
