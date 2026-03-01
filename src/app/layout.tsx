@@ -5,12 +5,16 @@ import "./globals.css";
 const manrope = Manrope({
   variable: "--font-sans",
   subsets: ["latin", "cyrillic"],
+  display: "swap",
+  preload: true,
 });
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-serif",
   weight: ["300", "400", "500", "600", "700"],
   subsets: ["latin", "cyrillic"],
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
@@ -65,6 +69,9 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://api.telegram.org" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

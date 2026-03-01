@@ -2,6 +2,10 @@
 
 import { useSyncExternalStore } from 'react';
 
+export function useIsMobile(): boolean {
+  return useMediaQuery('(max-width: 767px)');
+}
+
 export function useMediaQuery(query: string, serverFallback = false): boolean {
   return useSyncExternalStore(
     (onStoreChange) => {

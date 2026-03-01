@@ -4,11 +4,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'fram
 import { useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { useBooking } from '@/lib/booking-context';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
-
-function useIsMobile() {
-  return useMediaQuery('(max-width: 767px)');
-}
+import { useMediaQuery, useIsMobile } from '@/hooks/useMediaQuery';
 
 function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));

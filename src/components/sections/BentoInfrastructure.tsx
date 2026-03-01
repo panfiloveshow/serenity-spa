@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import { TiltCard } from '../ui/TiltCard';
 import { KineticText } from '../ui/KineticText';
 import { INFRASTRUCTURE } from '@/lib/constants';
-import { MOTION, staggerContainer, staggerChild } from '@/lib/motion';
+import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 
@@ -19,7 +19,7 @@ const EXTRA_DATA: Record<string, { stat: string; label: string; detail: string }
 const INFRA_IMAGES: Record<string, string> = {
   pool: '/infra-pool.webp',
   gym: '/infra-gym.webp',
-  sauna: '/infra-sauna.jpg',
+  sauna: '/infra-sauna.webp',
   jacuzzi: '/infra-jacuzzi.webp',
 };
 

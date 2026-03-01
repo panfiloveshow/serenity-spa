@@ -1,28 +1,16 @@
 'use client';
 
 import { motion, useScroll, useTransform, useReducedMotion, MotionValue } from 'framer-motion';
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { CTAButton } from '../ui/CTAButton';
 import { PACKAGES } from '@/lib/constants';
 import { KineticText } from '../ui/KineticText';
-import { MOTION, staggerContainer, staggerChild } from '@/lib/motion';
+import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useBooking } from '@/lib/booking-context';
-
-const NOISE_BG = `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`;
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 const CARD_COLORS = ['#1F4268', '#234A72', '#1F4268', '#234A72'];
 const ORB_COLORS = ['#C8956C', '#7A8BA8', '#C8956C', '#7A8BA8'];
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-  return isMobile;
-}
 
 export function StackedCardsPackages() {
   return (

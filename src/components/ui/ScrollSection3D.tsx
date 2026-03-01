@@ -1,7 +1,8 @@
 'use client';
 
 import { motion, useScroll, useTransform, useReducedMotion, MotionValue } from 'framer-motion';
-import { useRef, ReactNode, useEffect, useState } from 'react';
+import { useRef, ReactNode } from 'react';
+import { useIsMobile } from '@/hooks/useMediaQuery';
 
 type Effect = 'rise' | 'tilt' | 'zoom' | 'flip' | 'slide';
 
@@ -9,17 +10,6 @@ interface ScrollSection3DProps {
   children: ReactNode;
   effect?: Effect;
   className?: string;
-}
-
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-  return isMobile;
 }
 
 function useParallaxTransforms(
@@ -112,7 +102,6 @@ export function ScrollSection3D({
         style={{
           ...transforms,
           transformOrigin: 'center top',
-          willChange: 'transform, opacity',
         }}
       >
         {children}
