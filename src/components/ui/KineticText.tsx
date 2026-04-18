@@ -72,9 +72,9 @@ export function KineticText({
       whileInView="animate"
       viewport={MOTION.viewport.once}
     >
-      <Tag className={`${className} flex flex-wrap`}>
+      <Tag className={`${className} flex flex-wrap`} aria-label={children}>
         {words.map((word, i) => (
-          <span key={i} className="overflow-hidden inline-block mr-[0.3em]" style={{ perspective: '400px' }}>
+          <span key={i} className="overflow-hidden inline-block mr-[0.3em]" style={{ perspective: '400px' }} aria-hidden="true">
             <motion.span
               className="inline-block origin-bottom"
               variants={wordVariants}

@@ -8,6 +8,10 @@ export interface VisitorData {
   utm_campaign: string;
   utm_content: string;
   utm_term: string;
+  // Google Ads click parameters (captured from landing URL)
+  gclid?: string;
+  gad_source?: string;
+  gad_campaignid?: string;
   // Device & browser
   device: string;
   browser: string;
@@ -20,6 +24,7 @@ export interface VisitorData {
   pageTitle: string;
   visitTimestamp: string;
   sessionDuration: string;
+  sessionSeconds: number;
   pagesViewed: number;
   // Derived
   trafficSource: string;
@@ -33,17 +38,32 @@ interface SessionStore {
   pagesViewed: string[];
   referrer: string;
   utms: Record<string, string>;
+  ads: Record<string, string>;
 }
+
+const UTM_KEYS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+const AD_KEYS = ['gclid', 'gad_source', 'gad_campaignid', 'fbclid', 'yclid'];
 
 function getUTMParams(): Record<string, string> {
   if (typeof window === 'undefined') return {};
   const params = new URLSearchParams(window.location.search);
   const utms: Record<string, string> = {};
-  for (const key of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term']) {
+  for (const key of UTM_KEYS) {
     const val = params.get(key);
     if (val) utms[key] = val;
   }
   return utms;
+}
+
+function getAdParams(): Record<string, string> {
+  if (typeof window === 'undefined') return {};
+  const params = new URLSearchParams(window.location.search);
+  const ads: Record<string, string> = {};
+  for (const key of AD_KEYS) {
+    const val = params.get(key);
+    if (val) ads[key] = val;
+  }
+  return ads;
 }
 
 function detectDevice(): string {
@@ -116,11 +136,17 @@ function getSession(): SessionStore {
       pagesViewed: [],
       referrer: '',
       utms: {},
+      ads: {},
     };
   }
   try {
     const raw = sessionStorage.getItem(SESSION_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw) as SessionStore;
+      // Backfill ads field for sessions created before this field existed
+      if (!parsed.ads) parsed.ads = {};
+      return parsed;
+    }
   } catch { /* ignore */ }
 
   const session: SessionStore = {
@@ -129,6 +155,7 @@ function getSession(): SessionStore {
     pagesViewed: [window.location.pathname],
     referrer: document.referrer || '',
     utms: getUTMParams(),
+    ads: getAdParams(),
   };
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
   return session;
@@ -140,10 +167,14 @@ function updateSession(): SessionStore {
   if (!session.pagesViewed.includes(currentPath)) {
     session.pagesViewed.push(currentPath);
   }
-  // Update UTMs if new ones present
+  // Update UTMs/ads if new ones present on this navigation
   const newUtms = getUTMParams();
   if (Object.keys(newUtms).length > 0) {
     session.utms = { ...session.utms, ...newUtms };
+  }
+  const newAds = getAdParams();
+  if (Object.keys(newAds).length > 0) {
+    session.ads = { ...session.ads, ...newAds };
   }
   try {
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -164,7 +195,9 @@ function formatDuration(ms: number): string {
 export function collectVisitorData(): VisitorData {
   const session = updateSession();
   const utms = session.utms;
+  const ads = session.ads;
   const referrer = session.referrer;
+  const sessionMs = Date.now() - session.startTime;
 
   return {
     referrer: referrer || 'Прямой переход',
@@ -173,6 +206,9 @@ export function collectVisitorData(): VisitorData {
     utm_campaign: utms.utm_campaign || '',
     utm_content: utms.utm_content || '',
     utm_term: utms.utm_term || '',
+    gclid: ads.gclid,
+    gad_source: ads.gad_source,
+    gad_campaignid: ads.gad_campaignid,
     device: detectDevice(),
     browser: detectBrowser(),
     os: detectOS(),
@@ -182,7 +218,8 @@ export function collectVisitorData(): VisitorData {
     landingPage: session.landingPage,
     pageTitle: typeof document !== 'undefined' ? document.title : '',
     visitTimestamp: new Date().toLocaleString('ru-RU', { timeZone: 'Asia/Tashkent' }),
-    sessionDuration: formatDuration(Date.now() - session.startTime),
+    sessionDuration: formatDuration(sessionMs),
+    sessionSeconds: Math.floor(sessionMs / 1000),
     pagesViewed: session.pagesViewed.length,
     trafficSource: detectTrafficSource(referrer, utms),
   };

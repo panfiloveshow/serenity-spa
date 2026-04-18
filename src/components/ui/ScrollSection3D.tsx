@@ -1,8 +1,7 @@
 'use client';
 
-import { motion, useScroll, useTransform, useReducedMotion, MotionValue } from 'framer-motion';
-import { useRef, ReactNode } from 'react';
-import { useIsMobile } from '@/hooks/useMediaQuery';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ReactNode } from 'react';
 
 type Effect = 'rise' | 'tilt' | 'zoom' | 'flip' | 'slide';
 
@@ -12,100 +11,51 @@ interface ScrollSection3DProps {
   className?: string;
 }
 
-function useParallaxTransforms(
-  scrollYProgress: MotionValue<number>,
-  effect: Effect,
-  mobile: boolean
-) {
-  const m = mobile ? 0.4 : 1;
-
-  // All hooks called unconditionally to respect Rules of Hooks
-  // On mobile: blur values are 0 (no GPU cost), rotations are 0
-  const rise = {
-    rotateX: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], mobile ? [0, 0, 0, 0] : [12, 0, 0, -6]),
-    scale: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1 - 0.12 * m, 1, 1, 1 - 0.06 * m]),
-    opacity: useTransform(scrollYProgress, [0, 0.15, 0.8, 1], [0, 1, 1, 0.3]),
-    y: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [120 * m, 0, 0, -50 * m]),
-    filter: useTransform(scrollYProgress, [0, 0.15, 0.85, 1],
-      mobile ? ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'] : ['blur(8px)', 'blur(0px)', 'blur(0px)', 'blur(4px)']),
-  };
-
-  const tilt = {
-    rotateX: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], mobile ? [0, 0, 0, 0] : [15, 0, 0, -5]),
-    rotateY: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], mobile ? [0, 0, 0, 0] : [-6, 0, 0, 3]),
-    scale: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1 - 0.15 * m, 1, 1, 1 - 0.05 * m]),
-    opacity: useTransform(scrollYProgress, [0, 0.15, 0.8, 1], [0, 1, 1, 0.3]),
-    y: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [150 * m, 0, 0, -40 * m]),
-    filter: useTransform(scrollYProgress, [0, 0.18, 0.82, 1],
-      mobile ? ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'] : ['blur(10px)', 'blur(0px)', 'blur(0px)', 'blur(5px)']),
-  };
-
-  const zoom = {
-    scale: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1 - 0.2 * m, 1, 1, 1 + 0.05 * m]),
-    opacity: useTransform(scrollYProgress, [0, 0.15, 0.8, 1], [0, 1, 1, 0.2]),
-    y: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [100 * m, 0, 0, -60 * m]),
-    rotateX: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], mobile ? [0, 0, 0, 0] : [8, 0, 0, -4]),
-    filter: useTransform(scrollYProgress, [0, 0.15, 0.85, 1],
-      mobile ? ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'] : ['blur(12px)', 'blur(0px)', 'blur(0px)', 'blur(6px)']),
-  };
-
-  const flip = {
-    rotateX: useTransform(scrollYProgress, [0, 0.22, 0.78, 1], mobile ? [0, 0, 0, 0] : [20, 0, 0, -10]),
-    scale: useTransform(scrollYProgress, [0, 0.22, 0.78, 1], [1 - 0.18 * m, 1, 1, 1 - 0.08 * m]),
-    opacity: useTransform(scrollYProgress, [0, 0.15, 0.78, 1], [0, 1, 1, 0.15]),
-    y: useTransform(scrollYProgress, [0, 0.22, 0.78, 1], [180 * m, 0, 0, -60 * m]),
-    filter: useTransform(scrollYProgress, [0, 0.2, 0.8, 1],
-      mobile ? ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'] : ['blur(15px)', 'blur(0px)', 'blur(0px)', 'blur(8px)']),
-  };
-
-  const slide = {
-    x: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [-100 * m, 0, 0, 50 * m]),
-    rotateY: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], mobile ? [0, 0, 0, 0] : [8, 0, 0, -4]),
-    scale: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1 - 0.1 * m, 1, 1, 1 - 0.04 * m]),
-    opacity: useTransform(scrollYProgress, [0, 0.12, 0.8, 1], [0, 1, 1, 0.4]),
-    y: useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [80 * m, 0, 0, -30 * m]),
-    filter: useTransform(scrollYProgress, [0, 0.15, 0.85, 1],
-      mobile ? ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'] : ['blur(6px)', 'blur(0px)', 'blur(0px)', 'blur(3px)']),
-  };
-
-  const effects = { rise, tilt, zoom, flip, slide };
-  return effects[effect];
-}
+/**
+ * Viewport-triggered entrance wrapper.
+ *
+ * Previous implementation used `useScroll` + 5-6 `useTransform` values
+ * per section (including `blur()` filter). With 5 sections that's 25-30
+ * scroll-driven recalculations per frame — on mid-range desktops this
+ * pegged at ~20 FPS.
+ *
+ * New implementation uses a one-shot `whileInView` entrance animation:
+ *   - runs once when the section enters the viewport
+ *   - no scroll-driven math after that (static afterwards → 60 FPS)
+ *   - different `effect` values just pick different initial offsets
+ *     so the visual language stays similar
+ */
+const initialByEffect: Record<Effect, { opacity: number; y?: number; x?: number; scale?: number }> = {
+  rise:  { opacity: 0, y: 60 },
+  tilt:  { opacity: 0, y: 40, scale: 0.97 },
+  zoom:  { opacity: 0, scale: 0.93 },
+  flip:  { opacity: 0, y: 50, scale: 0.95 },
+  slide: { opacity: 0, x: -60 },
+};
 
 export function ScrollSection3D({
   children,
   effect = 'rise',
   className = '',
 }: ScrollSection3DProps) {
-  const ref = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
-  const isMobile = useIsMobile();
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ['start end', 'end start'],
-  });
-
-  const transforms = useParallaxTransforms(scrollYProgress, effect, isMobile);
 
   if (prefersReducedMotion) {
-    return <div className={className}>{children}</div>;
+    return <div className={`section-contain section-deferred ${className}`}>{children}</div>;
   }
 
+  const initial = initialByEffect[effect];
+  const animate = { opacity: 1, y: 0, x: 0, scale: 1 };
+
   return (
-    <div
-      ref={ref}
-      className={`relative ${className}`}
-      style={{ perspective: '1200px' }}
+    <motion.div
+      className={`section-contain section-deferred ${className}`}
+      initial={initial}
+      whileInView={animate}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
-      <motion.div
-        style={{
-          ...transforms,
-          transformOrigin: 'center top',
-        }}
-      >
-        {children}
-      </motion.div>
-    </div>
+      {children}
+    </motion.div>
   );
 }

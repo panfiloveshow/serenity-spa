@@ -3,18 +3,12 @@
 import { motion, useInView } from 'framer-motion';
 import { TiltCard } from '../ui/TiltCard';
 import { KineticText } from '../ui/KineticText';
-import { INFRASTRUCTURE } from '@/lib/constants';
 import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
+import { useLang } from '@/lib/lang-context';
 
-// Extended data for hover-reveal "second layer"
-const EXTRA_DATA: Record<string, { stat: string; label: string; detail: string }> = {
-  pool: { stat: '28°', label: 'Температура воды', detail: 'Современный бассейн для плавания и отдыха' },
-  gym: { stat: '24/7', label: 'Доступ к залу', detail: 'Оборудование от ведущего производителя' },
-  sauna: { stat: '95°', label: 'Финская сауна', detail: 'Финская и паровая сауна для полного расслабления' },
-  jacuzzi: { stat: '38°', label: 'Гидромассаж', detail: 'Гидромассажная ванна для восстановления' },
-};
+const INFRA_IDS = ['pool', 'gym', 'sauna', 'jacuzzi'] as const;
 
 const INFRA_IMAGES: Record<string, string> = {
   pool: '/infra-pool.webp',
@@ -50,11 +44,18 @@ function AnimatedCounter({ value, suffix = '' }: { value: string; suffix?: strin
 }
 
 export function BentoInfrastructure() {
-  const items = INFRASTRUCTURE.map((item) => ({
-    ...item,
-    title: item.titleRu || item.title,
-    extra: EXTRA_DATA[item.id],
-  }));
+  const { dictionary } = useLang();
+  const infra = dictionary.infrastructure;
+
+  const items = INFRA_IDS.map((id) => {
+    const dictItem = infra.items[id];
+    return {
+      id,
+      title: dictItem?.title ?? id,
+      description: dictItem?.description ?? '',
+      metrics: dictItem?.metrics ?? '',
+    };
+  });
 
   return (
     <section id="infrastructure" className="py-32 px-6 bg-[#1B3A5C] relative overflow-hidden">
@@ -76,13 +77,13 @@ export function BentoInfrastructure() {
             >
               Оздоровительный центр
             </motion.span>
-            <KineticText className="text-4xl md:text-6xl font-light text-[#E8DFD0]">Инфраструктура</KineticText>
+            <KineticText className="text-4xl md:text-6xl font-light text-[#E8DFD0]">{infra.sectionTitle}</KineticText>
           </div>
           <motion.p 
-            className="text-[#7A8BA8] max-w-sm text-lg font-light leading-relaxed"
+            className="text-[#A0B0C8] max-w-sm text-lg font-light leading-relaxed"
             variants={staggerChild}
           >
-            Современное оборудование от ведущего производителя для вашего комфорта и здоровья.
+            {infra.sectionSubtitle}
           </motion.p>
         </motion.div>
 
@@ -107,17 +108,17 @@ export function BentoInfrastructure() {
                 {/* Default content */}
                 <div className="relative z-10 h-full p-8 md:p-10 flex flex-col justify-end">
                   <h3 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-2">{items[0].title}</h3>
-                  <p className="text-[#7A8BA8] text-lg group-hover:text-[#E8DFD0]/60 transition-colors duration-500">{items[0].description}</p>
+                  <p className="text-[#A0B0C8] text-lg group-hover:text-[#E8DFD0]/60 transition-colors duration-500">{items[0].description}</p>
                   
                   {/* Hover reveal — second layer */}
                   <div className="mt-4 overflow-hidden">
                     <div className="translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out flex items-baseline gap-4 pt-4 border-t border-[#C8956C]/20">
                       <span className="text-4xl md:text-5xl font-light text-[#C8956C]">
-                        <AnimatedCounter value={items[0].extra?.stat || ''} />
+                        <AnimatedCounter value={items[0].metrics} />
                       </span>
                       <div>
-                        <p className="text-[#E8DFD0]/80 text-sm font-medium">{items[0].extra?.label}</p>
-                        <p className="text-[#7A8BA8] text-xs mt-0.5">{items[0].extra?.detail}</p>
+                        <p className="text-[#E8DFD0]/80 text-sm font-medium">{items[0].title}</p>
+                        <p className="text-[#A0B0C8] text-xs mt-0.5">{items[0].description}</p>
                       </div>
                     </div>
                   </div>
@@ -139,15 +140,15 @@ export function BentoInfrastructure() {
                     <div className="relative z-10 h-full p-6 flex flex-col justify-between">
                       <div>
                         <h3 className="text-xl font-light text-[#E8DFD0] mb-1">{item.title}</h3>
-                        <p className="text-[#7A8BA8] text-sm group-hover:text-[#E8DFD0]/50 transition-colors duration-500">{item.description}</p>
+                        <p className="text-[#A0B0C8] text-sm group-hover:text-[#E8DFD0]/50 transition-colors duration-500">{item.description}</p>
                         
                         {/* Hover reveal */}
                         <div className="overflow-hidden">
                           <div className="translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out flex items-baseline gap-3 pt-3 mt-2 border-t border-[#C8956C]/15">
                             <span className="text-2xl font-light text-[#C8956C]">
-                              <AnimatedCounter value={item.extra?.stat || ''} />
+                              <AnimatedCounter value={item.metrics} />
                             </span>
-                            <span className="text-[#7A8BA8] text-xs">{item.extra?.label}</span>
+                            <span className="text-[#A0B0C8] text-xs">{item.title}</span>
                           </div>
                         </div>
                       </div>
@@ -170,7 +171,7 @@ export function BentoInfrastructure() {
                   <div className="flex items-center gap-6">
                     <div>
                       <h3 className="text-2xl font-light text-[#E8DFD0] mb-1">{items[3].title}</h3>
-                      <p className="text-[#7A8BA8] group-hover:text-[#E8DFD0]/50 transition-colors duration-500">{items[3].description}</p>
+                      <p className="text-[#A0B0C8] group-hover:text-[#E8DFD0]/50 transition-colors duration-500">{items[3].description}</p>
                     </div>
                   </div>
                   
@@ -185,7 +186,7 @@ export function BentoInfrastructure() {
                         <p className="text-2xl font-light text-[#C8956C]">
                           <AnimatedCounter value={m.val} suffix={m.suffix} />
                         </p>
-                        <p className="text-[#7A8BA8] text-xs mt-1 uppercase tracking-wider">{m.label}</p>
+                        <p className="text-[#A0B0C8] text-xs mt-1 uppercase tracking-wider">{m.label}</p>
                       </div>
                     ))}
                   </div>

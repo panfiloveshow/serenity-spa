@@ -4,28 +4,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { CONTACTS } from '@/lib/constants';
 import { MOTION } from '@/lib/motion';
-
-const NAV_COLUMNS = [
-  {
-    title: 'Навигация',
-    links: [
-      { label: 'Инфраструктура', href: '#infrastructure' },
-      { label: 'Авторские услуги', href: '#services' },
-      { label: 'Программы', href: '#packages' },
-      { label: 'Абонементы', href: '#membership' },
-      { label: 'Контакты', href: '#contacts' },
-    ],
-  },
-  {
-    title: 'Услуги',
-    links: [
-      { label: 'Массажи', href: '#services' },
-      { label: 'Уходы за телом', href: '#services' },
-      { label: 'SPA пакеты', href: '#packages' },
-      { label: 'Бассейн и сауны', href: '#infrastructure' },
-    ],
-  },
-];
+import { useLang } from '@/lib/lang-context';
 
 const SOCIAL = [
   {
@@ -52,7 +31,19 @@ const SOCIAL = [
 ];
 
 export function Footer() {
+  const { locale, dictionary } = useLang();
   const year = new Date().getFullYear();
+
+  const navColumns = [
+    {
+      title: dictionary.footer.navTitle,
+      links: dictionary.footer.navLinks,
+    },
+    {
+      title: dictionary.footer.servicesTitle,
+      links: dictionary.footer.serviceLinks,
+    },
+  ];
 
   return (
     <footer className="bg-[#152E4A] relative overflow-hidden">
@@ -80,7 +71,7 @@ export function Footer() {
           {/* Top section: 3 columns */}
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_1.2fr] gap-12 md:gap-8 mb-20">
             {/* Nav columns */}
-            {NAV_COLUMNS.map((col) => (
+            {navColumns.map((col) => (
               <div key={col.title}>
                 <h4 className="text-[10px] uppercase tracking-[0.25em] text-[#C8956C]/60 mb-6">{col.title}</h4>
                 <ul className="space-y-3">
@@ -88,7 +79,7 @@ export function Footer() {
                     <li key={link.label}>
                       <a
                         href={link.href}
-                        className="text-[#E8DFD0]/40 text-sm font-light hover:text-[#E8DFD0] hover:pl-1 transition-all duration-300 block"
+                        className="text-[#E8DFD0]/40 text-sm font-light hover:text-[#E8DFD0] hover:pl-1 transition-all duration-300 block py-2 -my-2"
                       >
                         {link.label}
                       </a>
@@ -108,7 +99,7 @@ export function Footer() {
                 className="w-[160px] h-auto opacity-30 hover:opacity-50 transition-opacity duration-500 mb-6"
               />
               <p className="text-[#7A8BA8]/30 text-xs leading-relaxed max-w-[240px] md:text-right mb-6">
-                Оздоровительный центр в&nbsp;Ташкенте. Бассейн, сауны, массажи и&nbsp;авторские SPA&nbsp;программы.
+                {dictionary.footer.brandDescription}
               </p>
 
               {/* Social icons */}
@@ -136,16 +127,16 @@ export function Footer() {
 
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <p className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase">
-                &copy; {year} Serenity Spa. Все права защищены.
+                &copy; {year} {dictionary.footer.copyright}
               </p>
 
               <div className="flex items-center gap-6">
-                <a href="/privacy" className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
-                  Конфиденциальность
+                <a href={`/${locale}/privacy`} className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
+                  {dictionary.footer.privacyLink}
                 </a>
                 <span className="w-0.5 h-0.5 rounded-full bg-[#7A8BA8]/15" />
-                <a href="/terms" className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
-                  Условия
+                <a href={`/${locale}/terms`} className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
+                  {dictionary.footer.termsLink}
                 </a>
               </div>
             </div>
@@ -155,7 +146,7 @@ export function Footer() {
           <div className="flex justify-center mt-10">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              aria-label="Прокрутить страницу наверх"
+              aria-label={dictionary.footer.scrollTop}
               className="group flex flex-col items-center gap-2 text-[#7A8BA8]/20 hover:text-[#C8956C]/50 transition-colors duration-500 cursor-pointer"
             >
               <div className="w-8 h-8 rounded-full border border-current flex items-center justify-center group-hover:-translate-y-1 transition-transform duration-300">
@@ -163,7 +154,7 @@ export function Footer() {
                   <path d="M12 5v14M5 12l7 7 7-7" />
                 </svg>
               </div>
-              <span className="text-[9px] uppercase tracking-[0.3em]">Наверх</span>
+              <span className="text-[9px] uppercase tracking-[0.3em]">{dictionary.footer.scrollTop}</span>
             </button>
           </div>
         </div>

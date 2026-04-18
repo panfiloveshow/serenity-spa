@@ -5,8 +5,11 @@ import { MEMBERSHIP_TIERS } from '@/lib/constants';
 import { KineticText } from '../ui/KineticText';
 import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useBooking } from '@/lib/booking-context';
+import { useLang } from '@/lib/lang-context';
 
 export function ModernMembership() {
+  const { dictionary } = useLang();
+
   // Split into two rows: basic (first 3) and premium (last 5)
   const basicPlans = MEMBERSHIP_TIERS.slice(0, 3);
   const premiumPlans = MEMBERSHIP_TIERS.slice(3);
@@ -30,10 +33,10 @@ export function ModernMembership() {
             <motion.span className="text-[#C8956C] uppercase tracking-[0.25em] text-xs block mb-4" variants={staggerChild}>
               Членство в клубе
             </motion.span>
-            <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight">Абонементы</KineticText>
+            <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight">{dictionary.membership.sectionTitle}</KineticText>
           </div>
-          <motion.p className="text-[#7A8BA8] max-w-md text-base leading-relaxed md:text-right" variants={staggerChild}>
-            Вступите в членство клуба и наслаждайтесь бассейном, тренажёрным залом, саунами и джакузи.
+          <motion.p className="text-[#A0B0C8] max-w-md text-base leading-relaxed md:text-right" variants={staggerChild}>
+            {dictionary.membership.sectionSubtitle}
           </motion.p>
         </motion.div>
 
@@ -45,8 +48,8 @@ export function ModernMembership() {
           whileInView="animate"
           viewport={MOTION.viewport.once}
         >
-          {basicPlans.map((tier) => (
-            <MembershipCard key={tier.id} tier={tier} />
+          {basicPlans.map((tier, i) => (
+            <MembershipCard key={tier.id} tier={tier} dictTier={dictionary.membership.tiers[i]} bookLabel={dictionary.nav.bookButton} />
           ))}
         </motion.div>
 
@@ -58,8 +61,8 @@ export function ModernMembership() {
           whileInView="animate"
           viewport={MOTION.viewport.once}
         >
-          {premiumPlans.map((tier) => (
-            <MembershipCard key={tier.id} tier={tier} />
+          {premiumPlans.map((tier, i) => (
+            <MembershipCard key={tier.id} tier={tier} dictTier={dictionary.membership.tiers[i + 3]} bookLabel={dictionary.nav.bookButton} />
           ))}
         </motion.div>
       </div>
@@ -67,10 +70,15 @@ export function ModernMembership() {
   );
 }
 
-function MembershipCard({ tier }: { tier: typeof MEMBERSHIP_TIERS[number] }) {
+interface MembershipCardProps {
+  tier: typeof MEMBERSHIP_TIERS[number];
+  dictTier: { name: string; price: string; priceNote?: string; period: string; features: string[] };
+  bookLabel: string;
+}
+
+function MembershipCard({ tier, dictTier, bookLabel }: MembershipCardProps) {
   const isHighlighted = tier.isPopular;
   const { openBooking } = useBooking();
-  const priceNote = 'priceNote' in tier ? (tier as { priceNote?: string }).priceNote : undefined;
 
   return (
     <motion.div
@@ -94,7 +102,7 @@ function MembershipCard({ tier }: { tier: typeof MEMBERSHIP_TIERS[number] }) {
               : 'bg-[#C8956C]/10 text-[#C8956C]'
             }
           `}>
-            {tier.period}
+            {dictTier.period}
           </span>
           {isHighlighted && (
             <span className="inline-block ml-2 bg-[#1B3A5C] text-[#E8DFD0] text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full">
@@ -105,17 +113,17 @@ function MembershipCard({ tier }: { tier: typeof MEMBERSHIP_TIERS[number] }) {
 
         {/* Name */}
         <h3 className={`text-xl font-medium tracking-wide mb-3 ${isHighlighted ? 'text-[#1B3A5C]' : 'text-[#E8DFD0]'}`}>
-          {tier.name}
+          {dictTier.name}
         </h3>
 
         {/* Price */}
         <div className="mb-5">
           <p className={`text-2xl font-light ${isHighlighted ? 'text-[#1B3A5C]' : 'text-[#E8DFD0]'}`}>
-            {tier.price}
+            {dictTier.price}
           </p>
-          {priceNote && (
+          {dictTier.priceNote && (
             <p className={`text-[10px] mt-1.5 leading-relaxed ${isHighlighted ? 'text-[#1B3A5C]/60' : 'text-[#C8956C]/60'}`}>
-              {priceNote}
+              {dictTier.priceNote}
             </p>
           )}
         </div>
@@ -125,7 +133,7 @@ function MembershipCard({ tier }: { tier: typeof MEMBERSHIP_TIERS[number] }) {
 
         {/* Features */}
         <ul className="space-y-2.5 flex-1">
-          {tier.features.map((feature, idx) => (
+          {dictTier.features.map((feature, idx) => (
             <li key={idx} className="flex items-start gap-2.5">
               <svg className={`w-3.5 h-3.5 flex-shrink-0 mt-0.5 ${isHighlighted ? 'text-[#1B3A5C]/70' : 'text-[#C8956C]/60'}`} viewBox="0 0 16 16" fill="none">
                 <path d="M13.5 4.5L6.5 11.5L2.5 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -141,8 +149,8 @@ function MembershipCard({ tier }: { tier: typeof MEMBERSHIP_TIERS[number] }) {
         <button
           onClick={() => openBooking({
             type: 'membership',
-            name: tier.name,
-            price: tier.price,
+            name: dictTier.name,
+            price: dictTier.price,
           })}
           className={`w-full py-3 mt-6 rounded-full text-[10px] uppercase tracking-[0.2em] font-semibold transition-all duration-400 cursor-pointer
           ${isHighlighted 
@@ -150,7 +158,7 @@ function MembershipCard({ tier }: { tier: typeof MEMBERSHIP_TIERS[number] }) {
             : 'bg-[#E8DFD0]/0 border border-[#7A8BA8]/15 hover:bg-[#E8DFD0] hover:text-[#1B3A5C] hover:border-[#E8DFD0] hover:shadow-[0_4px_20px_rgba(232,223,208,0.1)]'
           }
         `}>
-          Выбрать
+          {bookLabel}
         </button>
       </div>
     </motion.div>

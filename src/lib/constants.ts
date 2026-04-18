@@ -311,7 +311,7 @@ export const PACKAGES = [
 export const CONTACTS = {
   phone: '+998 71 210 88 95',
   email: 'info@serenity-spa.uz',
-  address: 'ул. Ислама Каримова 2, 3-4 этаж, Укчи 1, 100027, Ташкент',
+  address: 'Укчи 1, 100027, Ташкент',
   hours: 'Ежедневно 07:00 — 23:00',
   social: {
     instagram: '@serenityspa_tashkent',

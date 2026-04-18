@@ -34,6 +34,41 @@ body {
   background: var(--background);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  /* Required by framer-motion useScroll container: scroll root must be non-static for correct offset math */
+  position: relative;
+  /* Prevent rubber-band bounce in iOS Safari that trashes FPS during scroll */
+  overscroll-behavior-y: none;
+  /* Subpixel font rendering — sharper text with zero cost */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* GPU-accelerate any element that renders heavy transforms/opacity.
+   Use `className="gpu"` on motion-heavy wrappers. */
+.gpu {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Hint browser this layer will be transformed during animations */
+  will-change: transform, opacity;
+}
+
+/* Section-level containment: reflow/repaint isolated to one section.
+   Combined with content-visibility it keeps scroll at 60 FPS on long pages. */
+.section-contain {
+  contain: layout paint style;
+}
+
+/* Off-screen sections aren't painted until ~500px away — huge FCP/LCP win. */
+.section-deferred {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+@media (min-width: 1024px) {
+  .section-deferred {
+    contain-intrinsic-size: 1px 1100px;
+  }
 }
 
 /* Noise Texture Overlay — hidden on mobile for performance */
@@ -84,6 +119,26 @@ body {
 
 html {
   scroll-behavior: smooth;
+  /* document.scrollingElement defaults to <html> — framer-motion checks its
+     position when useScroll({ target }) is used. Must be non-static. */
+  position: relative;
+}
+
+/* Lenis — smooth-scroll takeover.
+   When Lenis is active it adds `.lenis` to <html>. Disable native smooth
+   so CSS and rAF don't fight over scroll position. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: clip;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -101,23 +156,77 @@ html {
   }
 }
 
+/* ─── Lightweight entrance animations
+   Use these instead of framer-motion for simple fade-in patterns
+   where no gestures / scroll interaction is needed. ~0 KB JS cost.
+────────────────────────────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-down {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-scale {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.anim-fade-in    { animation: fade-in    0.5s ease-out both; }
+.anim-fade-up    { animation: fade-up    0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-fade-down  { animation: fade-down  0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.anim-fade-scale { animation: fade-scale 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-in,
+  .anim-fade-up,
+  .anim-fade-down,
+  .anim-fade-scale {
+    animation: none;
+  }
+}
+
 /* Оптимизация производительности на мобильных */
 @media (max-width: 767px) {
   * {
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Убрать тяжёлые blur-эффекты на мобильных */
-  .backdrop-blur-sm,
-  .backdrop-blur-md,
-  .backdrop-blur-lg {
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+  /* Hard-kill ALL backdrop-filter / filter blur on mobile — they cost 10-20ms/frame on mid-range Android */
+  [class*="backdrop-blur"],
+  [class*="backdrop-filter"] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  [class*="blur-"] {
+    filter: none !important;
   }
 
-  /* Отключить тяжёлые тени на мобильных */
-  .shadow-\[0_8px_60px_rgba\(0\,0\,0\,0\.4\)\] {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  /* Deep shadows → single soft shadow (GPU composites once) */
+  [class*="shadow-["] {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25) !important;
+  }
+
+  /* Scroll-driven transform animations (parallax, ScrollSection3D) cripple
+     low-end Android GPUs. Neutralize transforms coming from scroll. */
+  .reduce-scroll-fx {
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+/* Respect OS-level motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

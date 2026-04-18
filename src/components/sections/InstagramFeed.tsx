@@ -39,7 +39,7 @@ export function InstagramFeed() {
               Наш Instagram
             </KineticText>
           </motion.div>
-          <motion.p variants={staggerChild} className="text-[#7A8BA8] text-sm max-w-md mx-auto mb-6">
+          <motion.p variants={staggerChild} className="text-[#A0B0C8] text-sm max-w-md mx-auto mb-6">
             Следите за нашими обновлениями, акциями и закулисной жизнью Serenity Spa
           </motion.p>
           <motion.a

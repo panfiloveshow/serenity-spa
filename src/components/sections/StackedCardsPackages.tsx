@@ -8,11 +8,14 @@ import { KineticText } from '../ui/KineticText';
 import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useBooking } from '@/lib/booking-context';
 import { useIsMobile } from '@/hooks/useMediaQuery';
+import { useLang } from '@/lib/lang-context';
 
 const CARD_COLORS = ['#1F4268', '#234A72', '#1F4268', '#234A72'];
 const ORB_COLORS = ['#C8956C', '#7A8BA8', '#C8956C', '#7A8BA8'];
 
 export function StackedCardsPackages() {
+  const { dictionary } = useLang();
+
   return (
     <section className="bg-[#1B3A5C] relative overflow-hidden" id="packages">
       {/* Header */}
@@ -26,9 +29,9 @@ export function StackedCardsPackages() {
             viewport={MOTION.viewport.once}
           >
             <motion.span className="text-[#C8956C] uppercase tracking-[0.25em] text-xs block mb-4" variants={staggerChild}>
-              Незабываемый опыт
+              {dictionary.packages.sectionSubtitle}
             </motion.span>
-            <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight justify-center">Программы</KineticText>
+            <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight justify-center">{dictionary.packages.sectionTitle}</KineticText>
           </motion.div>
         </div>
       </div>
@@ -38,9 +41,18 @@ export function StackedCardsPackages() {
         <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none hidden md:block" />
 
         <div className="container mx-auto relative z-10">
-          {PACKAGES.map((pkg, i) => (
-            <PackageCard key={pkg.id} pkg={pkg} index={i} />
-          ))}
+          {PACKAGES.map((pkg, i) => {
+            const dictPkg = dictionary.packages.items[i];
+            return (
+              <PackageCard
+                key={pkg.id}
+                pkg={pkg}
+                dictPkg={dictPkg}
+                bookLabel={dictionary.nav.bookButton}
+                index={i}
+              />
+            );
+          })}
           <div className="h-[40vh]" />
         </div>
       </div>
@@ -61,7 +73,14 @@ function useCard3DTransforms(scrollYProgress: MotionValue<number>, mobile: boole
   };
 }
 
-function PackageCard({ pkg, index }: { pkg: typeof PACKAGES[0]; index: number }) {
+interface PackageCardProps {
+  pkg: typeof PACKAGES[0];
+  dictPkg: { title: string; price: string; duration: string; description: string; includes: string[]; popularLabel?: string };
+  bookLabel: string;
+  index: number;
+}
+
+function PackageCard({ pkg, dictPkg, bookLabel, index }: PackageCardProps) {
   const cardRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
@@ -78,7 +97,7 @@ function PackageCard({ pkg, index }: { pkg: typeof PACKAGES[0]; index: number })
   return (
     <div
       ref={cardRef}
-      className="h-[80vh] md:h-[70vh]"
+      className="relative h-[80vh] md:h-[70vh]"
       style={{ zIndex: index + 1 }}
     >
       <div className="sticky" style={{ top: stickyTop, perspective: '1200px' }}>
@@ -101,30 +120,30 @@ function PackageCard({ pkg, index }: { pkg: typeof PACKAGES[0]; index: number })
               <div>
                 <div className="flex items-center gap-3 mb-5">
                   <span className="text-[#C8956C] border border-[#C8956C]/30 rounded-full px-4 py-1.5 text-xs uppercase tracking-[0.15em]">
-                    {pkg.duration}
+                    {dictPkg.duration}
                   </span>
-                  {pkg.isPopular && (
+                  {pkg.isPopular && dictPkg.popularLabel && (
                     <span className="bg-[#C8956C] text-[#1B3A5C] rounded-full px-4 py-1.5 text-xs uppercase tracking-[0.15em] font-medium">
-                      Популярное
+                      {dictPkg.popularLabel}
                     </span>
                   )}
                 </div>
                 
-                <h3 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-3 tracking-tight">{pkg.title}</h3>
-                <p className="text-[#7A8BA8] text-sm leading-relaxed mb-6 max-w-md">
-                  {pkg.description}
+                <h3 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-3 tracking-tight">{dictPkg.title}</h3>
+                <p className="text-[#A0B0C8] text-sm leading-relaxed mb-6 max-w-md">
+                  {dictPkg.description}
                 </p>
                 
                 <div className="flex items-baseline gap-2 mb-8">
-                  <span className="text-2xl md:text-3xl font-light text-[#C8956C]">{pkg.price}</span>
+                  <span className="text-2xl md:text-3xl font-light text-[#C8956C]">{dictPkg.price}</span>
                 </div>
 
                 <CTAButton variant="primary" onClick={() => openBooking({
                   type: 'package',
-                  name: pkg.title,
-                  price: pkg.price,
-                  duration: pkg.duration,
-                })}>Забронировать</CTAButton>
+                  name: dictPkg.title,
+                  price: dictPkg.price,
+                  duration: dictPkg.duration,
+                })}>{bookLabel}</CTAButton>
               </div>
 
               {/* Right: Includes */}
@@ -136,7 +155,7 @@ function PackageCard({ pkg, index }: { pkg: typeof PACKAGES[0]; index: number })
                 viewport={MOTION.viewport.once}
               >
                 <ul className="space-y-0">
-                  {pkg.includes.map((item, idx) => (
+                  {dictPkg.includes.map((item, idx) => (
                     <motion.li 
                       key={idx}
                       variants={staggerChild}

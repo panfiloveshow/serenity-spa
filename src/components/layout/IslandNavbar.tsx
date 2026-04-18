@@ -5,13 +5,8 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useBooking } from '@/lib/booking-context';
-
-const navItems = [
-  { name: 'Услуги', href: '#services' },
-  { name: 'Программы', href: '#packages' },
-  { name: 'Абонементы', href: '#membership' },
-  { name: 'Контакты', href: '#contacts' },
-];
+import { useLang } from '@/lib/lang-context';
+import { LanguageSwitcher } from '@/components/ui/LanguageSwitcher';
 
 export function IslandNavbar() {
   const [active, setActive] = useState('');
@@ -19,6 +14,14 @@ export function IslandNavbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { scrollY } = useScroll();
   const { openBooking } = useBooking();
+  const { dictionary } = useLang();
+
+  const navItems = [
+    { name: dictionary.nav.services, href: '#services' },
+    { name: dictionary.nav.packages, href: '#packages' },
+    { name: dictionary.nav.membership, href: '#membership' },
+    { name: dictionary.nav.contacts, href: '#contacts' },
+  ];
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const shouldShow = latest > 500;
@@ -32,12 +35,12 @@ export function IslandNavbar() {
       {/* Desktop navbar */}
       <div className="fixed top-6 left-0 right-0 z-50 hidden md:flex justify-center pointer-events-none">
         <motion.nav 
-          className="pointer-events-auto bg-[#1B3A5C]/80 backdrop-blur-xl border border-[#7A8BA8]/20 rounded-full px-3 py-2 shadow-2xl shadow-black/20"
+          className="pointer-events-auto bg-[#1B3A5C]/80 backdrop-blur-xl border border-[#7A8BA8]/20 rounded-full px-3 py-2 shadow-2xl shadow-black/20 overflow-visible"
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <ul className="flex items-center gap-1">
+          <ul className="flex items-center gap-1 overflow-visible">
             {/* Logo - Hides at top to avoid duplication with Hero logo */}
             <AnimatePresence>
               {showLogo && (
@@ -53,11 +56,14 @@ export function IslandNavbar() {
                     onClick={() => setActive('')}
                     className="flex items-center px-2 py-1"
                   >
-                    <Image 
-                      src="/logo.svg" 
-                      alt="Serenity Spa" 
-                      width={120} 
-                      height={40} 
+                    <Image
+                      src="/logo.svg"
+                      alt="Serenity Spa"
+                      width={120}
+                      height={40}
+                      priority
+                      loading="eager"
+                      fetchPriority="high"
                       className="h-8 w-auto opacity-90 hover:opacity-100 transition-opacity"
                     />
                   </Link>
@@ -96,13 +102,16 @@ export function IslandNavbar() {
                 </Link>
               </li>
             ))}
+            <li className="relative ml-1 pl-1 border-l border-[#7A8BA8]/20 overflow-visible z-[55]">
+              <LanguageSwitcher />
+            </li>
             <li className="ml-1 pl-1 border-l border-[#7A8BA8]/20">
               <button
                 onClick={() => openBooking()}
-                aria-label="Открыть форму записи"
+                aria-label={dictionary.nav.bookButton}
                 className="px-5 py-2.5 bg-[#E8DFD0] text-[#1B3A5C] rounded-full text-sm font-bold hover:bg-white transition-colors cursor-pointer"
               >
-                Записаться
+                {dictionary.nav.bookButton}
               </button>
             </li>
           </ul>
@@ -118,20 +127,20 @@ export function IslandNavbar() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
           <Link href="#hero" onClick={() => { setActive(''); setMobileOpen(false); }}>
-            <Image src="/logo.svg" alt="Serenity Spa" width={100} height={32} className="h-7 w-auto opacity-90" />
+            <Image src="/logo.svg" alt="Serenity Spa" width={100} height={32} priority loading="eager" fetchPriority="high" className="h-7 w-auto opacity-90" />
           </Link>
           <div className="flex items-center gap-2">
             <button
               onClick={() => openBooking()}
-              aria-label="Открыть форму записи"
-              className="px-4 py-2 bg-[#C8956C] text-[#1B3A5C] rounded-xl text-xs font-bold cursor-pointer"
+              aria-label={dictionary.nav.bookButton}
+              className="min-h-[44px] px-4 py-2.5 bg-[#C8956C] text-[#1B3A5C] rounded-xl text-xs font-bold cursor-pointer"
             >
-              Записаться
+              {dictionary.nav.bookButton}
             </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label={mobileOpen ? 'Закрыть меню' : 'Открыть меню'}
-              className="w-9 h-9 rounded-xl border border-[#7A8BA8]/15 flex items-center justify-center text-[#E8DFD0]/70 cursor-pointer"
+              className="w-11 h-11 rounded-xl border border-[#7A8BA8]/15 flex items-center justify-center text-[#E8DFD0]/70 cursor-pointer"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 {mobileOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <><path d="M4 8h16" /><path d="M4 16h16" /></>}
@@ -164,6 +173,12 @@ export function IslandNavbar() {
                   {item.name}
                 </Link>
               ))}
+              <div className="px-4 py-3 border-t border-[#7A8BA8]/12 mt-1 pt-2">
+                <p className="text-[10px] uppercase tracking-widest text-[#7A8BA8]/70 mb-2 px-1">
+                  {dictionary.nav.language}
+                </p>
+                <LanguageSwitcher variant="menu" />
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

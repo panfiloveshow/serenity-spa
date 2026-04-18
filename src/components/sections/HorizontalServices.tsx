@@ -6,11 +6,16 @@ import { SERVICES } from '@/lib/constants';
 import { KineticText } from '../ui/KineticText';
 import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useBooking } from '@/lib/booking-context';
+import { useLang } from '@/lib/lang-context';
 
 export function HorizontalServices() {
   const [activeTab, setActiveTab] = useState(0);
-  const activeCategory = SERVICES[activeTab];
   const { openBooking } = useBooking();
+  const { dictionary } = useLang();
+
+  const dictCategories = dictionary.services.categories;
+  const activeCategory = SERVICES[activeTab];
+  const activeDictCategory = dictCategories[activeTab];
 
   return (
     <section className="bg-[#1B3A5C] relative py-32 px-6 overflow-hidden" id="services">
@@ -31,9 +36,9 @@ export function HorizontalServices() {
             Меню процедур
           </motion.span>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight">Авторские услуги</KineticText>
-            <motion.p className="text-[#7A8BA8] max-w-sm text-sm leading-relaxed md:text-right" variants={staggerChild}>
-              Техники со всего мира — от балийского массажа до сиамской травяной терапии
+            <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight">{dictionary.services.sectionTitle}</KineticText>
+            <motion.p className="text-[#A0B0C8] max-w-sm text-sm leading-relaxed md:text-right" variants={staggerChild}>
+              {activeDictCategory.subtitle}
             </motion.p>
           </div>
         </motion.div>
@@ -47,7 +52,7 @@ export function HorizontalServices() {
               className={`relative px-6 py-3 rounded-full text-sm font-medium whitespace-nowrap transition-all duration-400 cursor-pointer
                 ${activeTab === i 
                   ? 'bg-[#C8956C] text-[#1B3A5C]' 
-                  : 'bg-[#1F4268]/60 text-[#7A8BA8] hover:text-[#E8DFD0] hover:bg-[#1F4268] border border-[#7A8BA8]/10'
+                  : 'bg-[#1F4268]/60 text-[#A0B0C8] hover:text-[#E8DFD0] hover:bg-[#1F4268] border border-[#7A8BA8]/10'
                 }
               `}
             >
@@ -60,7 +65,7 @@ export function HorizontalServices() {
               )}
               <span className="relative z-10 flex items-center gap-2">
                 <span className="text-[10px] opacity-60">0{i + 1}</span>
-                {cat.title}
+                {dictCategories[i].title}
               </span>
             </button>
           ))}
@@ -84,8 +89,8 @@ export function HorizontalServices() {
                     0{activeTab + 1}
                   </span>
                   <div className="relative z-10">
-                    <h3 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-3">{activeCategory.title}</h3>
-                    <p className="text-[#7A8BA8] text-sm leading-relaxed mb-6">{activeCategory.subtitle}</p>
+                    <h3 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-3">{activeDictCategory.title}</h3>
+                    <p className="text-[#A0B0C8] text-sm leading-relaxed mb-6">{activeDictCategory.subtitle}</p>
                     <div className="flex items-center gap-4 text-[#7A8BA8]/50 text-xs">
                       <span>{activeCategory.items.length} процедур</span>
                       <span className="w-1 h-1 rounded-full bg-[#7A8BA8]/30" />
@@ -101,27 +106,44 @@ export function HorizontalServices() {
                 <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" style={{ backgroundImage: NOISE_BG }} />
 
                 <div className="relative z-10 divide-y divide-[#7A8BA8]/8">
-                  {activeCategory.items.map((item, idx) => (
+                  {activeCategory.items.map((item, idx) => {
+                    const dictItem = activeDictCategory.items[idx];
+                    return (
                     <motion.div
                       key={idx}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.4, delay: idx * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                      className="group/item px-6 md:px-8 py-5 hover:bg-[#C8956C]/5 transition-all duration-300 cursor-pointer"
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`${dictItem.name} — ${dictItem.duration}, ${item.price} UZS. Записаться`}
+                      className="group/item px-6 md:px-8 py-5 hover:bg-[#C8956C]/5 focus:bg-[#C8956C]/5 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#C8956C]/40 transition-all duration-300 cursor-pointer"
                       onClick={() => openBooking({
                         type: 'service',
-                        category: activeCategory.title,
-                        name: item.name,
+                        category: activeDictCategory.title,
+                        name: dictItem.name,
                         price: `${item.price} UZS`,
-                        duration: item.duration,
+                        duration: dictItem.duration,
                       })}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          openBooking({
+                            type: 'service',
+                            category: activeDictCategory.title,
+                            name: dictItem.name,
+                            price: `${item.price} UZS`,
+                            duration: dictItem.duration,
+                          });
+                        }
+                      }}
                     >
                       <div className="flex items-center justify-between gap-4">
                         {/* Left: name + duration */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-baseline gap-3">
                             <span className="text-[#E8DFD0]/90 text-base font-light group-hover/item:text-[#E8DFD0] transition-colors truncate">
-                              {item.name}
+                              {dictItem.name}
                             </span>
                             <span className="hidden sm:inline text-[#7A8BA8]/40 text-[10px] flex-shrink-0">
                               {'· · · · · · · · · · · · · · · · · · · · · ·'}
@@ -131,7 +153,7 @@ export function HorizontalServices() {
 
                         {/* Right: duration + price */}
                         <div className="flex items-baseline gap-4 flex-shrink-0">
-                          <span className="text-[#7A8BA8]/60 text-xs hidden sm:block">{item.duration}</span>
+                          <span className="text-[#7A8BA8]/60 text-xs hidden sm:block">{dictItem.duration}</span>
                           <span className="text-[#C8956C] text-base font-medium tabular-nums">
                             {item.price}
                             <span className="text-[9px] text-[#C8956C]/40 ml-1">UZS</span>
@@ -140,18 +162,19 @@ export function HorizontalServices() {
                       </div>
 
                       {/* Description — expand on hover */}
-                      {item.desc && (
+                      {dictItem.desc && (
                         <div className="max-h-0 opacity-0 group-hover/item:max-h-16 group-hover/item:opacity-100 transition-all duration-400 overflow-hidden">
                           <p className="text-[#7A8BA8]/50 text-xs mt-2 leading-relaxed pr-24">
-                            {item.desc}
+                            {dictItem.desc}
                           </p>
                         </div>
                       )}
 
                       {/* Mobile duration */}
-                      <span className="text-[#7A8BA8]/40 text-[10px] sm:hidden mt-1 block">{item.duration}</span>
+                      <span className="text-[#7A8BA8]/40 text-[10px] sm:hidden mt-1 block">{dictItem.duration}</span>
                     </motion.div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -170,7 +193,7 @@ export function HorizontalServices() {
             onClick={() => openBooking()}
             className="px-8 py-4 border border-[#7A8BA8]/15 text-[#E8DFD0]/70 rounded-full text-xs uppercase tracking-[0.2em] font-medium hover:bg-[#E8DFD0] hover:text-[#1B3A5C] hover:border-[#E8DFD0] transition-all duration-500 cursor-pointer"
           >
-            Записаться на процедуру
+            {dictionary.nav.bookButton}
           </button>
         </motion.div>
       </div>

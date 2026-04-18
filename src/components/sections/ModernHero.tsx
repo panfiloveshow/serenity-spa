@@ -4,6 +4,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'fram
 import { useRef, useCallback, useEffect } from 'react';
 import Image from 'next/image';
 import { useBooking } from '@/lib/booking-context';
+import { useLang } from '@/lib/lang-context';
 import { useMediaQuery, useIsMobile } from '@/hooks/useMediaQuery';
 
 function clamp(value: number, min: number, max: number): number {
@@ -37,6 +38,7 @@ const PARTICLES = [
 export function ModernHero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const { openBooking } = useBooking();
+  const { dictionary } = useLang();
   const isMobile = useIsMobile();
   const isLargeDesktop = useMediaQuery('(min-width: 1800px)');
   const isUltraWide = useMediaQuery('(min-width: 1920px)');
@@ -256,16 +258,16 @@ export function ModernHero() {
       >
         <div className="container mx-auto px-6 md:px-12 lg:px-20">
           <div className="max-w-xl lg:max-w-lg">
-            {/* Tagline with glow */}
-            <motion.span
-              className="block text-[#C8956C] tracking-[0.35em] uppercase text-[11px] md:text-xs mb-8 font-medium"
+            {/* H1 — primary page heading (also serves as visible tagline) */}
+            <motion.h1
+              className="block text-[#C8956C] tracking-[0.2em] md:tracking-[0.35em] uppercase text-[10px] md:text-xs mb-8 font-medium"
               initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 1, delay: 0.3 }}
               style={{ textShadow: '0 0 30px rgba(200,149,108,0.3)' }}
             >
-              Оздоровительный центр &middot; Ташкент
-            </motion.span>
+              Serenity Spa — {dictionary.hero.tagline}
+            </motion.h1>
 
             {/* Logo with glow effect */}
             <motion.div
@@ -275,12 +277,15 @@ export function ModernHero() {
               className="mb-8 relative"
             >
               {/* Logo glow behind */}
-              <div className="absolute -inset-8 bg-[#C8956C]/5 blur-[40px] rounded-full" />
+              <div className="absolute -inset-2 sm:-inset-8 bg-[#C8956C]/5 blur-[40px] rounded-full pointer-events-none" />
               <Image
                 src="/logo.svg"
                 alt="Serenity Spa"
                 width={500}
                 height={282}
+                priority
+                loading="eager"
+                fetchPriority="high"
                 className="w-[260px] md:w-[340px] lg:w-[420px] h-auto relative z-10 drop-shadow-[0_0_30px_rgba(200,149,108,0.15)]"
               />
             </motion.div>
@@ -309,12 +314,12 @@ export function ModernHero() {
 
             {/* Description with blur reveal */}
             <motion.p
-              className="text-[#E8DFD0]/60 text-base md:text-lg font-light leading-relaxed mb-10"
+              className="text-[#E8DFD0]/75 text-base md:text-lg font-normal leading-relaxed mb-10"
               initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               transition={{ duration: 1, delay: 1 }}
             >
-              Центр отдыха и&nbsp;релаксации, оснащённый современным оборудованием. Бассейн, тренажёрный зал, сауны, джакузи&nbsp;&mdash; всё для&nbsp;вашего здоровья.
+              {dictionary.hero.description}
             </motion.p>
 
             {/* CTA with enhanced styling */}
@@ -328,14 +333,14 @@ export function ModernHero() {
                 onClick={() => openBooking()}
                 className="group relative px-8 py-4 bg-[#C8956C] text-[#152E4A] rounded-full text-sm font-semibold tracking-wide overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_rgba(200,149,108,0.4)] cursor-pointer"
               >
-                <span className="relative z-10">Записаться</span>
+                <span className="relative z-10">{dictionary.hero.ctaBook}</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#D4A574] to-[#C8956C] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               </button>
               <a
                 href="#packages"
                 className="px-8 py-4 border border-[#E8DFD0]/15 text-[#E8DFD0]/70 rounded-full text-sm font-medium tracking-wide hover:border-[#C8956C]/40 hover:text-[#C8956C] hover:shadow-[0_0_30px_rgba(200,149,108,0.15)] transition-all duration-500 backdrop-blur-sm text-center"
               >
-                Программы
+                {dictionary.hero.ctaPackages}
               </a>
             </motion.div>
           </div>
@@ -348,9 +353,9 @@ export function ModernHero() {
         style={{ opacity: overlayOpacity }}
       />
 
-      {/* Layer 7: Scroll indicator */}
+      {/* Layer 7: Scroll indicator — desktop/tablet only (mouse wheel UX) */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[8] flex flex-col items-center gap-3"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[8] hidden md:flex flex-col items-center gap-3"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2, duration: 1 }}
@@ -360,7 +365,7 @@ export function ModernHero() {
           animate={{ opacity: [0.3, 0.6, 0.3] }}
           transition={{ duration: 3, repeat: Infinity }}
         >
-          Scroll
+          {dictionary.hero.scrollHint}
         </motion.span>
         <motion.div
           className="w-5 h-9 rounded-full border border-[#E8DFD0]/15 flex items-start justify-center p-1.5"
