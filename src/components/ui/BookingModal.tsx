@@ -157,8 +157,8 @@ export function BookingModal() {
     setNameError('');
     setPhoneError('');
     
-    // Validate name: only letters, spaces, hyphens
-    const nameRegex = /^[а-яА-ЯёЁa-zA-Z\s\-]+$/;
+    // Validate name: letters (Cyrillic/Latin/Uzbek), spaces, hyphens, apostrophe-like chars (oʻ, gʻ)
+    const nameRegex = /^[а-яА-ЯёЁa-zA-Zʻʼʽ''`\s\-]+$/;
     const trimmedName = name.trim();
     if (trimmedName.length < 2) {
       setNameError(b.nameMinError);
@@ -235,14 +235,10 @@ export function BookingModal() {
       router.push(`/${locale}/thank-you`);
     } catch (error: unknown) {
       console.error('Booking submission error:', error);
-      // Network timeout or connection error - still show success (fallback handles it)
-      const errorName = error instanceof Error ? error.name : '';
-      const errorMessage = error instanceof Error ? error.message : '';
-      if (errorName === 'AbortError' || errorMessage.includes('fetch')) {
-        setStep('success'); // Fallback will save it
-      } else {
-        setStep('error');
-      }
+      // Network error or timeout — show error so user can retry or contact via Telegram.
+      // We cannot fake success here: the server never saw the request, so the fallback
+      // queue on the server side is not triggered.
+      setStep('error');
     }
   };
 

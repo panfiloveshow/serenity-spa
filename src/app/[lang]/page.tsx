@@ -51,7 +51,7 @@ export default async function Home() {
     <BookingProvider>
       <a
         href="#main"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-[#C8956C] focus:text-[#1B3A5C] focus:font-semibold focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#E8DFD0]"
+        className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-[#C8956C] focus-visible:text-[#1B3A5C] focus-visible:font-semibold focus-visible:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8DFD0]"
       >
         Перейти к основному содержимому
       </a>

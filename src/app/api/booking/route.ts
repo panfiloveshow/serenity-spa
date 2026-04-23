@@ -24,6 +24,21 @@ const TELEGRAM_MAX_RETRIES = 3;
 
 const OWN_DOMAIN = process.env.OWN_DOMAIN || 'serenityspa.uz';
 
+// Extra allowed hosts for staging/preview (comma-separated, exact or leading-dot for subdomains).
+// Example: ALLOWED_DOMAINS="preview.example.com,.vercel.app,.pages.dev"
+const EXTRA_ALLOWED = (process.env.ALLOWED_DOMAINS ?? '')
+  .split(',')
+  .map(s => s.trim().toLowerCase())
+  .filter(Boolean);
+
+function hostMatches(host: string, domain: string): boolean {
+  if (domain.startsWith('.')) {
+    // Leading-dot means "any subdomain of" (e.g. ".vercel.app")
+    return host === domain.slice(1) || host.endsWith(domain);
+  }
+  return host === domain || host.endsWith(`.${domain}`);
+}
+
 function isAllowedOrigin(origin: string | null, referer: string | null): boolean {
   // Origin header is sent for cross-origin requests; absence is OK for same-origin POST
   const candidates = [origin, referer].filter(Boolean) as string[];
@@ -32,11 +47,9 @@ function isAllowedOrigin(origin: string | null, referer: string | null): boolean
   return candidates.every(url => {
     try {
       const host = new URL(url).hostname.toLowerCase();
-      return host === OWN_DOMAIN
-        || host === `www.${OWN_DOMAIN}`
-        || host.endsWith(`.${OWN_DOMAIN}`)
-        || host === 'localhost'
-        || host === '127.0.0.1';
+      if (host === 'localhost' || host === '127.0.0.1') return true;
+      if (hostMatches(host, OWN_DOMAIN)) return true;
+      return EXTRA_ALLOWED.some(d => hostMatches(host, d));
     } catch {
       return false;
     }

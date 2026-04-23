@@ -54,6 +54,20 @@ function checkMemoryLimit(key: string, limit: number, windowMs: number): boolean
   return entry.count <= limit;
 }
 
+// ioredis with lazyConnect auto-connects on first command. Calling .connect()
+// a second time on a ready client throws "Redis is already connecting/connected",
+// so only connect when the client is still in 'wait'/'end' state.
+async function ensureConnected(client: Redis): Promise<void> {
+  if (client.status === 'wait' || client.status === 'end') {
+    await client.connect().catch((err) => {
+      // Swallow "already connecting" race — the command will still queue and run
+      if (!String(err?.message || '').includes('already connecting')) {
+        throw err;
+      }
+    });
+  }
+}
+
 export async function checkRateLimitRedis(key: string, limit: number, windowMs: number): Promise<boolean> {
   const client = getRedisClient();
   if (!client) {
@@ -62,7 +76,7 @@ export async function checkRateLimitRedis(key: string, limit: number, windowMs: 
   }
 
   try {
-    await client.connect();
+    await ensureConnected(client);
     const current = await client.incr(key);
     if (current === 1) {
       await client.pexpire(key, windowMs);
@@ -89,7 +103,7 @@ export async function incrDailyCounter(key: string): Promise<number> {
   if (!client) return 1;
 
   try {
-    await client.connect();
+    await ensureConnected(client);
     const current = await client.incr(key);
     if (current === 1) {
       await client.pexpire(key, 24 * 60 * 60 * 1000);
@@ -106,11 +120,11 @@ export async function getRateLimitInfo(key: string): Promise<{ count: number; tt
   if (!client) return null;
 
   try {
-    await client.connect();
-    
+    await ensureConnected(client);
+
     const count = await client.get(key);
     const ttl = await client.pttl(key);
-    
+
     return {
       count: count ? parseInt(count, 10) : 0,
       ttl: ttl > 0 ? ttl : 0,
