@@ -41,6 +41,7 @@ describe('bookingSchema — happy path', () => {
       phone: '+998 90 123 45 67',
       service: 'Massage',
       date: '2026-05-01',
+      time: '14:00',
       comment: 'Прошу позвонить утром',
       website: '',
       formOpenedAt: Date.now() - 20000,
@@ -48,6 +49,16 @@ describe('bookingSchema — happy path', () => {
       visitor: { ...validVisitor, gclid: 'abc123', gad_source: '1' },
     });
     expect(result.success).toBe(true);
+  });
+
+  it('rejects invalid preferred time', () => {
+    const result = bookingSchema.safeParse({
+      name: 'Анна Петрова',
+      phone: '+998 90 123 45 67',
+      time: '25:99',
+      visitor: validVisitor,
+    });
+    expect(result.success).toBe(false);
   });
 
   it('normalizes whitespace in name', () => {

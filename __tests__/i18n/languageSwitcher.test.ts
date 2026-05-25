@@ -6,7 +6,7 @@
  */
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
-import { SUPPORTED_LOCALES, type Locale } from '@/types/i18n';
+import { SUPPORTED_LOCALES } from '@/types/i18n';
 import { buildLangSwitchHref } from '@/components/ui/LanguageSwitcher';
 
 // --- Arbitraries ---

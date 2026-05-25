@@ -8,6 +8,63 @@ import { LazyOsmEmbed } from '../ui/LazyOsmEmbed';
 import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useBooking } from '@/lib/booking-context';
 import { useLang } from '@/lib/lang-context';
+import type { Locale } from '@/types/i18n';
+
+const MAP_LINKS = {
+  twoGis: 'https://2gis.uz/tashkent/firm/70000001046378221',
+  googleRoute: 'https://www.google.com/maps/dir/?api=1&destination=41.3111,69.2797',
+  yandexRoute: 'https://yandex.uz/maps/?rtext=~41.3111,69.2797&rtt=auto',
+};
+
+const MAP_DETAILS: Record<Locale, {
+  openMap: string;
+  ratingLabel: string;
+  ratingValue: string;
+  placeTitle: string;
+  placeSubtitle: string;
+  features: string[];
+  facilityTitle: string;
+  facilityItems: string[];
+  landmark: string;
+  sourceLabel: string;
+}> = {
+  ru: {
+    openMap: 'Открыть Serenity Spa в 2ГИС',
+    ratingLabel: 'по данным 2ГИС',
+    ratingValue: '4.9 / 24 оценки',
+    placeTitle: 'Hilton Tashkent City',
+    placeSubtitle: 'Укчи 1, 3–4 этажи',
+    features: ['27 м бассейн', 'Хаммам и финская парная', 'SPA-процедуры', '24/7 фитнес'],
+    facilityTitle: 'На месте',
+    facilityItems: ['Wi‑Fi', 'Полотенца и тапочки', 'Бесплатная парковка'],
+    landmark: 'Ориентир: Tashkent City Mall ~600 м',
+    sourceLabel: '2ГИС · Tripadvisor',
+  },
+  en: {
+    openMap: 'Open Serenity Spa in 2GIS',
+    ratingLabel: 'via 2GIS',
+    ratingValue: '4.9 / 24 ratings',
+    placeTitle: 'Hilton Tashkent City',
+    placeSubtitle: 'Ukchi 1, floors 3–4',
+    features: ['27 m pool', 'Hammam and Finnish sauna', 'Spa treatments', '24/7 gym'],
+    facilityTitle: 'On site',
+    facilityItems: ['Wi‑Fi', 'Towels and slippers', 'Free parking'],
+    landmark: 'Landmark: Tashkent City Mall ~600 m',
+    sourceLabel: '2GIS · Tripadvisor',
+  },
+  uz: {
+    openMap: 'Serenity Spa ni 2GIS da ochish',
+    ratingLabel: '2GIS maʼlumoti',
+    ratingValue: '4.9 / 24 baho',
+    placeTitle: 'Hilton Tashkent City',
+    placeSubtitle: "O'qchi 1, 3–4-qavatlar",
+    features: ['27 m basseyn', 'Hammom va fin saunasi', 'SPA muolajalari', '24/7 fitnes'],
+    facilityTitle: 'Joyida',
+    facilityItems: ['Wi‑Fi', 'Sochiq va shippak', 'Bepul parking'],
+    landmark: 'Moʻljal: Tashkent City Mall ~600 m',
+    sourceLabel: '2GIS · Tripadvisor',
+  },
+};
 
 const SOCIAL_LINKS = [
   {
@@ -37,7 +94,8 @@ const SOCIAL_LINKS = [
 
 export function ContactsSection() {
   const { openBooking } = useBooking();
-  const { dictionary } = useLang();
+  const { dictionary, locale } = useLang();
+  const mapDetails = MAP_DETAILS[locale];
 
   const contactItems = [
     {
@@ -49,7 +107,7 @@ export function ContactsSection() {
       ),
       label: 'Адрес',
       value: dictionary.contacts.address,
-      href: 'https://www.google.com/maps/dir/?api=1&destination=41.3111,69.2797',
+      href: MAP_LINKS.googleRoute,
     },
     {
       icon: (
@@ -193,8 +251,8 @@ export function ContactsSection() {
           {/* Right: Map */}
           <motion.div
             className="relative rounded-3xl overflow-hidden border border-[#7A8BA8]/10 min-h-[500px] lg:min-h-0 group/map"
-            initial={{ opacity: 0, scale: 0.96, filter: 'blur(10px)' }}
-            whileInView={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+            initial={{ opacity: 0, scale: 0.96 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={MOTION.viewport.once}
             transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           >
@@ -204,15 +262,54 @@ export function ContactsSection() {
             {/* Map iframe — mounted when near viewport to defer OSM tile load */}
             <LazyOsmEmbed title="Serenity Spa Location" className="absolute inset-0" />
 
+            <a
+              href={MAP_LINKS.twoGis}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={mapDetails.openMap}
+              className="absolute inset-0 z-[15] rounded-3xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C8956C]"
+            />
+
             {/* Subtle edge gradients */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a1929]/90 via-transparent to-[#0a1929]/30 pointer-events-none z-10" />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0a1929]/40 via-transparent to-[#0a1929]/20 pointer-events-none z-10" />
+
+            <div className="absolute left-4 right-4 top-4 z-30 flex flex-col gap-3 pointer-events-none sm:left-5 sm:right-auto sm:max-w-[360px] lg:max-w-[390px]">
+              <div className="rounded-2xl border border-[#C8956C]/18 bg-[#122C49]/88 p-4 shadow-[0_14px_45px_rgba(0,0,0,0.34)] backdrop-blur-xl">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <p className="text-[#E8DFD0] text-base font-semibold">Serenity Spa</p>
+                    <p className="mt-1 text-[#A0B0C8] text-xs">{mapDetails.placeTitle}</p>
+                    <p className="mt-0.5 text-[#C8956C]/80 text-xs">{mapDetails.placeSubtitle}</p>
+                  </div>
+                  <div className="shrink-0 rounded-xl border border-[#C8956C]/20 bg-[#C8956C]/10 px-3 py-2 text-right">
+                    <p className="text-[#E8DFD0] text-sm font-semibold">{mapDetails.ratingValue}</p>
+                    <p className="mt-0.5 text-[#A0B0C8] text-[10px]">{mapDetails.ratingLabel}</p>
+                  </div>
+                </div>
+                <div className="mt-3 flex flex-wrap gap-1.5">
+                  {mapDetails.features.map((feature) => (
+                    <span key={feature} className="rounded-full border border-[#7A8BA8]/14 bg-[#1F4268]/55 px-2.5 py-1 text-[10px] font-medium text-[#E8DFD0]/82">
+                      {feature}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-3 grid gap-1.5 border-t border-[#7A8BA8]/12 pt-3 text-[11px] text-[#A0B0C8]">
+                  <p className="font-semibold uppercase tracking-[0.16em] text-[#C8956C]/80">{mapDetails.facilityTitle}</p>
+                  <p>{mapDetails.facilityItems.join(' · ')}</p>
+                  <p>{mapDetails.landmark}</p>
+                </div>
+              </div>
+              <div className="hidden w-fit rounded-full border border-[#7A8BA8]/12 bg-[#0A1929]/52 px-3 py-1 text-[10px] uppercase tracking-[0.18em] text-[#A0B0C8] backdrop-blur-md sm:block">
+                {mapDetails.sourceLabel}
+              </div>
+            </div>
 
             {/* Custom pin — centered */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-30 pointer-events-none flex flex-col items-center">
               {/* Tooltip card */}
               <motion.div
-                className="mb-3 px-5 py-3 rounded-2xl bg-[#1B3A5C]/95 backdrop-blur-xl border border-[#C8956C]/20 shadow-[0_8px_40px_rgba(0,0,0,0.5),0_0_0_1px_rgba(200,149,108,0.08)]"
+                className="hidden"
                 initial={{ opacity: 0, y: 10, scale: 0.9 }}
                 whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
@@ -227,7 +324,7 @@ export function ContactsSection() {
                   </div>
                   <div>
                     <p className="text-[#E8DFD0] text-sm font-semibold tracking-tight">Serenity Spa</p>
-                    <p className="text-[#C8956C]/70 text-[10px]">Укчи 1</p>
+                    <p className="text-[#C8956C]/70 text-[10px]">{dictionary.contacts.address}</p>
                   </div>
                 </div>
                 {/* Arrow */}
@@ -244,14 +341,23 @@ export function ContactsSection() {
 
             {/* Bottom floating bar */}
             <div className="absolute bottom-0 left-0 right-0 z-20 p-3 sm:p-5">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-[#1B3A5C]/90 backdrop-blur-xl border border-[#7A8BA8]/10 shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
+              <div className="relative z-40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 sm:gap-3 px-4 sm:px-5 py-3 sm:py-3.5 rounded-2xl bg-[#1B3A5C]/90 backdrop-blur-xl border border-[#7A8BA8]/10 shadow-[0_8px_30px_rgba(0,0,0,0.3)]">
                 <div className="min-w-0 hidden sm:block">
-                  <p className="text-[#E8DFD0] text-sm font-medium truncate">Укчи 1</p>
+                  <p className="text-[#E8DFD0] text-sm font-medium truncate">{dictionary.contacts.address}</p>
                   <p className="text-[#7A8BA8]/50 text-[10px] mt-0.5">{dictionary.contacts.hours}</p>
                 </div>
                 <div className="flex gap-2">
                   <a
-                    href="https://yandex.uz/maps/?rtext=~41.3111,69.2797&rtt=auto"
+                    href={MAP_LINKS.twoGis}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hidden sm:flex flex-none items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#1F4268]/80 border border-[#7A8BA8]/10 text-[#E8DFD0]/70 text-[11px] font-medium hover:border-[#C8956C]/25 hover:text-[#C8956C] transition-all duration-300"
+                  >
+                    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
+                    2ГИС
+                  </a>
+                  <a
+                    href={MAP_LINKS.yandexRoute}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-4 py-2.5 sm:py-2 rounded-xl bg-[#1F4268]/80 border border-[#7A8BA8]/10 text-[#E8DFD0]/70 text-[11px] font-medium hover:border-[#C8956C]/25 hover:text-[#C8956C] transition-all duration-300"

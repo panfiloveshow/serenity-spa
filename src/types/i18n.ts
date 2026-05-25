@@ -108,6 +108,8 @@ export interface Dictionary {
     phoneLabel: string;
     dateLabel: string;
     datePlaceholder: string;
+    timeLabel: string;
+    timePlaceholder: string;
     commentLabel: string;
     commentPlaceholder: string;
     submitButton: string;

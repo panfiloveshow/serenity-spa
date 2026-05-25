@@ -12,6 +12,7 @@ import { useLang } from '@/lib/lang-context';
 import { InputField } from '@/components/booking/InputField';
 import { PhoneInput } from '@/components/booking/PhoneInput';
 import { DatePicker } from '@/components/booking/DatePicker';
+import { TimePicker } from '@/components/booking/TimePicker';
 import { ServiceSelector, type BookingTab } from '@/components/booking/ServiceSelector';
 import { ErrorView } from '@/components/booking/ErrorView';
 import { SuccessView } from '@/components/booking/SuccessView';
@@ -38,6 +39,7 @@ export function BookingModal() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   const [comment, setComment] = useState('');
   const [website, setWebsite] = useState(''); // Honeypot field
   const [formOpenedAt, setFormOpenedAt] = useState<number>(0);
@@ -78,6 +80,7 @@ export function BookingModal() {
         setName('');
         setPhone('');
         setDate('');
+        setTime('');
         setComment('');
         setWebsite('');
         setFormOpenedAt(0);
@@ -192,6 +195,7 @@ export function BookingModal() {
           phone,
           service: selectedLabel || b.notSelected,
           date: date || undefined,
+          time: time || undefined,
           comment: comment || undefined,
           website, // Honeypot
           formOpenedAt,
@@ -227,6 +231,7 @@ export function BookingModal() {
       trackBookingFormSubmission({
         service: selectedLabel || b.notSelected,
         date,
+        time,
         hasComment: Boolean(comment),
         source: 'booking_modal',
       });
@@ -343,8 +348,11 @@ export function BookingModal() {
                       <PhoneInput label={b.phoneLabel} value={phone} onChange={setPhone} error={phoneError} />
                     </div>
 
-                    {/* Date */}
-                    <DatePicker label={b.dateLabel} value={date} onChange={setDate} />
+                    {/* Date + Time */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <DatePicker label={b.dateLabel} value={date} onChange={setDate} />
+                      <TimePicker label={b.timeLabel} value={time} onChange={setTime} />
+                    </div>
 
                     {/* Honeypot field - hidden from users */}
                     <div style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }} aria-hidden="true">
@@ -402,7 +410,7 @@ export function BookingModal() {
                   </motion.form>
                 )}
                 {step === 'success' && <SuccessView key="success" />}
-                {step === 'error' && <ErrorView key="error" onRetry={() => setStep('form')} onTelegram={() => { const msg = [`🌿 Новая заявка — Serenity Spa`, ``, `👤 ${name}`, `📱 ${phone}`, `💆 ${selectedLabel || b.notSelected}`, date ? `📅 ${date}` : '', comment ? `💬 ${comment}` : ''].filter(Boolean).join('\n'); window.open(`${CONTACTS.social.telegramUrl}?text=${encodeURIComponent(msg)}`, '_blank'); }} />}
+                {step === 'error' && <ErrorView key="error" onRetry={() => setStep('form')} onTelegram={() => { const msg = [`🌿 Новая заявка — Serenity Spa`, ``, `👤 ${name}`, `📱 ${phone}`, `💆 ${selectedLabel || b.notSelected}`, date ? `📅 ${date}` : '', time ? `⏰ ${time}` : '', comment ? `💬 ${comment}` : ''].filter(Boolean).join('\n'); window.open(`${CONTACTS.social.telegramUrl}?text=${encodeURIComponent(msg)}`, '_blank'); }} />}
               </AnimatePresence>
             </div>
           </motion.div>

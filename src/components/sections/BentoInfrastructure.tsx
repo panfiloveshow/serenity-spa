@@ -3,30 +3,62 @@
 import { motion, useInView } from 'framer-motion';
 import { TiltCard } from '../ui/TiltCard';
 import { KineticText } from '../ui/KineticText';
-import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
+import { MOTION, staggerContainer, staggerChild } from '@/lib/motion';
 import { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useLang } from '@/lib/lang-context';
+import type { Locale } from '@/types/i18n';
 
 const INFRA_IDS = ['pool', 'gym', 'sauna', 'jacuzzi'] as const;
+type InfraId = (typeof INFRA_IDS)[number];
 
-const INFRA_IMAGES: Record<string, string> = {
+const INFRA_IMAGES: Record<InfraId, string> = {
   pool: '/infra-pool.webp',
   gym: '/infra-gym.webp',
   sauna: '/infra-sauna.webp',
   jacuzzi: '/infra-jacuzzi.webp',
 };
 
+const INFRA_METRIC_LABELS: Record<InfraId, Record<Locale, string>> = {
+  pool: {
+    ru: 'температура воды',
+    en: 'water temperature',
+    uz: 'suv harorati',
+  },
+  gym: {
+    ru: 'режим доступа',
+    en: 'access schedule',
+    uz: 'kirish rejimi',
+  },
+  sauna: {
+    ru: 'температура сауны',
+    en: 'sauna temperature',
+    uz: 'sauna harorati',
+  },
+  jacuzzi: {
+    ru: 'температура воды',
+    en: 'water temperature',
+    uz: 'suv harorati',
+  },
+};
+
+function formatMetricValue(value: string) {
+  return value.endsWith('°') ? `${value}C` : value;
+}
+
 // Animated counter component
-function AnimatedCounter({ value, suffix = '' }: { value: string; suffix?: string }) {
+function AnimatedCounter({ value, suffix = '', animate = true }: { value: string; suffix?: string; animate?: boolean }) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once: true });
-  const parsedValue = Number.parseInt(value, 10);
-  const [display, setDisplay] = useState(() => (Number.isNaN(parsedValue) ? value : '0'));
+  const numericMatch = value.match(/^(\d+)(.*)$/);
+  const canAnimate = animate && Boolean(numericMatch && !value.includes('/'));
+  const parsedValue = canAnimate ? Number.parseInt(numericMatch?.[1] ?? value, 10) : Number.NaN;
+  const metricSuffix = suffix || (canAnimate ? numericMatch?.[2] ?? '' : '');
+  const [display, setDisplay] = useState(() => (canAnimate ? '0' : value));
   
   useEffect(() => {
     if (!isInView) return;
-    if (Number.isNaN(parsedValue)) return;
+    if (!canAnimate || Number.isNaN(parsedValue)) return;
     
     let start = 0;
     const duration = 1500;
@@ -38,13 +70,13 @@ function AnimatedCounter({ value, suffix = '' }: { value: string; suffix?: strin
       if (progress < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
-  }, [isInView, parsedValue]);
+  }, [canAnimate, isInView, parsedValue]);
 
-  return <span ref={ref}>{display}{suffix}</span>;
+  return <span ref={ref}>{display}{metricSuffix}</span>;
 }
 
 export function BentoInfrastructure() {
-  const { dictionary } = useLang();
+  const { dictionary, locale } = useLang();
   const infra = dictionary.infrastructure;
 
   const items = INFRA_IDS.map((id) => {
@@ -53,7 +85,8 @@ export function BentoInfrastructure() {
       id,
       title: dictItem?.title ?? id,
       description: dictItem?.description ?? '',
-      metrics: dictItem?.metrics ?? '',
+      metrics: formatMetricValue(dictItem?.metrics ?? ''),
+      metricLabel: INFRA_METRIC_LABELS[id][locale],
     };
   });
 
@@ -107,17 +140,17 @@ export function BentoInfrastructure() {
                 
                 {/* Default content */}
                 <div className="relative z-10 h-full p-8 md:p-10 flex flex-col justify-end">
-                  <h3 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-2">{items[0].title}</h3>
-                  <p className="text-[#A0B0C8] text-lg group-hover:text-[#E8DFD0]/60 transition-colors duration-500">{items[0].description}</p>
+                  <h3 className="text-2xl md:text-3xl font-light leading-tight text-[#E8DFD0] mb-2">{items[0].title}</h3>
+                  <p className="text-[#A0B0C8] text-base md:text-lg leading-relaxed group-hover:text-[#E8DFD0]/60 transition-colors duration-500">{items[0].description}</p>
                   
                   {/* Hover reveal — second layer */}
                   <div className="mt-4 overflow-hidden">
                     <div className="translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out flex items-baseline gap-4 pt-4 border-t border-[#C8956C]/20">
                       <span className="text-4xl md:text-5xl font-light text-[#C8956C]">
-                        <AnimatedCounter value={items[0].metrics} />
+                        <AnimatedCounter value={items[0].metrics} animate={false} />
                       </span>
                       <div>
-                        <p className="text-[#E8DFD0]/80 text-sm font-medium">{items[0].title}</p>
+                        <p className="text-[#E8DFD0]/80 text-sm font-medium">{items[0].metricLabel}</p>
                         <p className="text-[#A0B0C8] text-xs mt-0.5">{items[0].description}</p>
                       </div>
                     </div>
@@ -139,16 +172,16 @@ export function BentoInfrastructure() {
                     
                     <div className="relative z-10 h-full p-6 flex flex-col justify-between">
                       <div>
-                        <h3 className="text-xl font-light text-[#E8DFD0] mb-1">{item.title}</h3>
-                        <p className="text-[#A0B0C8] text-sm group-hover:text-[#E8DFD0]/50 transition-colors duration-500">{item.description}</p>
+                        <h3 className="text-2xl md:text-3xl font-light leading-tight text-[#E8DFD0] mb-2">{item.title}</h3>
+                        <p className="text-[#A0B0C8] text-base md:text-lg leading-relaxed group-hover:text-[#E8DFD0]/50 transition-colors duration-500">{item.description}</p>
                         
                         {/* Hover reveal */}
                         <div className="overflow-hidden">
                           <div className="translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out flex items-baseline gap-3 pt-3 mt-2 border-t border-[#C8956C]/15">
                             <span className="text-2xl font-light text-[#C8956C]">
-                              <AnimatedCounter value={item.metrics} />
+                              <AnimatedCounter value={item.metrics} animate={false} />
                             </span>
-                            <span className="text-[#A0B0C8] text-xs">{item.title}</span>
+                            <span className="text-[#A0B0C8] text-xs">{item.metricLabel}</span>
                           </div>
                         </div>
                       </div>
@@ -170,8 +203,8 @@ export function BentoInfrastructure() {
                 <div className="relative z-10 h-full p-8 md:p-10 flex items-center justify-between gap-8">
                   <div className="flex items-center gap-6">
                     <div>
-                      <h3 className="text-2xl font-light text-[#E8DFD0] mb-1">{items[3].title}</h3>
-                      <p className="text-[#A0B0C8] group-hover:text-[#E8DFD0]/50 transition-colors duration-500">{items[3].description}</p>
+                      <h3 className="text-2xl md:text-3xl font-light leading-tight text-[#E8DFD0] mb-2">{items[3].title}</h3>
+                      <p className="text-[#A0B0C8] text-base md:text-lg leading-relaxed group-hover:text-[#E8DFD0]/50 transition-colors duration-500">{items[3].description}</p>
                     </div>
                   </div>
                   

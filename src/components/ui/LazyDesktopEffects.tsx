@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 const VelocityCursor = dynamic(
@@ -15,14 +16,35 @@ const FluidBackground = dynamic(
 
 export function LazyDesktopEffects() {
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const hasFinePointer = useMediaQuery('(pointer: fine)');
+  const [canRenderEffects, setCanRenderEffects] = useState(false);
 
-  if (!isDesktop) {
+  useEffect(() => {
+    if (!isDesktop) {
+      return;
+    }
+
+    const win = window as Window & {
+      requestIdleCallback?: (callback: IdleRequestCallback, options?: IdleRequestOptions) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    if (typeof win.requestIdleCallback === 'function') {
+      const idleId = win.requestIdleCallback(() => setCanRenderEffects(true), { timeout: 2000 });
+      return () => win.cancelIdleCallback?.(idleId);
+    }
+
+    const timeoutId = window.setTimeout(() => setCanRenderEffects(true), 1200);
+    return () => window.clearTimeout(timeoutId);
+  }, [isDesktop]);
+
+  if (!isDesktop || !canRenderEffects) {
     return null;
   }
 
   return (
     <>
-      <VelocityCursor />
+      {hasFinePointer ? <VelocityCursor /> : null}
       <FluidBackground />
     </>
   );

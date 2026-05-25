@@ -65,6 +65,7 @@ export function sanitizePhoneHref(phone: string) {
 export function trackBookingFormSubmission(details: {
   service?: string;
   date?: string;
+  time?: string;
   hasComment?: boolean;
   source?: string;
 }) {
@@ -75,6 +76,7 @@ export function trackBookingFormSubmission(details: {
     form_name: 'booking_modal',
     service_name: details.service || 'Не выбрана',
     preferred_date: details.date || '',
+    preferred_time: details.time || '',
     has_comment: Boolean(details.hasComment),
     source: details.source || 'website',
   };

@@ -72,10 +72,11 @@ export function ServiceSelector({
                 </button>
               ))}
             </div>
-            <div className="space-y-1.5 max-h-[40vh] overflow-y-auto pr-1 scrollbar-none">
+            <div className="space-y-2 max-h-[46vh] overflow-y-auto pr-1 scrollbar-none">
               {SERVICES[activeServiceCat].items.map((item, i) => {
                 const dictItem = dictCategories[activeServiceCat]?.items[i];
                 const itemName = dictItem?.name ?? item.name;
+                const itemDescription = dictItem?.desc ?? item.desc;
                 const catTitle = dictCategories[activeServiceCat]?.title ?? SERVICES[activeServiceCat].title;
                 return (
                   <motion.button
@@ -84,14 +85,21 @@ export function ServiceSelector({
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03 }}
                     onClick={() => onPick(`${catTitle} — ${itemName} (${item.duration})`)}
-                    className="w-full group flex items-center gap-3 px-4 py-3 rounded-2xl border border-[#7A8BA8]/6 bg-[#1F4268]/20 hover:bg-[#C8956C]/8 hover:border-[#C8956C]/20 transition-all duration-300 cursor-pointer text-left"
+                    className="w-full group flex items-start gap-3 px-4 py-3.5 rounded-2xl border border-[#7A8BA8]/10 bg-[#1F4268]/30 hover:bg-[#C8956C]/8 hover:border-[#C8956C]/20 transition-all duration-300 cursor-pointer text-left"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-[#E8DFD0]/85 text-sm group-hover:text-[#E8DFD0] transition-colors truncate">{itemName}</p>
-                      <p className="text-[#7A8BA8]/40 text-[10px] mt-0.5">{item.duration}{item.desc ? ` · ${item.desc.slice(0, 50)}...` : ''}</p>
+                      <p className="text-[#E8DFD0] text-sm sm:text-[15px] leading-snug group-hover:text-[#E8DFD0] transition-colors">{itemName}</p>
+                      <p className="text-[#C8956C]/70 text-[11px] mt-1 font-medium">{item.duration}</p>
+                      {itemDescription && (
+                        <p className="text-[#A0B0C8]/80 text-xs leading-relaxed mt-1.5">
+                          {itemDescription}
+                        </p>
+                      )}
                     </div>
-                    <span className="text-[#C8956C]/70 text-xs font-medium whitespace-nowrap">{item.price} <span className="text-[#C8956C]/40 text-[9px]">UZS</span></span>
-                    <svg className="w-3.5 h-3.5 text-[#7A8BA8]/20 group-hover:text-[#C8956C]/50 transition-colors flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                    <div className="flex flex-col items-end gap-2 flex-shrink-0 max-w-[36%]">
+                      <span className="text-[#C8956C] text-xs font-medium whitespace-nowrap">{item.price} <span className="text-[#C8956C]/60 text-[9px]">UZS</span></span>
+                      <svg className="w-3.5 h-3.5 text-[#7A8BA8]/35 group-hover:text-[#C8956C]/60 transition-colors flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                    </div>
                   </motion.button>
                 );
               })}

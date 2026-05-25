@@ -25,10 +25,26 @@
     "sectionTitle": "Infrastructure",
     "sectionSubtitle": "Modern equipment from a leading manufacturer for your comfort and health.",
     "items": {
-      "pool": { "title": "Swimming Pool", "description": "Modern pool for swimming and relaxation", "metrics": "28°" },
-      "gym": { "title": "Fitness Center", "description": "Modern equipment from a leading manufacturer", "metrics": "24/7" },
-      "sauna": { "title": "Saunas", "description": "Finnish and steam sauna for complete relaxation", "metrics": "95°" },
-      "jacuzzi": { "title": "Jacuzzi", "description": "Hydromassage bath for recovery", "metrics": "38°" }
+      "pool": {
+        "title": "Swimming Pool",
+        "description": "Modern pool for swimming and relaxation",
+        "metrics": "28°"
+      },
+      "gym": {
+        "title": "Fitness Center",
+        "description": "Modern equipment from a leading manufacturer",
+        "metrics": "24/7"
+      },
+      "sauna": {
+        "title": "Saunas",
+        "description": "Finnish and steam sauna for complete relaxation",
+        "metrics": "95°"
+      },
+      "jacuzzi": {
+        "title": "Jacuzzi",
+        "description": "Hydromassage bath for recovery",
+        "metrics": "38°"
+      }
     }
   },
   "services": {
@@ -38,35 +54,103 @@
         "title": "Massages",
         "subtitle": "Signature techniques from around the world",
         "items": [
-          { "name": "Traditional Balinese", "duration": "60 min", "desc": "Full body deep massage for relaxation and improved circulation" },
-          { "name": "Traditional Balinese", "duration": "90 min", "desc": "" },
-          { "name": "Signature of Serenity", "duration": "90 min", "desc": "Aromatherapy and massage in an atmosphere of harmony and peace" },
-          { "name": "Hawaiian Ka Huna", "duration": "60 min", "desc": "Smooth energetic massage with long strokes and stretching" },
-          { "name": "Hawaiian Ka Huna", "duration": "90 min", "desc": "" },
-          { "name": "Detox (Lymphatic Drainage)", "duration": "90 min", "desc": "Improving the lymphatic system, reducing toxins and swelling" },
-          { "name": "Body Breath", "duration": "90 min", "desc": "Deep therapeutic massage for tension and stress relief" },
-          { "name": "Back, Neck & Shoulders", "duration": "30 min", "desc": "Stress relief, improved circulation and flexibility" },
-          { "name": "Foot Reflexology", "duration": "60 min", "desc": "Stimulating reflex points for deep relaxation" },
-          { "name": "Head & Neck Massage", "duration": "30 min", "desc": "An atmosphere of harmony — complete relaxation and bliss" },
-          { "name": "Hot Stone Therapy", "duration": "90 min", "desc": "The warmth of stones relieves muscle tension and restores energy" },
-          { "name": "Herbal SPA Massage", "duration": "120 min", "desc": "Siamese tradition: a bouquet of herbs in linen cloth for body and spirit" }
+          {
+            "name": "Traditional Balinese",
+            "duration": "60 min",
+            "desc": "Balinese massage is a good therapy to choose if you want to experience a variety of techniques to relax the body and boost your circulation. The massage technique borrows the best bits from different therapies. The main goal of Balinese massage is to achieve a relaxed state of mind by easing the flow of blood through the body. This is a deep massage technique that works on all the muscles of the body."
+          },
+          {
+            "name": "Traditional Balinese",
+            "duration": "90 min",
+            "desc": "Balinese massage is a good therapy to choose if you want to experience a variety of techniques to relax the body and boost your circulation. The massage technique borrows the best bits from different therapies. The main goal of Balinese massage is to achieve a relaxed state of mind by easing the flow of blood through the body. This is a deep massage technique that works on all the muscles of the body."
+          },
+          {
+            "name": "Signature of Serenity",
+            "duration": "90 min",
+            "desc": "During the aromatherapy and massage session at Serenity Spa, you will plunge into an atmosphere of harmony and peace. Soft light, pleasant music and fragrant oils create the perfect environment for relaxation and recovery. You will feel the tension leaving your body and the mind calming down."
+          },
+          {
+            "name": "Hawaiian Ka Huna",
+            "duration": "60 min",
+            "desc": "This is a unique, flowing, energetically vibrant yet deeply relaxing whole-body massage. Flowing long strokes are what characterize this special method of body work, along with a range of stretches. The second dimension is for the therapist to get in touch with your breathing, enabling a special connection and becoming one."
+          },
+          {
+            "name": "Hawaiian Ka Huna",
+            "duration": "90 min",
+            "desc": "This is a unique, flowing, energetically vibrant yet deeply relaxing whole-body massage. Flowing long strokes are what characterize this special method of body work, along with a range of stretches. The second dimension is for the therapist to get in touch with your breathing, enabling a special connection and becoming one."
+          },
+          {
+            "name": "Detox (Lymphatic Drainage)",
+            "duration": "90 min",
+            "desc": "Lymphatic drainage massage is a therapy designed to improve the functioning of the lymphatic system. This is achieved primarily through soft, rhythmic circular movements of the skin, which stimulate the contraction of lymphatic vessels and reduce toxins in the body. Lymphatic drainage massage helps improve metabolism and reduce swelling."
+          },
+          {
+            "name": "Body Breath",
+            "duration": "90 min",
+            "desc": "Deep muscle therapeutic massage designed to release tension and stress. This massage technique and its manipulations help alleviate soreness while enhancing range of motion with firm to deep pressure."
+          },
+          {
+            "name": "Back, Neck & Shoulders",
+            "duration": "30 min",
+            "desc": "Back, neck and shoulder massage can offer a number of health benefits. It can encourage relaxation, relieve stress, improve circulation and relax muscles. This treatment is especially good for relieving tension headaches, improving flexibility and can help strengthen the immune system."
+          },
+          {
+            "name": "Foot Reflexology",
+            "duration": "60 min",
+            "desc": "Stimulating reflex points on the feet increases blood and oxygen circulation throughout the body, instilling deep relaxation."
+          },
+          {
+            "name": "Head & Neck Massage",
+            "duration": "30 min",
+            "desc": "Pleasant aroma and soft touch create an atmosphere of harmony and tranquility, allowing you to completely relax and enjoy the process. Head and neck massage is a luxurious treatment that brings a feeling of complete relaxation and bliss."
+          },
+          {
+            "name": "Hot Stone Therapy",
+            "duration": "90 min",
+            "desc": "Are you often sleep-deprived or exhausted? Hot stone therapy could be the solution. It is one of the best treatments to release muscle tension and soreness, as the heat from the stones enhances the effect of massage. As the stones used in this therapy can retain heat for a longer time, it helps the person relax and re-energize."
+          },
+          {
+            "name": "Herbal SPA Massage",
+            "duration": "120 min",
+            "desc": "Herbal SPA massage derives from an age-old Siamese healing tradition. A bouquet of fine, select herbs wrapped in a linen cloth glides softly over the skin. You can feel the warmth and vigor of Siam's natural vitality spreading over your skin. Tender care as if from an herbal paradise promotes circulation, releases muscular tension, gives your skin a feeling of extraordinary well-being and pampers the spirit."
+          }
         ]
       },
       {
         "title": "Body Treatments",
         "subtitle": "Wraps and peels",
         "items": [
-          { "name": "Lavender Wrap", "duration": "60 min", "desc": "Relaxing wrap with natural lavender" },
-          { "name": "Chocolate Wrap", "duration": "60 min", "desc": "Nourishing and moisturizing skin with chocolate" },
-          { "name": "Avocado & Silk", "duration": "60 min", "desc": "Deep nourishment and silky smooth skin" },
-          { "name": "Detox Wrap", "duration": "60 min", "desc": "Toxin removal and skin cleansing" }
+          {
+            "name": "Lavender Wrap",
+            "duration": "60 min",
+            "desc": "Relaxing wrap with natural lavender"
+          },
+          {
+            "name": "Chocolate Wrap",
+            "duration": "60 min",
+            "desc": "Nourishing and moisturizing skin with chocolate"
+          },
+          {
+            "name": "Avocado & Silk",
+            "duration": "60 min",
+            "desc": "Deep nourishment and silky smooth skin"
+          },
+          {
+            "name": "Detox Wrap",
+            "duration": "60 min",
+            "desc": "Toxin removal and skin cleansing"
+          }
         ]
       },
       {
         "title": "Hand Care",
         "subtitle": "Paraffin therapy",
         "items": [
-          { "name": "Silk Tenderness", "duration": "45 min", "desc": "Incredible hand smoothness with paraffin therapy" }
+          {
+            "name": "Silk Tenderness",
+            "duration": "45 min",
+            "desc": "Incredible hand smoothness with paraffin therapy"
+          }
         ]
       }
     ]
@@ -80,14 +164,25 @@
         "price": "1 800 000 UZS",
         "duration": "3 hours",
         "description": "Comprehensive program for men: pool, thermal complex, deep massage and tea ceremony.",
-        "includes": ["Pool access", "Thermal complex", "Body Breath massage (90 min)", "Tea ceremony"]
+        "includes": [
+          "Pool access",
+          "Thermal complex",
+          "Body Breath massage (90 min)",
+          "Tea ceremony"
+        ]
       },
       {
         "title": "Women's Package",
         "price": "2 200 000 UZS",
         "duration": "3 hours",
         "description": "Luxurious program: chocolate peel, Balinese massage, treatment of choice and tea ceremony.",
-        "includes": ["Chocolate peel", "Traditional Balinese massage", "Treatment of choice (head massage / hand care)", "Pool access", "Tea ceremony"],
+        "includes": [
+          "Chocolate peel",
+          "Traditional Balinese massage",
+          "Treatment of choice (head massage / hand care)",
+          "Pool access",
+          "Tea ceremony"
+        ],
         "popularLabel": "Popular"
       },
       {
@@ -95,14 +190,27 @@
         "price": "5 500 000 UZS",
         "duration": "4.5 hours",
         "description": "Premium program: lavender peel, aroma bath, signature massage, wrap and tea ceremony.",
-        "includes": ["Lavender peel", "Aroma bath", "Signature of Serenity massage", "Lavender wrap", "Tea ceremony"]
+        "includes": [
+          "Lavender peel",
+          "Aroma bath",
+          "Signature of Serenity massage",
+          "Lavender wrap",
+          "Tea ceremony"
+        ]
       },
       {
         "title": "Couple's Package",
         "price": "5 000 000 UZS",
         "duration": "4 hours",
         "description": "Romantic program for two: pool, thermal complex, peel, massage, wrap and tea.",
-        "includes": ["Pool access", "Thermal complex", "Mint & Salt peel", "Traditional Balinese massage", "Avocado & Silk wrap", "Tea ceremony"]
+        "includes": [
+          "Pool access",
+          "Thermal complex",
+          "Mint & Salt peel",
+          "Traditional Balinese massage",
+          "Avocado & Silk wrap",
+          "Tea ceremony"
+        ]
       }
     ]
   },
@@ -110,14 +218,137 @@
     "sectionTitle": "Membership",
     "sectionSubtitle": "Join the club and enjoy the pool, gym, saunas and jacuzzi.",
     "tiers": [
-      { "name": "Single Visit", "price": "600 000 UZS", "priceNote": "Weekends: 700 000 UZS", "period": "Weekdays Mon–Fri", "features": ["Pool", "Gym", "Steam sauna", "Finnish sauna", "Jacuzzi", "Wi-Fi", "Detox water"] },
-      { "name": "12 Visits", "price": "4 500 000 UZS", "period": "Subscription", "features": ["Pool", "Gym", "Steam sauna", "Finnish sauna", "Jacuzzi", "Wi-Fi", "Detox water"] },
-      { "name": "Standard", "price": "5 500 000 UZS", "period": "1 month", "features": ["Pool", "Gym", "Steam sauna", "Finnish sauna", "Jacuzzi", "Wi-Fi", "Detox water", "Massager"] },
-      { "name": "Bronze", "price": "13 500 000 UZS", "period": "3 months", "features": ["Pool", "Gym", "Steam sauna", "Finnish sauna", "Jacuzzi", "5% off cosmetics", "Wi-Fi", "Detox water", "Massager", "10-day freeze"] },
-      { "name": "Silver", "price": "19 500 000 UZS", "period": "6 months", "features": ["Pool", "Gym", "Steam sauna", "Finnish sauna", "Jacuzzi", "10% off body spa", "5% off cosmetics", "1 guest visit", "Wi-Fi", "Detox water", "Massager", "1-month freeze"] },
-      { "name": "Gold", "price": "29 500 000 UZS", "period": "12 months", "features": ["Pool", "Gym", "Steam sauna", "Finnish sauna", "Jacuzzi", "20% off body spa", "5% off cosmetics", "3 guest visits", "Wi-Fi", "Detox water", "Massager", "2-month freeze"] },
-      { "name": "Family", "price": "44 500 000 UZS", "period": "12 months", "features": ["Pool", "Gym", "Steam sauna", "Finnish sauna", "Jacuzzi", "Kids under 12 free (up to 2)", "20% off body spa", "Wi-Fi", "Detox water", "Massager", "2-month freeze"] },
-      { "name": "Kids", "price": "from 2 750 000 UZS", "priceNote": "3 mo: 6 750 000 · 6 mo: 9 750 000 · 12 mo: 14 750 000", "period": "from 1 month", "features": ["Pool", "Steam sauna", "Finnish sauna", "Jacuzzi", "Wi-Fi", "Accompanying adult entry"] }
+      {
+        "name": "Single Visit",
+        "price": "600 000 UZS",
+        "priceNote": "Weekends: 700 000 UZS",
+        "period": "Weekdays Mon–Fri",
+        "features": [
+          "Pool",
+          "Gym",
+          "Steam sauna",
+          "Finnish sauna",
+          "Jacuzzi",
+          "Wi-Fi",
+          "Detox water"
+        ]
+      },
+      {
+        "name": "12 Visits",
+        "price": "4 500 000 UZS",
+        "period": "Subscription",
+        "features": [
+          "Pool",
+          "Gym",
+          "Steam sauna",
+          "Finnish sauna",
+          "Jacuzzi",
+          "Wi-Fi",
+          "Detox water"
+        ]
+      },
+      {
+        "name": "Standard",
+        "price": "5 500 000 UZS",
+        "period": "1 month",
+        "features": [
+          "Pool",
+          "Gym",
+          "Steam sauna",
+          "Finnish sauna",
+          "Jacuzzi",
+          "Wi-Fi",
+          "Detox water",
+          "Massager"
+        ]
+      },
+      {
+        "name": "Bronze",
+        "price": "13 500 000 UZS",
+        "period": "3 months",
+        "features": [
+          "Pool",
+          "Gym",
+          "Steam sauna",
+          "Finnish sauna",
+          "Jacuzzi",
+          "5% off cosmetics",
+          "Wi-Fi",
+          "Detox water",
+          "Massager",
+          "10-day freeze"
+        ]
+      },
+      {
+        "name": "Silver",
+        "price": "19 500 000 UZS",
+        "period": "6 months",
+        "features": [
+          "Pool",
+          "Gym",
+          "Steam sauna",
+          "Finnish sauna",
+          "Jacuzzi",
+          "10% off body spa",
+          "5% off cosmetics",
+          "1 guest visit",
+          "Wi-Fi",
+          "Detox water",
+          "Massager",
+          "1-month freeze"
+        ]
+      },
+      {
+        "name": "Gold",
+        "price": "29 500 000 UZS",
+        "period": "12 months",
+        "features": [
+          "Pool",
+          "Gym",
+          "Steam sauna",
+          "Finnish sauna",
+          "Jacuzzi",
+          "20% off body spa",
+          "5% off cosmetics",
+          "3 guest visits",
+          "Wi-Fi",
+          "Detox water",
+          "Massager",
+          "2-month freeze"
+        ]
+      },
+      {
+        "name": "Family",
+        "price": "44 500 000 UZS",
+        "period": "12 months",
+        "features": [
+          "Pool",
+          "Gym",
+          "Steam sauna",
+          "Finnish sauna",
+          "Jacuzzi",
+          "Kids under 12 free (up to 2)",
+          "20% off body spa",
+          "Wi-Fi",
+          "Detox water",
+          "Massager",
+          "2-month freeze"
+        ]
+      },
+      {
+        "name": "Kids",
+        "price": "from 2 750 000 UZS",
+        "priceNote": "3 mo: 6 750 000 · 6 mo: 9 750 000 · 12 mo: 14 750 000",
+        "period": "from 1 month",
+        "features": [
+          "Pool",
+          "Steam sauna",
+          "Finnish sauna",
+          "Jacuzzi",
+          "Wi-Fi",
+          "Accompanying adult entry"
+        ]
+      }
     ]
   },
   "contacts": {
@@ -137,17 +368,44 @@
     "termsLink": "Terms",
     "scrollTop": "Top",
     "navLinks": [
-      { "label": "Infrastructure", "href": "#infrastructure" },
-      { "label": "Signature Services", "href": "#services" },
-      { "label": "Packages", "href": "#packages" },
-      { "label": "Membership", "href": "#membership" },
-      { "label": "Contacts", "href": "#contacts" }
+      {
+        "label": "Infrastructure",
+        "href": "#infrastructure"
+      },
+      {
+        "label": "Signature Services",
+        "href": "#services"
+      },
+      {
+        "label": "Packages",
+        "href": "#packages"
+      },
+      {
+        "label": "Membership",
+        "href": "#membership"
+      },
+      {
+        "label": "Contacts",
+        "href": "#contacts"
+      }
     ],
     "serviceLinks": [
-      { "label": "Massages", "href": "#services" },
-      { "label": "Body Treatments", "href": "#services" },
-      { "label": "SPA Packages", "href": "#packages" },
-      { "label": "Pool & Saunas", "href": "#infrastructure" }
+      {
+        "label": "Massages",
+        "href": "#services"
+      },
+      {
+        "label": "Body Treatments",
+        "href": "#services"
+      },
+      {
+        "label": "SPA Packages",
+        "href": "#packages"
+      },
+      {
+        "label": "Pool & Saunas",
+        "href": "#infrastructure"
+      }
     ]
   },
   "booking": {
@@ -168,6 +426,8 @@
     "phoneLabel": "Phone",
     "dateLabel": "Preferred date",
     "datePlaceholder": "Select a date",
+    "timeLabel": "Preferred time",
+    "timePlaceholder": "Select a time",
     "commentLabel": "Comment",
     "commentPlaceholder": "Your wishes...",
     "submitButton": "Submit request",
@@ -182,8 +442,29 @@
     "nameCharsError": "Name can only contain letters, spaces and hyphens",
     "phoneError": "Please enter a complete phone number",
     "digitsOf": "of 9 digits",
-    "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-    "days": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "months": [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December"
+    ],
+    "days": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ],
     "successTitle": "Request submitted",
     "successMessage": "We will contact you to confirm your booking",
     "successThanks": "Thank you for reaching out!",
@@ -201,10 +482,22 @@
     "metaTitle": "Privacy Policy | Serenity Spa",
     "metaDescription": "Serenity Spa Privacy Policy: what data we collect, how we use and protect our clients' personal information.",
     "sections": [
-      { "title": "1. What data we collect", "content": "Name, phone number, selected service, preferred booking date, request comment, as well as technical visit data (referral source, UTM tags, device type, browser, IP address) for analytics and request processing." },
-      { "title": "2. Processing purposes", "content": "Data is used to contact the client, confirm and support bookings, improve service quality, evaluate advertising channel effectiveness and protect against abuse." },
-      { "title": "3. Data protection", "content": "We take technical and organizational measures to protect personal data from unauthorized access, modification, disclosure or destruction." },
-      { "title": "4. Contacts", "content": "For data processing inquiries, please call +998 71 210 88 95 or email info@serenity-spa.uz." }
+      {
+        "title": "1. What data we collect",
+        "content": "Name, phone number, selected service, preferred booking date, request comment, as well as technical visit data (referral source, UTM tags, device type, browser, IP address) for analytics and request processing."
+      },
+      {
+        "title": "2. Processing purposes",
+        "content": "Data is used to contact the client, confirm and support bookings, improve service quality, evaluate advertising channel effectiveness and protect against abuse."
+      },
+      {
+        "title": "3. Data protection",
+        "content": "We take technical and organizational measures to protect personal data from unauthorized access, modification, disclosure or destruction."
+      },
+      {
+        "title": "4. Contacts",
+        "content": "For data processing inquiries, please call +998 71 210 88 95 or email info@serenity-spa.uz."
+      }
     ]
   },
   "terms": {
@@ -212,10 +505,22 @@
     "metaTitle": "Terms of Service | Serenity Spa",
     "metaDescription": "Serenity Spa Terms of Service: website usage conditions, booking procedures and service interaction.",
     "sections": [
-      { "title": "1. Website purpose", "content": "The website provides information about services, programs and contact details of Serenity Spa. Submitting a booking form means a request for callback and visit confirmation." },
-      { "title": "2. Booking services", "content": "Booking date and time are considered confirmed only after contact with the administrator. Serenity Spa reserves the right to clarify request details and offer the nearest available slots." },
-      { "title": "3. Limitation of liability", "content": "Information on the website is provided on an 'as is' basis. Serenity Spa makes efforts to keep it current but does not guarantee the absolute absence of inaccuracies." },
-      { "title": "4. Contacts", "content": "For website and booking inquiries, please call +998 71 210 88 95 or email info@serenity-spa.uz." }
+      {
+        "title": "1. Website purpose",
+        "content": "The website provides information about services, programs and contact details of Serenity Spa. Submitting a booking form means a request for callback and visit confirmation."
+      },
+      {
+        "title": "2. Booking services",
+        "content": "Booking date and time are considered confirmed only after contact with the administrator. Serenity Spa reserves the right to clarify request details and offer the nearest available slots."
+      },
+      {
+        "title": "3. Limitation of liability",
+        "content": "Information on the website is provided on an 'as is' basis. Serenity Spa makes efforts to keep it current but does not guarantee the absolute absence of inaccuracies."
+      },
+      {
+        "title": "4. Contacts",
+        "content": "For website and booking inquiries, please call +998 71 210 88 95 or email info@serenity-spa.uz."
+      }
     ]
   },
   "notFound": {

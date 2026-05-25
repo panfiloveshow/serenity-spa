@@ -17,27 +17,27 @@ export function StackedCardsPackages() {
   const { dictionary } = useLang();
 
   return (
-    <section className="bg-[#1B3A5C] relative overflow-hidden" id="packages">
+    <section className="bg-[#1B3A5C] relative overflow-hidden scroll-mt-24 md:scroll-mt-28" id="packages">
       {/* Header */}
-      <div className="pt-32 pb-16 px-6">
+      <div className="pt-24 md:pt-32 pb-10 md:pb-16 px-5 md:px-6">
         <div className="container mx-auto">
           <motion.div 
-            className="text-center"
+            className="text-left md:text-center"
             variants={staggerContainer()}
             initial="initial"
             whileInView="animate"
             viewport={MOTION.viewport.once}
           >
-            <motion.span className="text-[#C8956C] uppercase tracking-[0.25em] text-xs block mb-4" variants={staggerChild}>
+            <motion.span className="text-[#C8956C] uppercase tracking-[0.18em] md:tracking-[0.25em] text-[11px] md:text-xs block mb-3 md:mb-4" variants={staggerChild}>
               {dictionary.packages.sectionSubtitle}
             </motion.span>
-            <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight justify-center">{dictionary.packages.sectionTitle}</KineticText>
+            <KineticText className="text-[clamp(2.75rem,15vw,4rem)] md:text-7xl leading-[0.95] font-light text-[#E8DFD0] tracking-tight justify-start md:justify-center">{dictionary.packages.sectionTitle}</KineticText>
           </motion.div>
         </div>
       </div>
 
       {/* Sticky stacking area with 3D parallax */}
-      <div className="relative px-6">
+      <div className="relative px-5 md:px-6">
         <div className="absolute top-1/3 right-0 w-[500px] h-[500px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none hidden md:block" />
 
         <div className="container mx-auto relative z-10">
@@ -68,8 +68,6 @@ function useCard3DTransforms(scrollYProgress: MotionValue<number>, mobile: boole
     scale: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [1 - 0.18 * m, 1 - 0.06 * m, 1, 1, 1 - 0.03 * m]),
     opacity: useTransform(scrollYProgress, [0, 0.25, 0.45, 0.85, 1], [0, 0.6, 1, 1, 0.5]),
     y: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [160 * m, 40 * m, 0, 0, -20 * m]),
-    filter: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1],
-      mobile ? ['blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)', 'blur(0px)'] : ['blur(12px)', 'blur(3px)', 'blur(0px)', 'blur(0px)', 'blur(2px)']),
   };
 }
 
@@ -105,7 +103,7 @@ function PackageCard({ pkg, dictPkg, bookLabel, index }: PackageCardProps) {
           style={prefersReducedMotion ? {} : {
             ...transforms,
             transformOrigin: 'center top',
-            willChange: 'transform, opacity, filter',
+            willChange: 'transform, opacity',
           }}
         >
           <div

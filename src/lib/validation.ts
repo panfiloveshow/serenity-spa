@@ -24,6 +24,12 @@ export const bookingSchema = z.object({
   date: z
     .string()
     .optional(),
+
+  time: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Некорректное время')
+    .optional()
+    .or(z.literal('')),
   
   comment: z
     .string()

@@ -23,23 +23,25 @@ export function LanguagePreferenceModal() {
   const pathname = usePathname();
   const router = useRouter();
   const reduceMotion = useReducedMotion();
-  const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    try {
-      if (!localStorage.getItem(STORAGE_KEY)) {
-        setVisible(true);
+    let cancelled = false;
+    const timer = window.setTimeout(() => {
+      if (cancelled) return;
+      
+      try {
+        setVisible(!localStorage.getItem(STORAGE_KEY));
+      } catch {
+        setVisible(false);
       }
-    } catch {
-      setVisible(false);
-    }
-  }, [mounted]);
+    }, 0);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   useEffect(() => {
     if (!visible) return;

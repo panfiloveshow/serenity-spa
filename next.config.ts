@@ -52,8 +52,6 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
-  output: 'standalone',
-  outputFileTracingRoot: process.cwd(),
   images: {
     qualities: [75, 76, 80, 85, 90],
     formats: ['image/avif', 'image/webp'],
@@ -64,6 +62,9 @@ const nextConfig: NextConfig = {
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
+  },
+  turbopack: {
+    root: process.cwd(),
   },
   async headers() {
     const isProd = process.env.NODE_ENV === 'production';

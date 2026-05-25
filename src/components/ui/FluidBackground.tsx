@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 export function FluidBackground() {
@@ -13,64 +12,10 @@ export function FluidBackground() {
 
   return (
     <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#152E4A]">
-      {/* SVG Filters for Liquid Effect */}
-      <svg className="hidden">
-        <defs>
-          <filter id="liquid-filter">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8"
-              result="goo"
-            />
-            <feBlend in="SourceGraphic" in2="goo" />
-          </filter>
-        </defs>
-      </svg>
-
-      {/* Moving Blobs */}
-      <div className="absolute inset-0 w-full h-full" style={{ filter: 'url(#liquid-filter)' }}>
-        <motion.div
-          className="absolute top-[20%] left-[20%] w-[500px] h-[500px] bg-[#234A72] rounded-full mix-blend-screen opacity-40 blur-[80px]"
-          animate={{
-            x: [0, 100, -50, 0],
-            y: [0, -100, 50, 0],
-            scale: [1, 1.2, 0.8, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-[20%] right-[20%] w-[600px] h-[600px] bg-[#263A5E] rounded-full mix-blend-screen opacity-30 blur-[100px]"
-          animate={{
-            x: [0, -150, 50, 0],
-            y: [0, 80, -50, 0],
-            scale: [1, 1.3, 0.9, 1],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute top-[40%] left-[50%] w-[400px] h-[400px] bg-[#C8956C] rounded-full mix-blend-overlay opacity-20 blur-[60px]"
-          animate={{
-            x: [0, 80, -80, 0],
-            y: [0, 50, -50, 0],
-            scale: [1, 1.1, 0.9, 1],
-          }}
-          transition={{
-            duration: 18,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-      </div>
+      {/* Static atmosphere: keeps the brand depth without a perpetual SVG filter + JS animation loop. */}
+      <div className="absolute left-[14%] top-[14%] h-[480px] w-[480px] rounded-full bg-[#234A72]/32 blur-[96px] mix-blend-screen" />
+      <div className="absolute bottom-[12%] right-[12%] h-[560px] w-[560px] rounded-full bg-[#263A5E]/24 blur-[120px] mix-blend-screen" />
+      <div className="absolute left-[48%] top-[36%] h-[340px] w-[340px] rounded-full bg-[#C8956C]/10 blur-[80px] mix-blend-overlay" />
       
       {/* Grain Overlay (already in globals, but ensuring layer order) */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay" 

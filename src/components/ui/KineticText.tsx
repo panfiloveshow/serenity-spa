@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useScroll, useTransform, useSpring, useVelocity } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { MOTION, staggerContainer } from '@/lib/motion';
 
 interface KineticTextProps {
@@ -15,13 +15,11 @@ const wordVariants = {
     y: '110%', 
     rotateX: 45,
     opacity: 0,
-    filter: 'blur(4px)',
   },
   animate: { 
     y: '0%', 
     rotateX: 0,
     opacity: 1,
-    filter: 'blur(0px)',
     transition: { 
       duration: MOTION.duration.slow, 
       ease: MOTION.ease.out,
@@ -35,15 +33,6 @@ export function KineticText({
   as: Tag = 'h2',
   split = true,
 }: KineticTextProps) {
-  const { scrollY } = useScroll();
-  const scrollVelocity = useVelocity(scrollY);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400,
-  });
-  
-  const skewX = useTransform(smoothVelocity, [-1000, 1000], [-8, 8]);
-
   const words = children.split(' ');
 
   if (!split) {
@@ -51,7 +40,6 @@ export function KineticText({
       <div className="overflow-hidden" style={{ perspective: '600px' }}>
         <motion.div
           className={`block origin-bottom ${className}`}
-          style={{ skewX }}
           initial={{ y: '100%', opacity: 0 }}
           whileInView={{ y: '0%', opacity: 1 }}
           viewport={MOTION.viewport.once}
@@ -66,7 +54,7 @@ export function KineticText({
   return (
     <motion.div
       className="overflow-hidden"
-      style={{ perspective: '800px', skewX }}
+      style={{ perspective: '800px' }}
       variants={staggerContainer(MOTION.stagger.fast)}
       initial="initial"
       whileInView="animate"

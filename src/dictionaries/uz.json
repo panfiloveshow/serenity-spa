@@ -25,10 +25,26 @@
     "sectionTitle": "Infratuzilma",
     "sectionSubtitle": "Sizning qulayligingiz va sog'ligingiz uchun yetakchi ishlab chiqaruvchining zamonaviy jihozlari.",
     "items": {
-      "pool": { "title": "Basseyn", "description": "Suzish va dam olish uchun zamonaviy basseyn", "metrics": "28°" },
-      "gym": { "title": "Sport zali", "description": "Yetakchi ishlab chiqaruvchining zamonaviy jihozlari", "metrics": "24/7" },
-      "sauna": { "title": "Saunalar", "description": "To'liq dam olish uchun fin va bug' saunasi", "metrics": "95°" },
-      "jacuzzi": { "title": "Jakuzi", "description": "Tiklanish uchun gidromassaj vannasi", "metrics": "38°" }
+      "pool": {
+        "title": "Basseyn",
+        "description": "Suzish va dam olish uchun zamonaviy basseyn",
+        "metrics": "28°"
+      },
+      "gym": {
+        "title": "Sport zali",
+        "description": "Yetakchi ishlab chiqaruvchining zamonaviy jihozlari",
+        "metrics": "24/7"
+      },
+      "sauna": {
+        "title": "Saunalar",
+        "description": "To'liq dam olish uchun fin va bug' saunasi",
+        "metrics": "95°"
+      },
+      "jacuzzi": {
+        "title": "Jakuzi",
+        "description": "Tiklanish uchun gidromassaj vannasi",
+        "metrics": "38°"
+      }
     }
   },
   "services": {
@@ -38,35 +54,103 @@
         "title": "Massajlar",
         "subtitle": "Dunyo bo'ylab mualliflik texnikalari",
         "items": [
-          { "name": "An'anaviy bali massaji", "duration": "60 daq", "desc": "Dam olish va qon aylanishini yaxshilash uchun butun tana chuqur massaji" },
-          { "name": "An'anaviy bali massaji", "duration": "90 daq", "desc": "" },
-          { "name": "Mualliflik «Signature of Serenity»", "duration": "90 daq", "desc": "Uyg'unlik va tinchlik muhitida aromaterapiya va massaj" },
-          { "name": "Gavayi Ka Xuna", "duration": "60 daq", "desc": "Uzun harakatlar va cho'zish bilan silliq energetik massaj" },
-          { "name": "Gavayi Ka Xuna", "duration": "90 daq", "desc": "" },
-          { "name": "Detoks (limfa drenaji)", "duration": "90 daq", "desc": "Limfa tizimini yaxshilash, toksinlar va shishlarni kamaytirish" },
-          { "name": "Tana nafasi", "duration": "90 daq", "desc": "Taranglik va stressni bartaraf etish uchun chuqur terapevtik massaj" },
-          { "name": "Orqa, bo'yin va yelkalar", "duration": "30 daq", "desc": "Stressni bartaraf etish, qon aylanishi va egiluvchanlikni yaxshilash" },
-          { "name": "Oyoq refleksologiyasi", "duration": "60 daq", "desc": "Chuqur dam olish uchun refleks nuqtalarini rag'batlantirish" },
-          { "name": "Bosh va bo'yin massaji", "duration": "30 daq", "desc": "Uyg'unlik muhiti — to'liq dam olish va rohat" },
-          { "name": "Issiq tosh terapiyasi", "duration": "90 daq", "desc": "Toshlarning issiqligi mushak tarangligini bartaraf etadi va kuchni tiklaydi" },
-          { "name": "O'simlik SPA massaji", "duration": "120 daq", "desc": "Siam an'anasi: tana va ruh uchun zig'ir matoda o'simliklar to'plami" }
+          {
+            "name": "An'anaviy bali massaji",
+            "duration": "60 daq",
+            "desc": "Bali massaji tanani bo'shashtirish va qon aylanishini yaxshilash uchun turli texnikalarni his qilishni istaganlar uchun yaxshi terapiyadir. Massaj texnikasi turli davolash usullarining eng yaxshi tomonlarini birlashtiradi. Bali massajining asosiy maqsadi tanadagi qon oqimini yengillashtirish orqali ruhiy xotirjamlikka erishishdir. Bu butun tana mushaklari bilan ishlaydigan chuqur massaj texnikasi."
+          },
+          {
+            "name": "An'anaviy bali massaji",
+            "duration": "90 daq",
+            "desc": "Bali massaji tanani bo'shashtirish va qon aylanishini yaxshilash uchun turli texnikalarni his qilishni istaganlar uchun yaxshi terapiyadir. Massaj texnikasi turli davolash usullarining eng yaxshi tomonlarini birlashtiradi. Bali massajining asosiy maqsadi tanadagi qon oqimini yengillashtirish orqali ruhiy xotirjamlikka erishishdir. Bu butun tana mushaklari bilan ishlaydigan chuqur massaj texnikasi."
+          },
+          {
+            "name": "Mualliflik «Signature of Serenity»",
+            "duration": "90 daq",
+            "desc": "Serenity Spa'dagi aromaterapiya va massaj seansi davomida siz uyg'unlik va tinchlik muhitiga sho'ng'iysiz. Yumshoq yorug'lik, yoqimli musiqa va xushbo'y moylar dam olish va tiklanish uchun mukammal muhit yaratadi. Siz tanangizdagi taranglik ketayotganini, ongingiz esa tinchlanayotganini his qilasiz."
+          },
+          {
+            "name": "Gavayi Ka Xuna",
+            "duration": "60 daq",
+            "desc": "Bu noyob, ravon, energetik jihatdan jonli, shu bilan birga butun tanani chuqur bo'shashtiruvchi massajdir. Uzoq va silliq harakatlar hamda turli cho'zishlar ushbu maxsus tana bilan ishlash usulini tavsiflaydi. Ikkinchi o'lchov - terapevtning sizning nafasingiz bilan aloqaga kirishi, maxsus bog'lanishni yaratishi va bir butunlikni his qildirishidir."
+          },
+          {
+            "name": "Gavayi Ka Xuna",
+            "duration": "90 daq",
+            "desc": "Bu noyob, ravon, energetik jihatdan jonli, shu bilan birga butun tanani chuqur bo'shashtiruvchi massajdir. Uzoq va silliq harakatlar hamda turli cho'zishlar ushbu maxsus tana bilan ishlash usulini tavsiflaydi. Ikkinchi o'lchov - terapevtning sizning nafasingiz bilan aloqaga kirishi, maxsus bog'lanishni yaratishi va bir butunlikni his qildirishidir."
+          },
+          {
+            "name": "Detoks (limfa drenaji)",
+            "duration": "90 daq",
+            "desc": "Limfodrenaj massaji limfa tizimi faoliyatini yaxshilashga mo'ljallangan terapiyadir. Natija asosan teridagi yumshoq, ritmik aylana harakatlar orqali erishiladi: ular limfa tomirlarining qisqarishini rag'batlantiradi va tanadagi toksinlarni kamaytiradi. Limfodrenaj massaji modda almashinuvini yaxshilash va shishlarni kamaytirishga yordam beradi."
+          },
+          {
+            "name": "Tana nafasi",
+            "duration": "90 daq",
+            "desc": "Taranglik va stressni bartaraf etish uchun mo'ljallangan chuqur mushak terapevtik massaji. Ushbu massaj texnikasi va manipulyatsiyalar og'riqni yengillashtirishga yordam beradi hamda kuchli va chuqur bosim orqali harakat diapazonini yaxshilaydi."
+          },
+          {
+            "name": "Orqa, bo'yin va yelkalar",
+            "duration": "30 daq",
+            "desc": "Orqa, bo'yin va yelka massaji sog'liq uchun bir qator foydalar berishi mumkin: dam olishga yordam beradi, stressni kamaytiradi, qon aylanishini yaxshilaydi va mushaklarni bo'shashtiradi. Bu muolaja ayniqsa taranglikdan kelib chiqadigan bosh og'rig'ini yengillashtirish, egiluvchanlikni oshirish va immun tizimini mustahkamlashga yordam berishi bilan foydali."
+          },
+          {
+            "name": "Oyoq refleksologiyasi",
+            "duration": "60 daq",
+            "desc": "Oyoqlardagi refleks nuqtalarini rag'batlantirish butun tana bo'ylab qon va kislorod aylanishini kuchaytiradi hamda chuqur bo'shashish hissini beradi."
+          },
+          {
+            "name": "Bosh va bo'yin massaji",
+            "duration": "30 daq",
+            "desc": "Yoqimli hid va yumshoq teginish uyg'unlik va sokinlik muhitini yaratadi, sizga to'liq bo'shashish va jarayondan zavqlanish imkonini beradi. Bosh va bo'yin massaji to'liq dam olish va rohat hissini beruvchi hashamatli muolajadir."
+          },
+          {
+            "name": "Issiq tosh terapiyasi",
+            "duration": "90 daq",
+            "desc": "Ko'pincha uyqusizlik yoki charchoqni his qilasizmi? Issiq tosh terapiyasi yechim bo'lishi mumkin. Bu mushak tarangligi va og'rig'ini kamaytirish uchun eng yaxshi muolajalardan biridir, chunki toshlarning issiqligi massaj ta'sirini kuchaytiradi. Ushbu terapiyada ishlatiladigan toshlar issiqlikni uzoqroq saqlagani uchun, insonning bo'shashishi va kuchini tiklashiga yordam beradi."
+          },
+          {
+            "name": "O'simlik SPA massaji",
+            "duration": "120 daq",
+            "desc": "O'simlik SPA massaji qadimiy Siam shifobaxsh an'analaridan kelib chiqqan. Zig'ir matoga o'ralgan nafis tanlangan o'tlar to'plami teri bo'ylab yumshoq sirpanadi. Siz Siam tabiatining issiqligi va hayotiy quvvati teringizga taralayotganini his qilasiz. Go'yo o'simliklar jannatidan kelgan nozik parvarish qon aylanishini yaxshilaydi, mushak tarangligini bo'shatadi, teringizga g'ayrioddiy farovonlik hissini beradi va ruhingizni erkalaydi."
+          }
         ]
       },
       {
         "title": "Tana parvarishi",
         "subtitle": "O'rashlar va pilinglar",
         "items": [
-          { "name": "Lavanda o'rashi", "duration": "60 daq", "desc": "Tabiiy lavanda bilan dam olish o'rashi" },
-          { "name": "Shokolad o'rashi", "duration": "60 daq", "desc": "Shokolad bilan terini oziqlantirish va namlantirish" },
-          { "name": "Avokado va ipak", "duration": "60 daq", "desc": "Chuqur oziqlantirish va terining ipakday silliqligini ta'minlash" },
-          { "name": "Detoks o'rashi", "duration": "60 daq", "desc": "Toksinlarni chiqarish va terini tozalash" }
+          {
+            "name": "Lavanda o'rashi",
+            "duration": "60 daq",
+            "desc": "Tabiiy lavanda bilan dam olish o'rashi"
+          },
+          {
+            "name": "Shokolad o'rashi",
+            "duration": "60 daq",
+            "desc": "Shokolad bilan terini oziqlantirish va namlantirish"
+          },
+          {
+            "name": "Avokado va ipak",
+            "duration": "60 daq",
+            "desc": "Chuqur oziqlantirish va terining ipakday silliqligini ta'minlash"
+          },
+          {
+            "name": "Detoks o'rashi",
+            "duration": "60 daq",
+            "desc": "Toksinlarni chiqarish va terini tozalash"
+          }
         ]
       },
       {
         "title": "Qo'l parvarishi",
         "subtitle": "Parafin terapiyasi",
         "items": [
-          { "name": "Ipak nafisligi", "duration": "45 daq", "desc": "Parafin terapiyasi tufayli qo'llarning ajoyib silliqligi" }
+          {
+            "name": "Ipak nafisligi",
+            "duration": "45 daq",
+            "desc": "Parafin terapiyasi tufayli qo'llarning ajoyib silliqligi"
+          }
         ]
       }
     ]
@@ -80,14 +164,25 @@
         "price": "1 800 000 UZS",
         "duration": "3 soat",
         "description": "Erkaklar uchun kompleks dastur: basseyn, termal kompleks, chuqur massaj va choy marosimi.",
-        "includes": ["Basseyn", "Termal kompleks", "«Tana nafasi» massaji (90 daq)", "Choy marosimi"]
+        "includes": [
+          "Basseyn",
+          "Termal kompleks",
+          "«Tana nafasi» massaji (90 daq)",
+          "Choy marosimi"
+        ]
       },
       {
         "title": "Ayollar paketi",
         "price": "2 200 000 UZS",
         "duration": "3 soat",
         "description": "Hashamatli dastur: shokolad pilingi, bali massaji, tanlangan muolaja va choy marosimi.",
-        "includes": ["Shokolad pilingi", "An'anaviy bali massaji", "Tanlangan muolaja (bosh massaji / qo'l parvarishi)", "Basseyn", "Choy marosimi"],
+        "includes": [
+          "Shokolad pilingi",
+          "An'anaviy bali massaji",
+          "Tanlangan muolaja (bosh massaji / qo'l parvarishi)",
+          "Basseyn",
+          "Choy marosimi"
+        ],
         "popularLabel": "Mashhur"
       },
       {
@@ -95,14 +190,27 @@
         "price": "5 500 000 UZS",
         "duration": "4,5 soat",
         "description": "Premium dastur: lavanda pilingi, aroma vanna, mualliflik massaji, o'rash va choy marosimi.",
-        "includes": ["Lavanda pilingi", "Aroma vanna", "«Signature of Serenity» massaji", "Lavanda o'rashi", "Choy marosimi"]
+        "includes": [
+          "Lavanda pilingi",
+          "Aroma vanna",
+          "«Signature of Serenity» massaji",
+          "Lavanda o'rashi",
+          "Choy marosimi"
+        ]
       },
       {
         "title": "Juftliklar paketi",
         "price": "5 000 000 UZS",
         "duration": "4 soat",
         "description": "Ikki kishi uchun romantik dastur: basseyn, termal kompleks, piling, massaj, o'rash va choy.",
-        "includes": ["Basseyn", "Termal kompleks", "Yalpiz va tuz pilingi", "An'anaviy bali massaji", "Avokado va ipak o'rashi", "Choy marosimi"]
+        "includes": [
+          "Basseyn",
+          "Termal kompleks",
+          "Yalpiz va tuz pilingi",
+          "An'anaviy bali massaji",
+          "Avokado va ipak o'rashi",
+          "Choy marosimi"
+        ]
       }
     ]
   },
@@ -110,14 +218,137 @@
     "sectionTitle": "Abonementlar",
     "sectionSubtitle": "Klubga a'zo bo'ling va basseyn, sport zali, saunalar va jakuzidan bahramand bo'ling.",
     "tiers": [
-      { "name": "Bir martalik tashrif", "price": "600 000 UZS", "priceNote": "Dam olish kunlari: 700 000 UZS", "period": "Ish kunlari Du–Ju", "features": ["Basseyn", "Sport zali", "Bug' saunasi", "Fin saunasi", "Jakuzi", "Wi-Fi", "Detoks suv"] },
-      { "name": "12 ta tashrif", "price": "4 500 000 UZS", "period": "Abonement", "features": ["Basseyn", "Sport zali", "Bug' saunasi", "Fin saunasi", "Jakuzi", "Wi-Fi", "Detoks suv"] },
-      { "name": "Standart", "price": "5 500 000 UZS", "period": "1 oy", "features": ["Basseyn", "Sport zali", "Bug' saunasi", "Fin saunasi", "Jakuzi", "Wi-Fi", "Detoks suv", "Massajyor"] },
-      { "name": "Bronza", "price": "13 500 000 UZS", "period": "3 oy", "features": ["Basseyn", "Sport zali", "Bug' saunasi", "Fin saunasi", "Jakuzi", "Kosmetikaga 5% chegirma", "Wi-Fi", "Detoks suv", "Massajyor", "10 kunlik muzlatish"] },
-      { "name": "Kumush", "price": "19 500 000 UZS", "period": "6 oy", "features": ["Basseyn", "Sport zali", "Bug' saunasi", "Fin saunasi", "Jakuzi", "Tana spa uchun 10% chegirma", "Kosmetikaga 5% chegirma", "1 mehmon tashrifi", "Wi-Fi", "Detoks suv", "Massajyor", "1 oylik muzlatish"] },
-      { "name": "Oltin", "price": "29 500 000 UZS", "period": "12 oy", "features": ["Basseyn", "Sport zali", "Bug' saunasi", "Fin saunasi", "Jakuzi", "Tana spa uchun 20% chegirma", "Kosmetikaga 5% chegirma", "3 mehmon tashrifi", "Wi-Fi", "Detoks suv", "Massajyor", "2 oylik muzlatish"] },
-      { "name": "Oilaviy", "price": "44 500 000 UZS", "period": "12 oy", "features": ["Basseyn", "Sport zali", "Bug' saunasi", "Fin saunasi", "Jakuzi", "12 yoshgacha bolalar bepul (2 tagacha)", "Tana spa uchun 20% chegirma", "Wi-Fi", "Detoks suv", "Massajyor", "2 oylik muzlatish"] },
-      { "name": "Bolalar", "price": "2 750 000 UZS dan", "priceNote": "3 oy: 6 750 000 · 6 oy: 9 750 000 · 12 oy: 14 750 000", "period": "1 oydan", "features": ["Basseyn", "Bug' saunasi", "Fin saunasi", "Jakuzi", "Wi-Fi", "Hamroh kattalar kirishi"] }
+      {
+        "name": "Bir martalik tashrif",
+        "price": "600 000 UZS",
+        "priceNote": "Dam olish kunlari: 700 000 UZS",
+        "period": "Ish kunlari Du–Ju",
+        "features": [
+          "Basseyn",
+          "Sport zali",
+          "Bug' saunasi",
+          "Fin saunasi",
+          "Jakuzi",
+          "Wi-Fi",
+          "Detoks suv"
+        ]
+      },
+      {
+        "name": "12 ta tashrif",
+        "price": "4 500 000 UZS",
+        "period": "Abonement",
+        "features": [
+          "Basseyn",
+          "Sport zali",
+          "Bug' saunasi",
+          "Fin saunasi",
+          "Jakuzi",
+          "Wi-Fi",
+          "Detoks suv"
+        ]
+      },
+      {
+        "name": "Standart",
+        "price": "5 500 000 UZS",
+        "period": "1 oy",
+        "features": [
+          "Basseyn",
+          "Sport zali",
+          "Bug' saunasi",
+          "Fin saunasi",
+          "Jakuzi",
+          "Wi-Fi",
+          "Detoks suv",
+          "Massajyor"
+        ]
+      },
+      {
+        "name": "Bronza",
+        "price": "13 500 000 UZS",
+        "period": "3 oy",
+        "features": [
+          "Basseyn",
+          "Sport zali",
+          "Bug' saunasi",
+          "Fin saunasi",
+          "Jakuzi",
+          "Kosmetikaga 5% chegirma",
+          "Wi-Fi",
+          "Detoks suv",
+          "Massajyor",
+          "10 kunlik muzlatish"
+        ]
+      },
+      {
+        "name": "Kumush",
+        "price": "19 500 000 UZS",
+        "period": "6 oy",
+        "features": [
+          "Basseyn",
+          "Sport zali",
+          "Bug' saunasi",
+          "Fin saunasi",
+          "Jakuzi",
+          "Tana spa uchun 10% chegirma",
+          "Kosmetikaga 5% chegirma",
+          "1 mehmon tashrifi",
+          "Wi-Fi",
+          "Detoks suv",
+          "Massajyor",
+          "1 oylik muzlatish"
+        ]
+      },
+      {
+        "name": "Oltin",
+        "price": "29 500 000 UZS",
+        "period": "12 oy",
+        "features": [
+          "Basseyn",
+          "Sport zali",
+          "Bug' saunasi",
+          "Fin saunasi",
+          "Jakuzi",
+          "Tana spa uchun 20% chegirma",
+          "Kosmetikaga 5% chegirma",
+          "3 mehmon tashrifi",
+          "Wi-Fi",
+          "Detoks suv",
+          "Massajyor",
+          "2 oylik muzlatish"
+        ]
+      },
+      {
+        "name": "Oilaviy",
+        "price": "44 500 000 UZS",
+        "period": "12 oy",
+        "features": [
+          "Basseyn",
+          "Sport zali",
+          "Bug' saunasi",
+          "Fin saunasi",
+          "Jakuzi",
+          "12 yoshgacha bolalar bepul (2 tagacha)",
+          "Tana spa uchun 20% chegirma",
+          "Wi-Fi",
+          "Detoks suv",
+          "Massajyor",
+          "2 oylik muzlatish"
+        ]
+      },
+      {
+        "name": "Bolalar",
+        "price": "2 750 000 UZS dan",
+        "priceNote": "3 oy: 6 750 000 · 6 oy: 9 750 000 · 12 oy: 14 750 000",
+        "period": "1 oydan",
+        "features": [
+          "Basseyn",
+          "Bug' saunasi",
+          "Fin saunasi",
+          "Jakuzi",
+          "Wi-Fi",
+          "Hamroh kattalar kirishi"
+        ]
+      }
     ]
   },
   "contacts": {
@@ -137,17 +368,44 @@
     "termsLink": "Shartlar",
     "scrollTop": "Yuqoriga",
     "navLinks": [
-      { "label": "Infratuzilma", "href": "#infrastructure" },
-      { "label": "Mualliflik xizmatlari", "href": "#services" },
-      { "label": "Dasturlar", "href": "#packages" },
-      { "label": "Abonementlar", "href": "#membership" },
-      { "label": "Aloqa", "href": "#contacts" }
+      {
+        "label": "Infratuzilma",
+        "href": "#infrastructure"
+      },
+      {
+        "label": "Mualliflik xizmatlari",
+        "href": "#services"
+      },
+      {
+        "label": "Dasturlar",
+        "href": "#packages"
+      },
+      {
+        "label": "Abonementlar",
+        "href": "#membership"
+      },
+      {
+        "label": "Aloqa",
+        "href": "#contacts"
+      }
     ],
     "serviceLinks": [
-      { "label": "Massajlar", "href": "#services" },
-      { "label": "Tana parvarishi", "href": "#services" },
-      { "label": "SPA paketlar", "href": "#packages" },
-      { "label": "Basseyn va saunalar", "href": "#infrastructure" }
+      {
+        "label": "Massajlar",
+        "href": "#services"
+      },
+      {
+        "label": "Tana parvarishi",
+        "href": "#services"
+      },
+      {
+        "label": "SPA paketlar",
+        "href": "#packages"
+      },
+      {
+        "label": "Basseyn va saunalar",
+        "href": "#infrastructure"
+      }
     ]
   },
   "booking": {
@@ -168,6 +426,8 @@
     "phoneLabel": "Telefon",
     "dateLabel": "Kerakli sana",
     "datePlaceholder": "Sanani tanlang",
+    "timeLabel": "Kerakli vaqt",
+    "timePlaceholder": "Vaqtni tanlang",
     "commentLabel": "Izoh",
     "commentPlaceholder": "Istaklaringiz...",
     "submitButton": "So'rov yuborish",
@@ -182,8 +442,29 @@
     "nameCharsError": "Ism faqat harflar, bo'shliqlar va defislardan iborat bo'lishi mumkin",
     "phoneError": "Iltimos, to'liq telefon raqamini kiriting",
     "digitsOf": "9 raqamdan",
-    "months": ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"],
-    "days": ["Du", "Se", "Cho", "Pa", "Ju", "Sha", "Ya"],
+    "months": [
+      "Yanvar",
+      "Fevral",
+      "Mart",
+      "Aprel",
+      "May",
+      "Iyun",
+      "Iyul",
+      "Avgust",
+      "Sentabr",
+      "Oktabr",
+      "Noyabr",
+      "Dekabr"
+    ],
+    "days": [
+      "Du",
+      "Se",
+      "Cho",
+      "Pa",
+      "Ju",
+      "Sha",
+      "Ya"
+    ],
     "successTitle": "So'rov yuborildi",
     "successMessage": "Biz siz bilan yozuvni tasdiqlash uchun bog'lanamiz",
     "successThanks": "Murojaat uchun rahmat!",
@@ -201,10 +482,22 @@
     "metaTitle": "Maxfiylik siyosati | Serenity Spa",
     "metaDescription": "Serenity Spa maxfiylik siyosati: qanday ma'lumotlarni yig'amiz, qanday ishlatamiz va mijozlarning shaxsiy ma'lumotlarini qanday himoya qilamiz.",
     "sections": [
-      { "title": "1. Qanday ma'lumotlarni yig'amiz", "content": "Ism, telefon raqami, tanlangan xizmat, kerakli yozilish sanasi, so'rov izohi, shuningdek tashrif texnik ma'lumotlari (o'tish manbai, UTM belgilari, qurilma turi, brauzer, IP manzil) tahlil va so'rovlarni qayta ishlash uchun." },
-      { "title": "2. Qayta ishlash maqsadlari", "content": "Ma'lumotlar mijoz bilan bog'lanish, yozuvni tasdiqlash va qo'llab-quvvatlash, xizmat sifatini yaxshilash, reklama kanallari samaradorligini baholash va suiiste'mollikdan himoya qilish uchun ishlatiladi." },
-      { "title": "3. Ma'lumotlarni himoya qilish", "content": "Biz shaxsiy ma'lumotlarni ruxsatsiz kirish, o'zgartirish, oshkor qilish yoki yo'q qilishdan himoya qilish uchun texnik va tashkiliy choralar ko'ramiz." },
-      { "title": "4. Aloqa", "content": "Ma'lumotlarni qayta ishlash bo'yicha savollar uchun +998 71 210 88 95 telefon raqamiga yoki info@serenity-spa.uz elektron pochtasiga murojaat qiling." }
+      {
+        "title": "1. Qanday ma'lumotlarni yig'amiz",
+        "content": "Ism, telefon raqami, tanlangan xizmat, kerakli yozilish sanasi, so'rov izohi, shuningdek tashrif texnik ma'lumotlari (o'tish manbai, UTM belgilari, qurilma turi, brauzer, IP manzil) tahlil va so'rovlarni qayta ishlash uchun."
+      },
+      {
+        "title": "2. Qayta ishlash maqsadlari",
+        "content": "Ma'lumotlar mijoz bilan bog'lanish, yozuvni tasdiqlash va qo'llab-quvvatlash, xizmat sifatini yaxshilash, reklama kanallari samaradorligini baholash va suiiste'mollikdan himoya qilish uchun ishlatiladi."
+      },
+      {
+        "title": "3. Ma'lumotlarni himoya qilish",
+        "content": "Biz shaxsiy ma'lumotlarni ruxsatsiz kirish, o'zgartirish, oshkor qilish yoki yo'q qilishdan himoya qilish uchun texnik va tashkiliy choralar ko'ramiz."
+      },
+      {
+        "title": "4. Aloqa",
+        "content": "Ma'lumotlarni qayta ishlash bo'yicha savollar uchun +998 71 210 88 95 telefon raqamiga yoki info@serenity-spa.uz elektron pochtasiga murojaat qiling."
+      }
     ]
   },
   "terms": {
@@ -212,10 +505,22 @@
     "metaTitle": "Foydalanish shartlari | Serenity Spa",
     "metaDescription": "Serenity Spa foydalanish shartlari: saytdan foydalanish shartlari, yozilish tartibi va xizmat bilan o'zaro aloqa.",
     "sections": [
-      { "title": "1. Sayt maqsadi", "content": "Sayt Serenity Spa xizmatlari, dasturlari va aloqa ma'lumotlari haqida ma'lumot beradi. Yozilish formasini yuborish qayta aloqa so'rovi va tashrifni tasdiqlashni anglatadi." },
-      { "title": "2. Xizmatlarga yozilish", "content": "Yozilish sanasi va vaqti faqat administrator bilan bog'langandan keyin tasdiqlangan hisoblanadi. Serenity Spa so'rov tafsilotlarini aniqlashtirish va eng yaqin bo'sh vaqtlarni taklif qilish huquqini o'zida saqlaydi." },
-      { "title": "3. Javobgarlikni cheklash", "content": "Saytdagi ma'lumotlar «boricha» asosida taqdim etiladi. Serenity Spa uni dolzarb saqlash uchun harakat qiladi, ammo noaniqliklarning mutlaqo yo'qligini kafolatlamaydi." },
-      { "title": "4. Aloqa", "content": "Sayt va yozilish bo'yicha savollar uchun +998 71 210 88 95 telefon raqamiga yoki info@serenity-spa.uz elektron pochtasiga murojaat qiling." }
+      {
+        "title": "1. Sayt maqsadi",
+        "content": "Sayt Serenity Spa xizmatlari, dasturlari va aloqa ma'lumotlari haqida ma'lumot beradi. Yozilish formasini yuborish qayta aloqa so'rovi va tashrifni tasdiqlashni anglatadi."
+      },
+      {
+        "title": "2. Xizmatlarga yozilish",
+        "content": "Yozilish sanasi va vaqti faqat administrator bilan bog'langandan keyin tasdiqlangan hisoblanadi. Serenity Spa so'rov tafsilotlarini aniqlashtirish va eng yaqin bo'sh vaqtlarni taklif qilish huquqini o'zida saqlaydi."
+      },
+      {
+        "title": "3. Javobgarlikni cheklash",
+        "content": "Saytdagi ma'lumotlar «boricha» asosida taqdim etiladi. Serenity Spa uni dolzarb saqlash uchun harakat qiladi, ammo noaniqliklarning mutlaqo yo'qligini kafolatlamaydi."
+      },
+      {
+        "title": "4. Aloqa",
+        "content": "Sayt va yozilish bo'yicha savollar uchun +998 71 210 88 95 telefon raqamiga yoki info@serenity-spa.uz elektron pochtasiga murojaat qiling."
+      }
     ]
   },
   "notFound": {

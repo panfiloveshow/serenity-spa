@@ -105,6 +105,9 @@ export function buildBookingMessage(data: BookingData, ctx: MessageContext): str
   if (data.date) {
     lines.push(`📅 <b>Желаемая дата:</b> ${escapeHtml(data.date)}`);
   }
+  if (data.time) {
+    lines.push(`⏰ <b>Желаемое время:</b> ${escapeHtml(data.time)}`);
+  }
 
   lines.push(`🕐 ${formatDateTime()} · ${formatLocation(geo)}`);
   lines.push(`🌐 Язык сайта: ${formatLocale(data.pageLocale)}`);

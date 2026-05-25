@@ -12,7 +12,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import * as fc from 'fast-check';
 import { SUPPORTED_LOCALES, OG_LOCALES } from '@/types/i18n';
-import type { Locale } from '@/types/i18n';
 import { getDictionary } from '@/lib/i18n';
 
 // Mock next/font/google — layout.tsx calls Manrope() and Cormorant_Garamond() at module level

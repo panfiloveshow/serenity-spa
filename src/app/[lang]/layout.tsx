@@ -234,6 +234,7 @@ export default async function LangLayout({
         {hasYm && (
           <noscript>
             <div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`https://mc.yandex.ru/watch/${YM_ID}`}
                 style={{ position: 'absolute', left: '-9999px' }}

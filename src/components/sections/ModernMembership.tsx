@@ -15,7 +15,7 @@ export function ModernMembership() {
   const premiumPlans = MEMBERSHIP_TIERS.slice(3);
 
   return (
-    <section className="py-32 px-6 bg-[#1B3A5C] relative overflow-hidden" id="membership">
+    <section className="py-24 md:py-32 px-5 md:px-6 bg-[#1B3A5C] relative overflow-hidden scroll-mt-24 md:scroll-mt-28" id="membership">
       {/* Background glows */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#C8956C]/3 blur-[200px] rounded-full pointer-events-none hidden md:block" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-[#7A8BA8]/3 blur-[180px] rounded-full pointer-events-none hidden md:block" />
@@ -23,19 +23,19 @@ export function ModernMembership() {
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Header */}
         <motion.div 
-          className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8"
+          className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gap-5 md:gap-8"
           variants={staggerContainer()}
           initial="initial"
           whileInView="animate"
           viewport={MOTION.viewport.once}
         >
           <div>
-            <motion.span className="text-[#C8956C] uppercase tracking-[0.25em] text-xs block mb-4" variants={staggerChild}>
+            <motion.span className="text-[#C8956C] uppercase tracking-[0.18em] md:tracking-[0.25em] text-[11px] md:text-xs block mb-3 md:mb-4" variants={staggerChild}>
               Членство в клубе
             </motion.span>
-            <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight">{dictionary.membership.sectionTitle}</KineticText>
+            <KineticText className="text-[clamp(2.75rem,15vw,4rem)] md:text-7xl leading-[0.95] font-light text-[#E8DFD0] tracking-tight justify-start">{dictionary.membership.sectionTitle}</KineticText>
           </div>
-          <motion.p className="text-[#A0B0C8] max-w-md text-base leading-relaxed md:text-right" variants={staggerChild}>
+          <motion.p className="text-[#A0B0C8] max-w-md text-sm md:text-base leading-relaxed md:text-right" variants={staggerChild}>
             {dictionary.membership.sectionSubtitle}
           </motion.p>
         </motion.div>

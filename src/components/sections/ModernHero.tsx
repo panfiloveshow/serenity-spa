@@ -106,7 +106,7 @@ export function ModernHero() {
   return (
     <section
       ref={containerRef}
-      className="relative h-screen w-full overflow-hidden bg-[#152E4A]"
+      className="relative min-h-[760px] h-[100svh] md:h-screen w-full overflow-hidden bg-[#152E4A]"
       id="hero"
       onMouseMove={enableMouseTilt ? handleMouseMove : undefined}
       onMouseLeave={enableMouseTilt ? handleMouseLeave : undefined}
@@ -140,9 +140,9 @@ export function ModernHero() {
         )}
       </div>
 
-      {/* Layer 1: Photo with 3D tilt + parallax */}
+      {/* Layer 1: Pool photo with 3D tilt + parallax */}
       <motion.div
-        className="absolute top-0 right-0 bottom-0 w-full lg:w-[65%] z-[2]"
+        className="absolute inset-0 z-[2]"
         style={enableMouseTilt ? {
           y: imgY,
           scale: imgScale,
@@ -156,18 +156,27 @@ export function ModernHero() {
           rotateZ: imgRotate,
         }}
       >
-        <Image
-          src="/hero-woman.webp"
-          alt="Serenity Spa"
-          fill
-          className="object-cover object-[50%_15%]"
-          priority
-          quality={76}
-          sizes="(min-width: 1024px) 65vw, 100vw"
-        />
-        <div className="absolute inset-0 bg-[#152E4A]/30 mix-blend-color" />
+        <picture>
+          <source media="(max-width: 767px)" srcSet="/hero-pool-mobile.webp" />
+          <source srcSet="/hero-pool.webp" />
+          {/* Pre-optimized art-directed hero image. next/image cannot switch sources by media query. */}
+          <img
+            src="/hero-pool.webp"
+            alt="Serenity Spa pool"
+            width={1800}
+            height={1201}
+            fetchPriority="high"
+            decoding="async"
+            className="h-full w-full object-cover object-[63%_50%] brightness-[1.12] contrast-[1.08] saturate-[1.04] md:object-[58%_50%] lg:object-center"
+          />
+        </picture>
+        <div className="absolute inset-0 bg-[#152E4A]/8 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,#152E4A_0%,rgba(21,46,74,0.78)_28%,rgba(21,46,74,0.18)_58%,rgba(21,46,74,0.04)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(21,46,74,0.44)_0%,rgba(21,46,74,0.06)_30%,rgba(21,46,74,0.16)_72%,rgba(21,46,74,0.68)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_74%_42%,rgba(255,255,255,0.10)_0%,rgba(255,255,255,0.04)_34%,transparent_62%)] mix-blend-screen" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_58%_76%,rgba(116,170,196,0.16)_0%,rgba(116,170,196,0.05)_38%,transparent_66%)] mix-blend-screen" />
         {/* Photo edge glow */}
-        <div className="absolute inset-0 shadow-[inset_0_0_100px_40px_#152E4A]" />
+        <div className="absolute inset-0 shadow-[inset_0_0_90px_28px_#152E4A]" />
       </motion.div>
 
       {/* Layer 2: Floating golden particles — desktop only */}
@@ -202,12 +211,12 @@ export function ModernHero() {
 
       {/* Layer 3: Overlays for depth */}
       <div className="absolute inset-0 z-[4] pointer-events-none">
-        <div className="absolute inset-0 bg-[#152E4A]/50 lg:hidden" />
-        <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-[#152E4A] via-[#152E4A]/85 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#152E4A] via-[#152E4A]/20 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#152E4A]/60 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-[#152E4A]/12 lg:hidden" />
+        <div className="absolute inset-0 hidden lg:block bg-gradient-to-r from-[#152E4A]/78 via-[#152E4A]/28 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#152E4A]/72 via-[#152E4A]/4 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#152E4A]/52 via-transparent to-transparent" />
         {/* Radial vignette for cinematic feel */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_60%_30%,transparent_20%,#152E4A_80%)] opacity-50" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_68%_42%,transparent_34%,rgba(21,46,74,0.48)_88%)] opacity-60" />
       </div>
 
       {/* Layer 4: Animated decorative lines */}
@@ -239,7 +248,7 @@ export function ModernHero() {
 
       {/* Layer 5: Content with 3D tilt */}
       <motion.div
-        className="relative z-[6] h-full flex items-center"
+        className="relative z-[6] h-full flex items-start md:items-center pt-[8.75rem] md:pt-0"
         style={isMobile ? {
           opacity: contentOpacity,
           y: contentY,
@@ -260,9 +269,9 @@ export function ModernHero() {
           <div className="max-w-xl lg:max-w-lg">
             {/* H1 — primary page heading (also serves as visible tagline) */}
             <motion.h1
-              className="block text-[#C8956C] tracking-[0.2em] md:tracking-[0.35em] uppercase text-[10px] md:text-xs mb-8 font-medium"
-              initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              className="block text-[#C8956C] tracking-[0.18em] md:tracking-[0.35em] uppercase text-[10px] md:text-xs mb-6 md:mb-8 font-medium"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
               style={{ textShadow: '0 0 30px rgba(200,149,108,0.3)' }}
             >
@@ -271,13 +280,11 @@ export function ModernHero() {
 
             {/* Logo with glow effect */}
             <motion.div
-              initial={{ opacity: 0, y: 40, filter: 'blur(20px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
               className="mb-8 relative"
             >
-              {/* Logo glow behind */}
-              <div className="absolute -inset-2 sm:-inset-8 bg-[#C8956C]/5 blur-[40px] rounded-full pointer-events-none" />
               <Image
                 src="/logo.svg"
                 alt="Serenity Spa"
@@ -286,7 +293,7 @@ export function ModernHero() {
                 priority
                 loading="eager"
                 fetchPriority="high"
-                className="w-[260px] md:w-[340px] lg:w-[420px] h-auto relative z-10 drop-shadow-[0_0_30px_rgba(200,149,108,0.15)]"
+                className="w-[250px] md:w-[340px] lg:w-[420px] h-auto relative z-10 drop-shadow-[0_0_30px_rgba(200,149,108,0.15)]"
               />
             </motion.div>
 
@@ -315,8 +322,8 @@ export function ModernHero() {
             {/* Description with blur reveal */}
             <motion.p
               className="text-[#E8DFD0]/75 text-base md:text-lg font-normal leading-relaxed mb-10"
-              initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 1 }}
             >
               {dictionary.hero.description}
@@ -325,8 +332,8 @@ export function ModernHero() {
             {/* CTA with enhanced styling */}
             <motion.div
               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
-              initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.2 }}
             >
               <button

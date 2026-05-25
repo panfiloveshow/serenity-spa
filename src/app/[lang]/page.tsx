@@ -22,6 +22,12 @@ const HorizontalServices = dynamic(() =>
   }))
 );
 
+const PhotoGallerySection = dynamic(() =>
+  import('@/components/sections/PhotoGallerySection').then((m) => ({
+    default: m.PhotoGallerySection,
+  }))
+);
+
 const StackedCardsPackages = dynamic(() =>
   import('@/components/sections/StackedCardsPackages').then((m) => ({
     default: m.StackedCardsPackages,
@@ -75,6 +81,10 @@ export default async function Home() {
             <BentoInfrastructure />
           </ScrollSection3D>
 
+          <ScrollSection3D effect="rise">
+            <PhotoGallerySection />
+          </ScrollSection3D>
+
           <ScrollSection3D effect="tilt">
             <HorizontalServices />
           </ScrollSection3D>
@@ -86,11 +96,6 @@ export default async function Home() {
           <ScrollSection3D effect="flip">
             <ModernMembership />
           </ScrollSection3D>
-
-          {/* Instagram feed temporarily hidden */}
-          {/* <ScrollSection3D effect="rise">
-            <InstagramFeed />
-          </ScrollSection3D> */}
 
           <ScrollSection3D effect="rise">
             <TestimonialsSection />
