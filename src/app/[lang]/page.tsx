@@ -9,6 +9,8 @@ import { BookingProvider } from '@/lib/booking-context';
 import { LazyBookingModal } from '@/components/ui/LazyBookingModal';
 import { MobileStickyCTA } from '@/components/ui/MobileStickyCTA';
 import { VisitorTracker } from '@/components/ui/VisitorTracker';
+import { SeoAnswersSection } from '@/components/sections/SeoAnswersSection';
+import type { Locale } from '@/types/i18n';
 
 const BentoInfrastructure = dynamic(() =>
   import('@/components/sections/BentoInfrastructure').then((m) => ({
@@ -52,7 +54,14 @@ const TestimonialsSection = dynamic(() =>
   }))
 );
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang: rawLang } = await params;
+  const lang = rawLang as Locale;
+
   return (
     <BookingProvider>
       <a
@@ -96,6 +105,8 @@ export default async function Home() {
           <ScrollSection3D effect="flip">
             <ModernMembership />
           </ScrollSection3D>
+
+          <SeoAnswersSection lang={lang} />
 
           <ScrollSection3D effect="rise">
             <TestimonialsSection />

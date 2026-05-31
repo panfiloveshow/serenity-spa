@@ -1,6 +1,7 @@
 import { SERVICES, PACKAGES } from '@/lib/constants';
+import { BUSINESS_ID, BUSINESS_NAME, SITE_URL } from '@/lib/seo';
 
-const BASE_URL = 'https://serenityspa.uz';
+const BASE_URL = SITE_URL;
 const CURRENCY = 'UZS';
 
 function parsePrice(raw: string): string | undefined {
@@ -24,22 +25,25 @@ function parseDurationMinutes(raw: string): string | undefined {
 export function ServicesJsonLd({ lang }: { lang: string }) {
   const providerRef = {
     '@type': 'HealthAndBeautyBusiness',
-    name: 'Serenity Spa',
-    '@id': `${BASE_URL}/${lang}#business`,
+    name: BUSINESS_NAME,
+    '@id': BUSINESS_ID,
   };
 
   const services = SERVICES.flatMap(category =>
-    category.items.map(item => {
+    category.items.map((item, i) => {
       const price = parsePrice(item.price);
       const duration = parseDurationMinutes(item.duration);
       return {
         '@context': 'https://schema.org',
         '@type': 'Service',
+        '@id': `${BASE_URL}/${lang}#service-${category.id}-${i}`,
         name: `${category.title} — ${item.name} (${item.duration})`,
         description: item.desc || `${item.name}, ${item.duration}`,
         category: category.title,
+        serviceType: category.title,
         provider: providerRef,
         areaServed: { '@type': 'City', name: 'Ташкент' },
+        url: `${BASE_URL}/${lang}#services`,
         ...(duration && { duration }),
         ...(price && {
           offers: {
@@ -58,12 +62,15 @@ export function ServicesJsonLd({ lang }: { lang: string }) {
     const price = parsePrice(pkg.price);
     return {
       '@context': 'https://schema.org',
-      '@type': 'Product',
+      '@type': 'Service',
+      '@id': `${BASE_URL}/${lang}#package-${pkg.id}`,
       name: pkg.title,
       description: pkg.description,
       provider: providerRef,
       category: 'Spa Package',
-      hasMerchantReturnPolicy: undefined,
+      serviceType: 'SPA программа',
+      areaServed: { '@type': 'City', name: 'Ташкент' },
+      url: `${BASE_URL}/${lang}#packages`,
       ...(price && {
         offers: {
           '@type': 'Offer',

@@ -7,10 +7,12 @@ import { getDictionary } from '@/lib/i18n';
 import { LangProvider } from '@/lib/lang-context';
 import { LanguagePreferenceModal } from '@/components/ui/LanguagePreferenceModal';
 import { ServicesJsonLd } from '@/components/seo/ServicesJsonLd';
+import { LocalSeoJsonLd } from '@/components/seo/LocalSeoJsonLd';
+import { SEO_KEYWORDS, SITE_URL } from '@/lib/seo';
 import type { Locale } from '@/types/i18n';
 import { SUPPORTED_LOCALES, OG_LOCALES, DEFAULT_LOCALE } from '@/types/i18n';
 
-const BASE_URL = 'https://serenityspa.uz';
+const BASE_URL = SITE_URL;
 
 const manrope = Manrope({
   variable: '--font-sans',
@@ -49,11 +51,7 @@ export async function generateMetadata({
   return {
     title: dict.metadata.title,
     description: dict.metadata.description,
-    keywords: [
-      'спа Ташкент', 'массаж Ташкент', 'спа центр', 'Serenity Spa',
-      'оздоровительный центр', 'сауна', 'хаммам', 'бассейн',
-      'пилинг', 'обёртывание', 'spa Tashkent',
-    ],
+    keywords: [...SEO_KEYWORDS],
     authors: [{ name: 'Serenity Spa' }],
     metadataBase: new URL(BASE_URL),
     alternates: {
@@ -175,49 +173,7 @@ export default async function LangLayout({
         {hasYm && (
           <link rel="dns-prefetch" href="https://mc.yandex.ru" />
         )}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'HealthAndBeautyBusiness',
-              '@id': `${BASE_URL}/${lang}#business`,
-              name: 'Serenity Spa',
-              description: dictionary.metadata.jsonLdDescription,
-              url: `${BASE_URL}/${lang}`,
-              image: `${BASE_URL}/opengraph-image`,
-              telephone: '+998712108895',
-              address: {
-                '@type': 'PostalAddress',
-                streetAddress: 'Укчи 1',
-                postalCode: '100027',
-                addressLocality: 'Ташкент',
-                addressCountry: 'UZ',
-              },
-              openingHoursSpecification: {
-                '@type': 'OpeningHoursSpecification',
-                dayOfWeek: [
-                  'Monday', 'Tuesday', 'Wednesday', 'Thursday',
-                  'Friday', 'Saturday', 'Sunday',
-                ],
-                opens: '07:00',
-                closes: '23:00',
-              },
-              sameAs: [
-                'https://www.instagram.com/serenityspa_tashkent',
-                'https://t.me/Serenity_Spa',
-              ],
-              priceRange: '$$$',
-              geo: {
-                '@type': 'GeoCoordinates',
-                latitude: 41.311081,
-                longitude: 69.279737,
-              },
-              currenciesAccepted: 'UZS',
-              paymentAccepted: 'Cash, Credit Card',
-            }),
-          }}
-        />
+        <LocalSeoJsonLd lang={lang} />
         <ServicesJsonLd lang={lang} />
       </head>
       <body className={`${manrope.variable} ${cormorant.variable} antialiased font-sans`}>

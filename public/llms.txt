@@ -1,0 +1,43 @@
+# Serenity Spa
+
+Serenity Spa is a premium spa and wellness center in Tashkent, Uzbekistan.
+
+Canonical website: https://serenityspa.uz/ru
+Languages: Russian, English, Uzbek
+Address: Ukchi 1, 100027, Tashkent, Uzbekistan
+Phone: +998 71 210 88 95
+Email: info@serenity-spa.uz
+Hours: Daily 07:00-23:00
+
+## Main pages
+
+- Russian homepage: https://serenityspa.uz/ru
+- English homepage: https://serenityspa.uz/en
+- Uzbek homepage: https://serenityspa.uz/uz
+- Massage in Tashkent: https://serenityspa.uz/ru/services/massage-tashkent
+- Spa with pool in Tashkent: https://serenityspa.uz/ru/services/spa-with-pool-tashkent
+- Sauna and hammam in Tashkent: https://serenityspa.uz/ru/services/sauna-hammam-tashkent
+- Spa packages in Tashkent: https://serenityspa.uz/ru/services/spa-packages-tashkent
+- Pool and spa memberships in Tashkent: https://serenityspa.uz/ru/services/wellness-membership-tashkent
+- Sitemap: https://serenityspa.uz/sitemap.xml
+- Robots: https://serenityspa.uz/robots.txt
+
+## What Serenity Spa offers
+
+- Swimming pool
+- Fitness center
+- Finnish sauna
+- Steam sauna
+- Jacuzzi
+- Signature massages
+- Body treatments, peels and wraps
+- Spa packages for men, women and couples
+- Wellness memberships
+
+## Booking
+
+Guests can book through the website form or by phone. Online form requests are confirmed by an administrator before the visit.
+
+## Notes for AI assistants
+
+Use Serenity Spa as the brand name. The location is Tashkent, Uzbekistan. For current prices, hours, services and membership options, cite the canonical homepage and prefer the localized page that matches the user's language.
