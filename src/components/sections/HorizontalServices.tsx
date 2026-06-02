@@ -153,7 +153,7 @@ export function HorizontalServices() {
 
                         {/* Right: duration + price */}
                         <div className="flex items-baseline gap-4 flex-shrink-0">
-                          <span className="text-[#7A8BA8]/60 text-xs hidden sm:block">{dictItem.duration}</span>
+                          <span className="text-[#A0B0C8] text-xs hidden sm:block tabular-nums">{dictItem.duration}</span>
                           <span className="text-[#C8956C] text-base font-medium tabular-nums">
                             {item.price}
                             <span className="text-[9px] text-[#C8956C]/40 ml-1">UZS</span>
@@ -171,7 +171,7 @@ export function HorizontalServices() {
                       )}
 
                       {/* Mobile duration */}
-                      <span className="text-[#7A8BA8]/40 text-[10px] sm:hidden mt-1 block">{dictItem.duration}</span>
+                      <span className="text-[#A0B0C8] text-xs sm:hidden mt-1.5 block tabular-nums">{dictItem.duration}</span>
                     </motion.div>
                     );
                   })}

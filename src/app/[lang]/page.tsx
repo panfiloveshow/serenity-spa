@@ -7,7 +7,6 @@ import { ScrollSection3D } from '@/components/ui/ScrollSection3D';
 import { BotanicalLayer } from '@/components/ui/BotanicalLayer';
 import { BookingProvider } from '@/lib/booking-context';
 import { LazyBookingModal } from '@/components/ui/LazyBookingModal';
-import { MobileStickyCTA } from '@/components/ui/MobileStickyCTA';
 import { VisitorTracker } from '@/components/ui/VisitorTracker';
 import { SeoAnswersSection } from '@/components/sections/SeoAnswersSection';
 import type { Locale } from '@/types/i18n';
@@ -74,7 +73,6 @@ export default async function Home({
       <div className="noise-overlay" />
       <LazyDesktopEffects />
       <LazyBookingModal />
-      <MobileStickyCTA />
 
       <IslandNavbar />
 

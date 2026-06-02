@@ -60,14 +60,15 @@ export function StackedCardsPackages() {
   );
 }
 
-function useCard3DTransforms(scrollYProgress: MotionValue<number>, mobile: boolean) {
-  const m = mobile ? 0.4 : 1;
+function useCardStackTransforms(scrollYProgress: MotionValue<number>, mobile: boolean) {
+  const m = mobile ? 0.5 : 1;
   return {
-    rotateX: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], mobile ? [0, 0, 0, 0, 0] : [18, 6, 0, 0, -3]),
-    rotateY: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], mobile ? [0, 0, 0, 0, 0] : [-4, -1, 0, 0, 1]),
-    scale: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [1 - 0.18 * m, 1 - 0.06 * m, 1, 1, 1 - 0.03 * m]),
-    opacity: useTransform(scrollYProgress, [0, 0.25, 0.45, 0.85, 1], [0, 0.6, 1, 1, 0.5]),
-    y: useTransform(scrollYProgress, [0, 0.3, 0.5, 0.85, 1], [160 * m, 40 * m, 0, 0, -20 * m]),
+    // Subtle scale: rise to full size on entry, settle a touch smaller as it gets covered → reads as layered depth, no skew
+    scale: useTransform(scrollYProgress, [0, 0.4, 0.85, 1], [1 - 0.07 * m, 1, 1, 1 - 0.02 * m]),
+    // Fade in only — outgoing cards stay solid so the next card cleanly covers them (no ghosting / overlap bleed)
+    opacity: useTransform(scrollYProgress, [0, 0.2, 1], [0, 1, 1]),
+    // Gentle upward reveal, then hold in place
+    y: useTransform(scrollYProgress, [0, 0.4], [70 * m, 0]),
   };
 }
 
@@ -89,7 +90,7 @@ function PackageCard({ pkg, dictPkg, bookLabel, index }: PackageCardProps) {
     offset: ['start end', 'end start'],
   });
 
-  const transforms = useCard3DTransforms(scrollYProgress, isMobile);
+  const transforms = useCardStackTransforms(scrollYProgress, isMobile);
   const stickyTop = 80 + index * 32;
 
   return (
@@ -98,7 +99,7 @@ function PackageCard({ pkg, dictPkg, bookLabel, index }: PackageCardProps) {
       className="relative h-[80vh] md:h-[70vh]"
       style={{ zIndex: index + 1 }}
     >
-      <div className="sticky" style={{ top: stickyTop, perspective: '1200px' }}>
+      <div className="sticky" style={{ top: stickyTop }}>
         <motion.div
           style={prefersReducedMotion ? {} : {
             ...transforms,
