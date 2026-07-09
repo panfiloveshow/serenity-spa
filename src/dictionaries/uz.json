@@ -12,7 +12,9 @@
     "membership": "Abonementlar",
     "contacts": "Aloqa",
     "bookButton": "Yozilish",
-    "language": "Til"
+    "language": "Til",
+    "openMenu": "Menyuni ochish",
+    "closeMenu": "Menyuni yopish"
   },
   "hero": {
     "tagline": "Sog'lomlashtirish markazi · Toshkent",
@@ -45,6 +47,13 @@
         "description": "Tiklanish uchun gidromassaj vannasi",
         "metrics": "38°"
       }
+    },
+    "eyebrow": "Sogʻlomlashtirish markazi",
+    "stats": {
+      "area": "Maydon",
+      "zones": "Dam olish zonalari",
+      "hours": "Ish vaqti",
+      "hoursSuffix": "s"
     }
   },
   "services": {
@@ -153,7 +162,10 @@
           }
         ]
       }
-    ]
+    ],
+    "eyebrow": "Muolajalar menyusi",
+    "count": "{n} ta muolaja",
+    "priceFrom": "{v} UZS dan"
   },
   "packages": {
     "sectionTitle": "Dasturlar",
@@ -349,7 +361,9 @@
           "Hamroh kattalar kirishi"
         ]
       }
-    ]
+    ],
+    "eyebrow": "Klub aʼzoligi",
+    "popularBadge": "Ommabop"
   },
   "contacts": {
     "sectionTitle": "Aloqa",
@@ -357,7 +371,11 @@
     "hours": "Har kuni 07:00 — 23:00",
     "phoneLabel": "Telefon",
     "emailLabel": "Email",
-    "mapButton": "Yo'nalish"
+    "mapButton": "Yo'nalish",
+    "eyebrow": "Biz bilan bogʻlaning",
+    "subtitle": "Biz Toshkentdamiz va har kuni ishlaymiz. Sizni kutamiz!",
+    "addressLabel": "Manzil",
+    "hoursLabel": "Ish vaqti"
   },
   "footer": {
     "navTitle": "Navigatsiya",
@@ -391,20 +409,24 @@
     ],
     "serviceLinks": [
       {
-        "label": "Massajlar",
-        "href": "#services"
+        "label": "Toshkentda massaj",
+        "href": "/services/massage-tashkent"
       },
       {
-        "label": "Tana parvarishi",
-        "href": "#services"
+        "label": "Basseynli spa",
+        "href": "/services/spa-with-pool-tashkent"
       },
       {
-        "label": "SPA paketlar",
-        "href": "#packages"
+        "label": "Sauna va hammom",
+        "href": "/services/sauna-hammam-tashkent"
       },
       {
-        "label": "Basseyn va saunalar",
-        "href": "#infrastructure"
+        "label": "Spa dasturlar",
+        "href": "/services/spa-packages-tashkent"
+      },
+      {
+        "label": "Spa abonementlari",
+        "href": "/services/wellness-membership-tashkent"
       }
     ]
   },
@@ -475,7 +497,13 @@
     "errorMessage": "Qayta urinib ko'ring yoki bizga Telegram orqali yozing",
     "retryButton": "Qayta urinish",
     "telegramButton": "Telegramga yozish",
-    "notSelected": "Tanlanmagan"
+    "notSelected": "Tanlanmagan",
+    "closeAria": "Yozilish shaklini yopish",
+    "prevMonth": "Oldingi oy",
+    "nextMonth": "Keyingi oy",
+    "clear": "Tozalash",
+    "today": "Bugun",
+    "unknownError": "Nomaʼlum xatolik"
   },
   "privacy": {
     "title": "Maxfiylik siyosati",
@@ -537,5 +565,32 @@
     "title": "Tilni tanlang",
     "subtitle": "Serenity Spa · Toshkent",
     "continueCurrent": "Joriy tilda davom etish"
+  },
+  "a11y": {
+    "skipToContent": "Asosiy kontentga oʻtish",
+    "call": "Qoʻngʻiroq qilish"
+  },
+  "testimonials": {
+    "eyebrow": "Sharhlar",
+    "title": "Mehmonlarimiz nima deydi",
+    "ratingSummary": "5 dan {avg} · {count} ta sharh",
+    "starsAria": "5 yulduzdan {n}",
+    "reviews": [
+      {
+        "name": "Madina R.",
+        "service": "Signature of Serenity",
+        "text": "Ajoyib muhit va ustalarning professionalligi. Kun boʻyi jannatda his qildim. Albatta yana kelaman."
+      },
+      {
+        "name": "Aziz K.",
+        "service": "Erkaklar paketi",
+        "text": "Toshkentdagi eng yaxshi spa. «Tananing nafasi» massaji shunchaki ajoyib. Hammasi yuqori darajada."
+      },
+      {
+        "name": "Nilufar A.",
+        "service": "Ikki kishilik Serenity",
+        "text": "Turmush oʻrtogʻimga yubiley uchun sovgʻa qildik — juda mamnun boʻldik. Premium darajadagi xizmat va tafsilotlarga eʼtibor."
+      }
+    ]
   }
 }

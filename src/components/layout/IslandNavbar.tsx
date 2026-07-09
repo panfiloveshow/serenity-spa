@@ -139,7 +139,7 @@ export function IslandNavbar() {
             </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label={mobileOpen ? 'Закрыть меню' : 'Открыть меню'}
+              aria-label={mobileOpen ? dictionary.nav.closeMenu : dictionary.nav.openMenu}
               className="w-11 h-11 rounded-xl border border-[#7A8BA8]/15 flex items-center justify-center text-[#E8DFD0]/70 cursor-pointer"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -208,7 +208,7 @@ export function BookingModal() {
       clearTimeout(timeoutId);
       
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ error: 'Неизвестная ошибка' }));
+        const errorData = await res.json().catch(() => ({ error: b.unknownError }));
         throw new Error(errorData.error || 'Failed');
       }
       
@@ -284,7 +284,7 @@ export function BookingModal() {
               ref={closeButtonRef}
               type="button"
               onClick={closeBooking}
-              aria-label="Закрыть форму записи"
+              aria-label={b.closeAria}
               className="absolute top-5 right-5 z-30 w-10 h-10 rounded-full bg-[#1F4268]/80 backdrop-blur-sm border border-[#7A8BA8]/10 flex items-center justify-center text-[#7A8BA8]/50 hover:text-[#E8DFD0] hover:border-[#C8956C]/30 hover:bg-[#1F4268] focus:outline-none focus:ring-2 focus:ring-[#C8956C]/60 focus:ring-offset-2 focus:ring-offset-[#1B3A5C] transition-all duration-300 cursor-pointer"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -6,6 +6,8 @@ import {
   SEO_KEYWORDS,
   SITE_URL,
   getSeoContent,
+  getStreet,
+  getLocality,
 } from '@/lib/seo';
 
 export function LocalSeoJsonLd({ lang }: { lang: Locale }) {
@@ -21,7 +23,7 @@ export function LocalSeoJsonLd({ lang }: { lang: Locale }) {
       alternateName: ['Serenity Spa Tashkent', 'Serenity Spa Ташкент'],
       description: content.intro,
       url: pageUrl,
-      image: `${SITE_URL}/opengraph-image`,
+      image: `${SITE_URL}/og-image.jpg`,
       logo: `${SITE_URL}/logo.svg`,
       telephone: BUSINESS_CONTACT.phone,
       email: BUSINESS_CONTACT.email,
@@ -30,9 +32,9 @@ export function LocalSeoJsonLd({ lang }: { lang: Locale }) {
       paymentAccepted: 'Cash, Credit Card',
       address: {
         '@type': 'PostalAddress',
-        streetAddress: BUSINESS_CONTACT.streetAddress,
+        streetAddress: getStreet(lang),
         postalCode: BUSINESS_CONTACT.postalCode,
-        addressLocality: lang === 'en' ? BUSINESS_CONTACT.localityEn : BUSINESS_CONTACT.localityRu,
+        addressLocality: getLocality(lang),
         addressCountry: BUSINESS_CONTACT.country,
       },
       geo: {
@@ -101,7 +103,7 @@ export function LocalSeoJsonLd({ lang }: { lang: Locale }) {
       about: businessRef,
       primaryImageOfPage: {
         '@type': 'ImageObject',
-        url: `${SITE_URL}/opengraph-image`,
+        url: `${SITE_URL}/og-image.jpg`,
       },
       breadcrumb: { '@id': `${pageUrl}#breadcrumb` },
       mainEntity: { '@id': `${pageUrl}#faq` },

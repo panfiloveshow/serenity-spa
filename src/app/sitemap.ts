@@ -28,7 +28,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     for (const page of [...pages, ...organicPages]) {
       entries.push({
         url: `${BASE_URL}/${locale}${page.path}`,
-        lastModified: new Date(),
         changeFrequency: page.changeFrequency,
         priority: page.priority,
         alternates: {

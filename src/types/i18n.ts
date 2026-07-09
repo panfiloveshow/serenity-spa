@@ -23,6 +23,12 @@ export interface Dictionary {
     contacts: string;
     bookButton: string;
     language: string;
+    openMenu: string;
+    closeMenu: string;
+  };
+  a11y: {
+    skipToContent: string;
+    call: string;
   };
   hero: {
     tagline: string;
@@ -34,10 +40,20 @@ export interface Dictionary {
   infrastructure: {
     sectionTitle: string;
     sectionSubtitle: string;
+    eyebrow: string;
+    stats: {
+      area: string;
+      zones: string;
+      hours: string;
+      hoursSuffix: string;
+    };
     items: Record<string, { title: string; description: string; metrics?: string }>;
   };
   services: {
     sectionTitle: string;
+    eyebrow: string;
+    count: string;
+    priceFrom: string;
     categories: Array<{
       title: string;
       subtitle: string;
@@ -63,6 +79,8 @@ export interface Dictionary {
   membership: {
     sectionTitle: string;
     sectionSubtitle: string;
+    eyebrow: string;
+    popularBadge: string;
     tiers: Array<{
       name: string;
       price: string;
@@ -78,6 +96,17 @@ export interface Dictionary {
     phoneLabel: string;
     emailLabel: string;
     mapButton: string;
+    eyebrow: string;
+    subtitle: string;
+    addressLabel: string;
+    hoursLabel: string;
+  };
+  testimonials: {
+    eyebrow: string;
+    title: string;
+    ratingSummary: string;
+    starsAria: string;
+    reviews: Array<{ name: string; service: string; text: string }>;
   };
   footer: {
     navTitle: string;
@@ -137,6 +166,12 @@ export interface Dictionary {
     retryButton: string;
     telegramButton: string;
     notSelected: string;
+    closeAria: string;
+    prevMonth: string;
+    nextMonth: string;
+    clear: string;
+    today: string;
+    unknownError: string;
   };
   privacy: {
     title: string;

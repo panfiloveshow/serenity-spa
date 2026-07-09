@@ -97,7 +97,7 @@ export function DatePicker({
                 type="button"
                 onClick={prevMonth}
                 disabled={!canGoPrev}
-                aria-label="Предыдущий месяц"
+                aria-label={dictionary.booking.prevMonth}
                 className="w-7 h-7 rounded-lg flex items-center justify-center text-[#7A8BA8]/50 hover:text-[#E8DFD0] hover:bg-[#1F4268] disabled:opacity-20 disabled:cursor-not-allowed transition-all cursor-pointer"
               >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
@@ -106,7 +106,7 @@ export function DatePicker({
               <button
                 type="button"
                 onClick={nextMonth}
-                aria-label="Следующий месяц"
+                aria-label={dictionary.booking.nextMonth}
                 className="w-7 h-7 rounded-lg flex items-center justify-center text-[#7A8BA8]/50 hover:text-[#E8DFD0] hover:bg-[#1F4268] transition-all cursor-pointer"
               >
                 <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
@@ -146,8 +146,8 @@ export function DatePicker({
             </div>
 
             <div className="flex justify-between mt-2 pt-2 border-t border-[#7A8BA8]/8">
-              <button type="button" onClick={() => { onChange(''); setOpen(false); }} className="text-[10px] text-[#7A8BA8]/40 hover:text-[#C8956C]/60 transition-colors cursor-pointer">Очистить</button>
-              <button type="button" onClick={() => selectDay(today.getDate())} disabled={viewMonth !== today.getMonth() || viewYear !== today.getFullYear()} className="text-[10px] text-[#C8956C]/60 hover:text-[#C8956C] transition-colors cursor-pointer disabled:opacity-30">Сегодня</button>
+              <button type="button" onClick={() => { onChange(''); setOpen(false); }} className="text-[10px] text-[#7A8BA8]/40 hover:text-[#C8956C]/60 transition-colors cursor-pointer">{dictionary.booking.clear}</button>
+              <button type="button" onClick={() => selectDay(today.getDate())} disabled={viewMonth !== today.getMonth() || viewYear !== today.getFullYear()} className="text-[10px] text-[#C8956C]/60 hover:text-[#C8956C] transition-colors cursor-pointer disabled:opacity-30">{dictionary.booking.today}</button>
             </div>
           </motion.div>
         )}

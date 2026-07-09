@@ -1,6 +1,7 @@
 import { writeFile, appendFile, mkdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
+import { createCipheriv, createHash, randomBytes } from 'crypto';
 
 const LOG_DIR = process.env.LOG_DIR || '/var/log/serenity-spa';
 const FAILED_BOOKINGS_DIR = process.env.FAILED_BOOKINGS_DIR || '/var/www/serenity-spa/failed-bookings';
@@ -85,6 +86,38 @@ interface BookingLogMeta {
   flags?: string[];
 }
 
+function queueEncryptionKey(): Buffer | null {
+  const material = process.env.FAILED_BOOKINGS_ENCRYPTION_KEY || process.env.TG_BOT_TOKEN;
+  if (!material) return null;
+  return createHash('sha256').update(material).digest();
+}
+
+function encryptQueueMessage(message: string): {
+  alg: 'aes-256-gcm';
+  iv: string;
+  tag: string;
+  data: string;
+} {
+  const key = queueEncryptionKey();
+  if (!key) {
+    throw new Error('Missing FAILED_BOOKINGS_ENCRYPTION_KEY or TG_BOT_TOKEN for failed-booking encryption');
+  }
+
+  const iv = randomBytes(12);
+  const cipher = createCipheriv('aes-256-gcm', key, iv);
+  const encrypted = Buffer.concat([
+    cipher.update(message, 'utf8'),
+    cipher.final(),
+  ]);
+
+  return {
+    alg: 'aes-256-gcm',
+    iv: iv.toString('base64'),
+    tag: cipher.getAuthTag().toString('base64'),
+    data: encrypted.toString('base64'),
+  };
+}
+
 export async function logBookingSuccess(
   data: BookingPayload,
   ip: string,
@@ -152,8 +185,18 @@ export async function saveFailedBooking(data: Record<string, unknown>): Promise<
     const filename = `${timestamp}.json`;
     const filepath = join(FAILED_BOOKINGS_DIR, filename);
 
+    const message = typeof data.message === 'string' ? data.message : '';
     const failedBooking = {
-      ...data,
+      schemaVersion: 2,
+      requestId: typeof data.requestId === 'string' ? data.requestId : undefined,
+      score: typeof data.score === 'number' ? data.score : undefined,
+      service: typeof data.service === 'string' ? data.service : undefined,
+      customer: {
+        name: maskName(typeof data.name === 'string' ? data.name : undefined),
+        phone: maskPhone(typeof data.phone === 'string' ? data.phone : undefined),
+      },
+      ip: maskIp(typeof data.ip === 'string' ? data.ip : undefined),
+      retryMessage: encryptQueueMessage(message),
       failedAt: new Date().toISOString(),
       retryCount: 0,
     };

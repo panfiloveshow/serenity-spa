@@ -11,7 +11,7 @@ import {
   getOrganicPageAlternates,
   getOrganicPageUrl,
 } from '@/lib/organic-pages';
-import { BUSINESS_CONTACT, BUSINESS_NAME, SITE_URL } from '@/lib/seo';
+import { BUSINESS_CONTACT, BUSINESS_NAME, SITE_URL, getStreet, getLocality } from '@/lib/seo';
 
 export function generateStaticParams() {
   return SUPPORTED_LOCALES.flatMap((lang) =>
@@ -55,6 +55,12 @@ export async function generateMetadata({
           alt: page.title,
         },
       ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: page.metaTitle,
+      description: page.description,
+      images: [page.image],
     },
     robots: {
       index: true,
@@ -154,7 +160,7 @@ export default async function OrganicServicePage({
               <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/12 bg-[#07111C]/48 p-4 backdrop-blur-md">
                 <div className="flex items-center gap-2 text-sm text-[#E8DFD0]">
                   <span className="text-[#C8956C]" aria-hidden>•</span>
-                  {BUSINESS_CONTACT.streetAddress}, {lang === 'en' ? BUSINESS_CONTACT.localityEn : BUSINESS_CONTACT.localityRu}
+                  {getStreet(lang)}, {getLocality(lang)}
                 </div>
               </div>
             </div>

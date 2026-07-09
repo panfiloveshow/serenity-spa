@@ -1,8 +1,22 @@
 import { SERVICES, PACKAGES } from '@/lib/constants';
-import { BUSINESS_ID, BUSINESS_NAME, SITE_URL } from '@/lib/seo';
+import { BUSINESS_ID, BUSINESS_NAME, SITE_URL, getLocality } from '@/lib/seo';
+import { getDictionary } from '@/lib/i18n';
+import type { Locale } from '@/types/i18n';
 
 const BASE_URL = SITE_URL;
 const CURRENCY = 'UZS';
+
+const SPA_PACKAGE_LABEL: Record<Locale, string> = {
+  ru: 'SPA программа',
+  en: 'Spa package',
+  uz: 'Spa dasturi',
+};
+
+const CATALOG_LABEL: Record<Locale, string> = {
+  ru: 'Услуги и SPA программы',
+  en: 'Services and spa packages',
+  uz: 'Xizmatlar va spa dasturlari',
+};
 
 function parsePrice(raw: string): string | undefined {
   const digits = raw.replace(/\D/g, '');
@@ -19,86 +33,79 @@ function parseDurationMinutes(raw: string): string | undefined {
 }
 
 /**
- * Inline Service/OfferCatalog JSON-LD for each service category and premium package.
- * Rendered server-side; boosts rich results and local SEO for Tashkent.
+ * Single OfferCatalog JSON-LD merged into the business node via @id.
+ * One script tag instead of one per service; Google shows no rich results
+ * for Service, so the catalog just enriches the LocalBusiness entity.
  */
-export function ServicesJsonLd({ lang }: { lang: string }) {
-  const providerRef = {
-    '@type': 'HealthAndBeautyBusiness',
-    name: BUSINESS_NAME,
-    '@id': BUSINESS_ID,
-  };
+export async function ServicesJsonLd({ lang }: { lang: Locale }) {
+  const dict = await getDictionary(lang);
+  const city = getLocality(lang);
+  const areaServed = { '@type': 'City', name: city };
 
-  const services = SERVICES.flatMap(category =>
-    category.items.map((item, i) => {
+  const serviceOffers = SERVICES.flatMap((category, ci) => {
+    const dictCat = dict.services.categories[ci];
+    const catTitle = dictCat?.title ?? category.title;
+    return category.items.map((item, i) => {
+      const dictItem = dictCat?.items[i];
+      const itemName = dictItem?.name ?? item.name;
+      const itemDuration = dictItem?.duration ?? item.duration;
+      const itemDesc = dictItem?.desc ?? item.desc;
       const price = parsePrice(item.price);
+      // Parse ISO duration from the RU constant (мин/час are always parseable).
       const duration = parseDurationMinutes(item.duration);
       return {
-        '@context': 'https://schema.org',
-        '@type': 'Service',
-        '@id': `${BASE_URL}/${lang}#service-${category.id}-${i}`,
-        name: `${category.title} — ${item.name} (${item.duration})`,
-        description: item.desc || `${item.name}, ${item.duration}`,
-        category: category.title,
-        serviceType: category.title,
-        provider: providerRef,
-        areaServed: { '@type': 'City', name: 'Ташкент' },
+        '@type': 'Offer',
+        ...(price && { price, priceCurrency: CURRENCY }),
+        availability: 'https://schema.org/InStock',
         url: `${BASE_URL}/${lang}#services`,
-        ...(duration && { duration }),
-        ...(price && {
-          offers: {
-            '@type': 'Offer',
-            price,
-            priceCurrency: CURRENCY,
-            availability: 'https://schema.org/InStock',
-            url: `${BASE_URL}/${lang}#services`,
-          },
-        }),
+        itemOffered: {
+          '@type': 'Service',
+          name: `${catTitle} — ${itemName} (${itemDuration})`,
+          description: itemDesc || `${itemName}, ${itemDuration}`,
+          category: catTitle,
+          serviceType: catTitle,
+          areaServed,
+          ...(duration && { duration }),
+        },
       };
-    }),
-  );
+    });
+  });
 
-  const packages = PACKAGES.map(pkg => {
+  const packageOffers = PACKAGES.map((pkg, pi) => {
+    const dictPkg = dict.packages.items[pi];
     const price = parsePrice(pkg.price);
     return {
-      '@context': 'https://schema.org',
-      '@type': 'Service',
-      '@id': `${BASE_URL}/${lang}#package-${pkg.id}`,
-      name: pkg.title,
-      description: pkg.description,
-      provider: providerRef,
-      category: 'Spa Package',
-      serviceType: 'SPA программа',
-      areaServed: { '@type': 'City', name: 'Ташкент' },
+      '@type': 'Offer',
+      ...(price && { price, priceCurrency: CURRENCY }),
+      availability: 'https://schema.org/InStock',
       url: `${BASE_URL}/${lang}#packages`,
-      ...(price && {
-        offers: {
-          '@type': 'Offer',
-          price,
-          priceCurrency: CURRENCY,
-          availability: 'https://schema.org/InStock',
-          url: `${BASE_URL}/${lang}#packages`,
-        },
-      }),
+      itemOffered: {
+        '@type': 'Service',
+        name: dictPkg?.title ?? pkg.title,
+        description: dictPkg?.description ?? pkg.description,
+        category: 'Spa Package',
+        serviceType: SPA_PACKAGE_LABEL[lang] ?? SPA_PACKAGE_LABEL.ru,
+        areaServed,
+      },
     };
   });
 
+  const catalog = {
+    '@context': 'https://schema.org',
+    '@type': 'HealthAndBeautyBusiness',
+    '@id': BUSINESS_ID,
+    name: BUSINESS_NAME,
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: `${BUSINESS_NAME} — ${CATALOG_LABEL[lang] ?? CATALOG_LABEL.ru}`,
+      itemListElement: [...serviceOffers, ...packageOffers],
+    },
+  };
+
   return (
-    <>
-      {services.map((s, i) => (
-        <script
-          key={`svc-${i}`}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(s) }}
-        />
-      ))}
-      {packages.map((p, i) => (
-        <script
-          key={`pkg-${i}`}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(p) }}
-        />
-      ))}
-    </>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(catalog) }}
+    />
   );
 }

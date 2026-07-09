@@ -47,3 +47,6 @@ next-env.d.ts
 /lh-*.json
 /lint-report.json
 /.claude/
+
+# local photo originals
+/Spa - Pool 1.jpg

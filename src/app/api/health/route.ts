@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getRedisClient } from '@/lib/redis';
 
 interface HealthStatus {
@@ -30,7 +30,45 @@ async function pingRedis(timeoutMs = 1000): Promise<'up' | 'down'> {
   }
 }
 
-export async function GET() {
+function hasDetailedHealthAccess(request: NextRequest): boolean {
+  const healthToken = process.env.HEALTHCHECK_TOKEN;
+  if (!healthToken) return false;
+
+  const bearer = request.headers.get('authorization')?.match(/^Bearer\s+(.+)$/i)?.[1];
+
+  return bearer === healthToken;
+}
+
+export async function GET(request: NextRequest) {
+  if (hasDetailedHealthAccess(request)) {
+    const { body, httpStatus } = await getDetailedHealth();
+    return NextResponse.json(body, {
+      status: httpStatus,
+      headers: { 'Cache-Control': 'no-store, max-age=0' },
+    });
+  }
+
+  return NextResponse.json(
+    { status: 'ok' },
+    { headers: { 'Cache-Control': 'no-store, max-age=0' } },
+  );
+}
+
+export async function HEAD() {
+  return new Response(null, {
+    status: 200,
+    headers: { 'Cache-Control': 'no-store, max-age=0' },
+  });
+}
+
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: { 'Cache-Control': 'no-store, max-age=0' },
+  });
+}
+
+async function getDetailedHealth() {
   const redisStatus = await pingRedis();
   const telegramConfigured = Boolean(process.env.TG_BOT_TOKEN && process.env.TG_CHAT_ID);
 
@@ -50,8 +88,5 @@ export async function GET() {
   };
 
   const httpStatus = status === 'ok' ? 200 : status === 'degraded' ? 200 : 503;
-  return NextResponse.json(body, {
-    status: httpStatus,
-    headers: { 'Cache-Control': 'no-store, max-age=0' },
-  });
+  return { body, httpStatus };
 }

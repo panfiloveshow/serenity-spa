@@ -35,13 +35,13 @@ export function getRedisClient(): Redis | null {
 }
 
 /**
- * Strict behavior:
+ * Behavior:
  *  - Redis up: precise counter, allows up to `limit` in window
- *  - Redis down: fail-CLOSED after 3 consecutive errors so attackers can't DoS Redis to bypass RL
- *  - The memory fallback below gives sane behavior during transient restarts
+ *  - Redis down: fall back to the in-process counter. Runs as a single PM2 fork
+ *    instance (ecosystem.config.js), so the memory limiter still enforces the
+ *    same limits globally — no bypass, and no 429-ing every legitimate booking.
  */
 const MEM_COUNTERS = new Map<string, { count: number; resetAt: number }>();
-let redisFailCount = 0;
 
 function checkMemoryLimit(key: string, limit: number, windowMs: number): boolean {
   const now = Date.now();
@@ -81,14 +81,9 @@ export async function checkRateLimitRedis(key: string, limit: number, windowMs: 
     if (current === 1) {
       await client.pexpire(key, windowMs);
     }
-    redisFailCount = 0; // reset on success
     return current <= limit;
   } catch (error) {
-    redisFailCount += 1;
-    console.error(`Redis rate limit check error (fail #${redisFailCount}):`, error);
-    // After a few consecutive failures, fail-CLOSED to prevent bypass via Redis DoS
-    if (redisFailCount > 3) return false;
-    // Transient error — use memory fallback
+    console.error('Redis rate limit check error, using in-memory fallback:', error);
     return checkMemoryLimit(key, limit, windowMs);
   }
 }

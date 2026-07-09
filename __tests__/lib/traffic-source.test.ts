@@ -95,6 +95,17 @@ describe('analyzeTrafficSource — unknown external host', () => {
     expect(r.suspicious).toBe(true);
     expect(r.suspicionReason).toMatch(/неизвестн/i);
   });
+
+  it.each([
+    'https://google.phishing.ru/',
+    'https://notfb.com/',
+    'https://2gis.evil.net/',
+    'https://yandex.attacker.io/',
+  ])('does not trust brand-lookalike host %s (no substring match)', (url) => {
+    const r = analyzeTrafficSource({ referrer: url });
+    expect(r.suspicious).toBe(true);
+    expect(r.suspicionReason).toMatch(/неизвестн/i);
+  });
 });
 
 describe('analyzeTrafficSource — UTM priority', () => {

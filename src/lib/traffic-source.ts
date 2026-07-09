@@ -22,17 +22,19 @@ const GAD_SOURCE_MAP: Record<string, { label: string; risky: boolean }> = {
   '10': { label: 'Cross-Network', risky: true },
 };
 
-// Known trusted sources
+// Known trusted sources — full registrable domains only, matched at a label
+// boundary (see isTrustedHost). No bare prefixes: substring matching let hosts
+// like "google.phishing.ru" pass as trusted.
 const TRUSTED_HOSTS = [
   'serenityspa.uz',
-  'google.', 'google.com', 'google.ru', 'google.uz',
-  'yandex.', 'yandex.ru', 'yandex.uz',
+  'google.com', 'google.ru', 'google.uz',
+  'yandex.ru', 'yandex.uz', 'yandex.com',
   'instagram.com',
   'facebook.com', 'fb.com',
   'youtube.com', 'youtu.be',
   't.me', 'telegram.org', 'telegram.me',
   'tiktok.com',
-  '2gis.',
+  '2gis.ru', '2gis.uz',
   'bing.com',
 ];
 
@@ -57,7 +59,7 @@ function extractHost(referrer: string): string | undefined {
 
 function isTrustedHost(host: string, ownDomain: string): boolean {
   if (host === ownDomain || host.endsWith('.' + ownDomain)) return true;
-  return TRUSTED_HOSTS.some(t => host === t || host.endsWith('.' + t) || host.includes(t));
+  return TRUSTED_HOSTS.some(t => host === t || host.endsWith('.' + t));
 }
 
 function isFraudIndicator(host: string): boolean {
@@ -150,12 +152,6 @@ export function analyzeTrafficSource(input: {
       suspicious = true;
       reasons.push(`переход с неизвестного сайта ${referrerHost}`);
     }
-  }
-
-  // 6. gad_source=5/7 but referrer is clean — still worth noting
-  if (gadInfo?.risky && !reasons.length) {
-    reasons.push(`реклама Google показана на партнёрских площадках (${gadInfo.label})`);
-    suspicious = true;
   }
 
   return {

@@ -31,7 +31,7 @@ export function ModernMembership() {
         >
           <div>
             <motion.span className="text-[#C8956C] uppercase tracking-[0.18em] md:tracking-[0.25em] text-[11px] md:text-xs block mb-3 md:mb-4" variants={staggerChild}>
-              Членство в клубе
+              {dictionary.membership.eyebrow}
             </motion.span>
             <KineticText className="text-[clamp(2.75rem,15vw,4rem)] md:text-7xl leading-[0.95] font-light text-[#E8DFD0] tracking-tight justify-start">{dictionary.membership.sectionTitle}</KineticText>
           </div>
@@ -49,7 +49,7 @@ export function ModernMembership() {
           viewport={MOTION.viewport.once}
         >
           {basicPlans.map((tier, i) => (
-            <MembershipCard key={tier.id} tier={tier} dictTier={dictionary.membership.tiers[i]} bookLabel={dictionary.nav.bookButton} />
+            <MembershipCard key={tier.id} tier={tier} dictTier={dictionary.membership.tiers[i]} bookLabel={dictionary.nav.bookButton} popularLabel={dictionary.membership.popularBadge} />
           ))}
         </motion.div>
 
@@ -62,7 +62,7 @@ export function ModernMembership() {
           viewport={MOTION.viewport.once}
         >
           {premiumPlans.map((tier, i) => (
-            <MembershipCard key={tier.id} tier={tier} dictTier={dictionary.membership.tiers[i + 3]} bookLabel={dictionary.nav.bookButton} />
+            <MembershipCard key={tier.id} tier={tier} dictTier={dictionary.membership.tiers[i + 3]} bookLabel={dictionary.nav.bookButton} popularLabel={dictionary.membership.popularBadge} />
           ))}
         </motion.div>
       </div>
@@ -74,9 +74,10 @@ interface MembershipCardProps {
   tier: typeof MEMBERSHIP_TIERS[number];
   dictTier: { name: string; price: string; priceNote?: string; period: string; features: string[] };
   bookLabel: string;
+  popularLabel: string;
 }
 
-function MembershipCard({ tier, dictTier, bookLabel }: MembershipCardProps) {
+function MembershipCard({ tier, dictTier, bookLabel, popularLabel }: MembershipCardProps) {
   const isHighlighted = tier.isPopular;
   const { openBooking } = useBooking();
 
@@ -106,7 +107,7 @@ function MembershipCard({ tier, dictTier, bookLabel }: MembershipCardProps) {
           </span>
           {isHighlighted && (
             <span className="inline-block ml-2 bg-[#1B3A5C] text-[#E8DFD0] text-[8px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full">
-              Популярный
+              {popularLabel}
             </span>
           )}
         </div>

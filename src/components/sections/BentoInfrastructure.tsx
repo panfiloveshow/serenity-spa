@@ -108,7 +108,7 @@ export function BentoInfrastructure() {
               className="text-[#C8956C] uppercase tracking-[0.25em] text-xs block mb-4"
               variants={staggerChild}
             >
-              Оздоровительный центр
+              {infra.eyebrow}
             </motion.span>
             <KineticText className="text-4xl md:text-6xl font-light text-[#E8DFD0]">{infra.sectionTitle}</KineticText>
           </div>
@@ -211,9 +211,9 @@ export function BentoInfrastructure() {
                   {/* Inline metrics */}
                   <div className="hidden md:flex items-center gap-10">
                     {[
-                      { val: '1200', suffix: 'м²', label: 'Площадь' },
-                      { val: '7', suffix: '', label: 'Зон отдыха' },
-                      { val: '12', suffix: 'ч', label: 'Работаем' },
+                      { val: '1200', suffix: 'м²', label: infra.stats.area },
+                      { val: '7', suffix: '', label: infra.stats.zones },
+                      { val: '12', suffix: infra.stats.hoursSuffix, label: infra.stats.hours },
                     ].map((m, i) => (
                       <div key={i} className="text-center">
                         <p className="text-2xl font-light text-[#C8956C]">

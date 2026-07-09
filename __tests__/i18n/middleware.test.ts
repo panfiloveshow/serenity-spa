@@ -39,8 +39,9 @@ function createMockRequest(pathname: string) {
   } as unknown as import('next/server').NextRequest;
 }
 
-// Import middleware after mocks are set up
-const { middleware } = await import('@/middleware');
+// Import middleware after mocks are set up.
+// Next 16 renamed middleware.ts → proxy.ts and the export middleware → proxy.
+const { proxy: middleware } = await import('@/proxy');
 
 // --- Arbitraries ---
 

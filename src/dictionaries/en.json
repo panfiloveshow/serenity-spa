@@ -12,7 +12,9 @@
     "membership": "Membership",
     "contacts": "Contacts",
     "bookButton": "Book Now",
-    "language": "Language"
+    "language": "Language",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "hero": {
     "tagline": "Wellness Center · Tashkent",
@@ -45,6 +47,13 @@
         "description": "Hydromassage bath for recovery",
         "metrics": "38°"
       }
+    },
+    "eyebrow": "Wellness center",
+    "stats": {
+      "area": "Area",
+      "zones": "Relax zones",
+      "hours": "Open daily",
+      "hoursSuffix": "h"
     }
   },
   "services": {
@@ -153,7 +162,10 @@
           }
         ]
       }
-    ]
+    ],
+    "eyebrow": "Treatment menu",
+    "count": "{n} treatments",
+    "priceFrom": "from {v} UZS"
   },
   "packages": {
     "sectionTitle": "Packages",
@@ -349,7 +361,9 @@
           "Accompanying adult entry"
         ]
       }
-    ]
+    ],
+    "eyebrow": "Club membership",
+    "popularBadge": "Popular"
   },
   "contacts": {
     "sectionTitle": "Contacts",
@@ -357,7 +371,11 @@
     "hours": "Daily 07:00 — 23:00",
     "phoneLabel": "Phone",
     "emailLabel": "Email",
-    "mapButton": "Directions"
+    "mapButton": "Directions",
+    "eyebrow": "Get in touch",
+    "subtitle": "We're in Tashkent and open every day. We'd love to see you!",
+    "addressLabel": "Address",
+    "hoursLabel": "Working hours"
   },
   "footer": {
     "navTitle": "Navigation",
@@ -391,20 +409,24 @@
     ],
     "serviceLinks": [
       {
-        "label": "Massages",
-        "href": "#services"
+        "label": "Massage in Tashkent",
+        "href": "/services/massage-tashkent"
       },
       {
-        "label": "Body Treatments",
-        "href": "#services"
+        "label": "Spa with Pool",
+        "href": "/services/spa-with-pool-tashkent"
       },
       {
-        "label": "SPA Packages",
-        "href": "#packages"
+        "label": "Sauna & Hammam",
+        "href": "/services/sauna-hammam-tashkent"
       },
       {
-        "label": "Pool & Saunas",
-        "href": "#infrastructure"
+        "label": "Spa Packages",
+        "href": "/services/spa-packages-tashkent"
+      },
+      {
+        "label": "Spa Memberships",
+        "href": "/services/wellness-membership-tashkent"
       }
     ]
   },
@@ -475,7 +497,13 @@
     "errorMessage": "Please try again or message us directly on Telegram",
     "retryButton": "Try again",
     "telegramButton": "Message on Telegram",
-    "notSelected": "Not selected"
+    "notSelected": "Not selected",
+    "closeAria": "Close booking form",
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month",
+    "clear": "Clear",
+    "today": "Today",
+    "unknownError": "Unknown error"
   },
   "privacy": {
     "title": "Privacy Policy",
@@ -537,5 +565,32 @@
     "title": "Choose your language",
     "subtitle": "Serenity Spa · Tashkent",
     "continueCurrent": "Continue in current language"
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "call": "Call"
+  },
+  "testimonials": {
+    "eyebrow": "Reviews",
+    "title": "What our guests say",
+    "ratingSummary": "{avg} of 5 · {count} reviews",
+    "starsAria": "{n} of 5 stars",
+    "reviews": [
+      {
+        "name": "Madina R.",
+        "service": "Signature of Serenity",
+        "text": "Incredible atmosphere and truly professional therapists. I felt like I was in paradise all day. I will definitely be back."
+      },
+      {
+        "name": "Aziz K.",
+        "service": "Men's package",
+        "text": "The best spa in Tashkent. The “Body Breathing” massage was simply incredible. Everything is top-notch."
+      },
+      {
+        "name": "Nilufar A.",
+        "service": "Serenity for two",
+        "text": "We gave it to my husband for our anniversary — we were absolutely delighted. Premium-class service and attention to detail."
+      }
+    ]
   }
 }

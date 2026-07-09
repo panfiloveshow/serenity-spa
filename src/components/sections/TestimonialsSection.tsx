@@ -1,6 +1,15 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useLang } from '@/lib/lang-context';
+import { BUSINESS_ID, BUSINESS_NAME } from '@/lib/seo';
+import type { Locale } from '@/types/i18n';
+
+const DATE_LOCALES: Record<Locale, string> = {
+  ru: 'ru-RU',
+  en: 'en-US',
+  uz: 'uz-UZ',
+};
 
 export interface Testimonial {
   id: string;
@@ -14,37 +23,17 @@ export interface Testimonial {
   avatar?: string;
 }
 
-// Placeholder data — replace with real reviews from Google My Business / 2GIS / internal feedback
-export const PLACEHOLDER_TESTIMONIALS: Testimonial[] = [
-  {
-    id: 'p1',
-    name: 'Мадина Р.',
-    service: 'Signature of Serenity',
-    rating: 5,
-    text: 'Невероятная атмосфера и профессионализм мастеров. Чувствовала себя в раю целый день. Обязательно вернусь.',
-    date: '2026-03-20',
-  },
-  {
-    id: 'p2',
-    name: 'Азиз К.',
-    service: 'Мужской пакет',
-    rating: 5,
-    text: 'Лучший спа-центр в Ташкенте. Массаж "Дыхание тела" — просто что-то невероятное. Всё на высшем уровне.',
-    date: '2026-03-15',
-  },
-  {
-    id: 'p3',
-    name: 'Nilufar А.',
-    service: 'Серенити для двоих',
-    rating: 5,
-    text: 'Подарили мужу на годовщину — остались в полном восторге. Сервис премиум-класса, внимание к деталям.',
-    date: '2026-03-02',
-  },
+// Placeholder reviews — text lives in the dictionaries (per locale); rating/date here.
+// Replace with real reviews from Google My Business / 2GIS / internal feedback.
+const REVIEW_META: Array<Pick<Testimonial, 'id' | 'rating' | 'date'>> = [
+  { id: 'p1', rating: 5, date: '2026-03-20' },
+  { id: 'p2', rating: 5, date: '2026-03-15' },
+  { id: 'p3', rating: 5, date: '2026-03-02' },
 ];
 
-function StarRating({ rating }: { rating: number }) {
+function StarRating({ rating, label }: { rating: number; label: string }) {
   return (
-    <div className="flex gap-0.5" aria-label={`${rating} из 5 звёзд`}>
+    <div className="flex gap-0.5" aria-label={label}>
       {Array.from({ length: 5 }).map((_, i) => (
         <svg
           key={i}
@@ -60,12 +49,24 @@ function StarRating({ rating }: { rating: number }) {
   );
 }
 
-export function TestimonialsSection({ testimonials = PLACEHOLDER_TESTIMONIALS }: {
+export function TestimonialsSection({ testimonials }: {
   testimonials?: Testimonial[];
 }) {
-  if (!testimonials.length) return null;
+  const { dictionary, locale } = useLang();
+  const tx = dictionary.testimonials;
 
-  const avgRating = testimonials.reduce((s, t) => s + t.rating, 0) / testimonials.length;
+  // Default to the localized placeholder reviews (rating/date from REVIEW_META).
+  const data: Testimonial[] = testimonials ?? tx.reviews.map((r, i) => ({
+    ...REVIEW_META[i],
+    name: r.name,
+    service: r.service,
+    text: r.text,
+  }));
+
+  if (!data.length) return null;
+
+  const avgRating = data.reduce((s, t) => s + t.rating, 0) / data.length;
+  const starsAria = (n: number) => tx.starsAria.replace('{n}', String(n));
 
   return (
     <section id="testimonials" className="relative py-20 md:py-28 px-6 md:px-12 lg:px-20">
@@ -79,20 +80,20 @@ export function TestimonialsSection({ testimonials = PLACEHOLDER_TESTIMONIALS }:
           className="mb-12 text-center"
         >
           <span className="block text-[#C8956C] tracking-[0.35em] uppercase text-[11px] md:text-xs mb-4 font-medium">
-            Отзывы
+            {tx.eyebrow}
           </span>
           <h2 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-4">
-            Что говорят наши гости
+            {tx.title}
           </h2>
           <div className="flex items-center justify-center gap-3 text-[#7A8BA8]/60 text-sm">
-            <StarRating rating={Math.round(avgRating)} />
-            <span>{avgRating.toFixed(1)} из 5 · {testimonials.length} отзывов</span>
+            <StarRating rating={Math.round(avgRating)} label={starsAria(Math.round(avgRating))} />
+            <span>{tx.ratingSummary.replace('{avg}', avgRating.toFixed(1)).replace('{count}', String(data.length))}</span>
           </div>
         </motion.div>
 
         {/* Grid */}
         <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t, i) => (
+          {data.map((t, i) => (
             <motion.article
               key={t.id}
               initial={{ opacity: 0, y: 30 }}
@@ -104,14 +105,14 @@ export function TestimonialsSection({ testimonials = PLACEHOLDER_TESTIMONIALS }:
               itemType="https://schema.org/Review"
             >
               <div className="flex items-center justify-between mb-4">
-                <StarRating rating={t.rating} />
+                <StarRating rating={t.rating} label={starsAria(t.rating)} />
                 <meta itemProp="reviewRating" content={String(t.rating)} />
                 <time
                   className="text-[#7A8BA8]/40 text-xs"
                   dateTime={t.date}
                   itemProp="datePublished"
                 >
-                  {new Date(t.date).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })}
+                  {new Date(t.date).toLocaleDateString(DATE_LOCALES[locale], { month: 'long', year: 'numeric' })}
                 </time>
               </div>
 
@@ -148,10 +149,11 @@ export function TestimonialsSection({ testimonials = PLACEHOLDER_TESTIMONIALS }:
               '@type': 'AggregateRating',
               itemReviewed: {
                 '@type': 'LocalBusiness',
-                name: 'Serenity Spa',
+                '@id': BUSINESS_ID,
+                name: BUSINESS_NAME,
               },
               ratingValue: avgRating.toFixed(1),
-              reviewCount: testimonials.length,
+              reviewCount: data.length,
               bestRating: 5,
               worstRating: 1,
             }),

@@ -78,7 +78,7 @@ export function Footer() {
                   {col.links.map((link) => (
                     <li key={link.label}>
                       <a
-                        href={link.href}
+                        href={link.href.startsWith('/') ? `/${locale}${link.href}` : link.href}
                         className="text-[#E8DFD0]/40 text-sm font-light hover:text-[#E8DFD0] hover:pl-1 transition-all duration-300 block py-2 -my-2"
                       >
                         {link.label}

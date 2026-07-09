@@ -33,7 +33,7 @@ export function HorizontalServices() {
           viewport={MOTION.viewport.once}
         >
           <motion.span className="text-[#C8956C] uppercase tracking-[0.18em] md:tracking-[0.25em] text-[11px] md:text-xs block mb-3 md:mb-4" variants={staggerChild}>
-            Меню процедур
+            {dictionary.services.eyebrow}
           </motion.span>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-5 md:gap-6">
             <KineticText className="text-[clamp(2.75rem,15vw,4rem)] md:text-7xl leading-[0.95] font-light text-[#E8DFD0] tracking-tight justify-start">{dictionary.services.sectionTitle}</KineticText>
@@ -92,9 +92,9 @@ export function HorizontalServices() {
                     <h3 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-3">{activeDictCategory.title}</h3>
                     <p className="text-[#A0B0C8] text-sm leading-relaxed mb-6">{activeDictCategory.subtitle}</p>
                     <div className="flex items-center gap-4 text-[#7A8BA8]/50 text-xs">
-                      <span>{activeCategory.items.length} процедур</span>
+                      <span>{dictionary.services.count.replace('{n}', String(activeCategory.items.length))}</span>
                       <span className="w-1 h-1 rounded-full bg-[#7A8BA8]/30" />
-                      <span>от {Math.min(...activeCategory.items.map(i => parseInt(i.price.replace(/\s/g, ''))))} UZS</span>
+                      <span>{dictionary.services.priceFrom.replace('{v}', String(Math.min(...activeCategory.items.map(i => parseInt(i.price.replace(/\s/g, ''))))))}</span>
                     </div>
                   </div>
                 </div>
@@ -116,7 +116,7 @@ export function HorizontalServices() {
                       transition={{ duration: 0.4, delay: idx * 0.04, ease: [0.22, 1, 0.36, 1] }}
                       role="button"
                       tabIndex={0}
-                      aria-label={`${dictItem.name} — ${dictItem.duration}, ${item.price} UZS. Записаться`}
+                      aria-label={`${dictItem.name} — ${dictItem.duration}, ${item.price} UZS. ${dictionary.nav.bookButton}`}
                       className="group/item px-6 md:px-8 py-5 hover:bg-[#C8956C]/8 focus:bg-[#C8956C]/8 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#C8956C]/40 transition-all duration-300 cursor-pointer"
                       onClick={() => openBooking({
                         type: 'service',

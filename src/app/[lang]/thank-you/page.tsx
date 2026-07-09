@@ -20,6 +20,8 @@ export async function generateMetadata({
   return {
     title: `${dict.booking.thankYouTitle} | Serenity Spa`,
     robots: { index: false, follow: false },
+    // self-canonical: don't inherit the homepage canonical from the layout
+    alternates: { canonical: `/${lang}/thank-you` },
   };
 }
 

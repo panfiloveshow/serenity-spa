@@ -9,6 +9,7 @@ import { BookingProvider } from '@/lib/booking-context';
 import { LazyBookingModal } from '@/components/ui/LazyBookingModal';
 import { VisitorTracker } from '@/components/ui/VisitorTracker';
 import { SeoAnswersSection } from '@/components/sections/SeoAnswersSection';
+import { getDictionary } from '@/lib/i18n';
 import type { Locale } from '@/types/i18n';
 
 const BentoInfrastructure = dynamic(() =>
@@ -60,6 +61,7 @@ export default async function Home({
 }) {
   const { lang: rawLang } = await params;
   const lang = rawLang as Locale;
+  const dictionary = await getDictionary(lang);
 
   return (
     <BookingProvider>
@@ -67,7 +69,7 @@ export default async function Home({
         href="#main"
         className="sr-only focus-visible:not-sr-only focus-visible:fixed focus-visible:top-4 focus-visible:left-4 focus-visible:z-[100] focus-visible:px-4 focus-visible:py-2 focus-visible:rounded-lg focus-visible:bg-[#C8956C] focus-visible:text-[#1B3A5C] focus-visible:font-semibold focus-visible:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8DFD0]"
       >
-        Перейти к основному содержимому
+        {dictionary.a11y.skipToContent}
       </a>
       <VisitorTracker />
       <div className="noise-overlay" />

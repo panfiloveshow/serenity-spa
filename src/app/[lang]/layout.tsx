@@ -8,7 +8,7 @@ import { LangProvider } from '@/lib/lang-context';
 import { LanguagePreferenceModal } from '@/components/ui/LanguagePreferenceModal';
 import { ServicesJsonLd } from '@/components/seo/ServicesJsonLd';
 import { LocalSeoJsonLd } from '@/components/seo/LocalSeoJsonLd';
-import { SEO_KEYWORDS, SITE_URL } from '@/lib/seo';
+import { SITE_URL } from '@/lib/seo';
 import type { Locale } from '@/types/i18n';
 import { SUPPORTED_LOCALES, OG_LOCALES, DEFAULT_LOCALE } from '@/types/i18n';
 
@@ -51,7 +51,6 @@ export async function generateMetadata({
   return {
     title: dict.metadata.title,
     description: dict.metadata.description,
-    keywords: [...SEO_KEYWORDS],
     authors: [{ name: 'Serenity Spa' }],
     metadataBase: new URL(BASE_URL),
     alternates: {
@@ -67,7 +66,7 @@ export async function generateMetadata({
       description: dict.metadata.ogDescription,
       images: [
         {
-          url: '/opengraph-image',
+          url: '/og-image.jpg',
           width: 1200,
           height: 630,
           alt: dict.metadata.ogTitle,
@@ -78,7 +77,12 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title: dict.metadata.ogTitle,
       description: dict.metadata.ogDescription,
-      images: ['/opengraph-image'],
+      images: ['/og-image.jpg'],
+    },
+    // tokens from Search Console / Яндекс.Вебмастер; omitted while env vars are unset
+    verification: {
+      google: process.env.GOOGLE_SITE_VERIFICATION,
+      yandex: process.env.YANDEX_VERIFICATION,
     },
     robots: {
       index: true,

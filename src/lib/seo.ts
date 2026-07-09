@@ -9,9 +9,11 @@ export const BUSINESS_CONTACT = {
   phoneDisplay: '+998 71 210 88 95',
   email: 'info@serenity-spa.uz',
   streetAddress: 'Укчи 1',
+  streetAddressLatin: 'Ukchi 1',
   postalCode: '100027',
   localityRu: 'Ташкент',
   localityEn: 'Tashkent',
+  localityUz: 'Toshkent',
   country: 'UZ',
   latitude: 41.311081,
   longitude: 69.279737,
@@ -179,4 +181,18 @@ export const SEO_CONTENT: Record<Locale, {
 
 export function getSeoContent(locale: Locale) {
   return SEO_CONTENT[locale] ?? SEO_CONTENT.ru;
+}
+
+/** Street name — Cyrillic for RU, Latin transliteration for EN/UZ. */
+export function getStreet(locale: Locale) {
+  return locale === 'ru' ? BUSINESS_CONTACT.streetAddress : BUSINESS_CONTACT.streetAddressLatin;
+}
+
+/** City name in the reader's language. */
+export function getLocality(locale: Locale) {
+  return locale === 'en'
+    ? BUSINESS_CONTACT.localityEn
+    : locale === 'uz'
+      ? BUSINESS_CONTACT.localityUz
+      : BUSINESS_CONTACT.localityRu;
 }

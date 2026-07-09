@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomUUID } from 'crypto';
+import { isIP } from 'net';
 import { logBookingSuccess, logBookingError, saveFailedBooking } from '@/lib/logger';
 import { checkRateLimitRedis, incrDailyCounter } from '@/lib/redis';
 import { bookingSchema, detectBot, type BookingData } from '@/lib/validation';
@@ -54,6 +55,46 @@ function isAllowedOrigin(origin: string | null, referer: string | null): boolean
       return false;
     }
   });
+}
+
+function normalizeIpCandidate(value: string | null): string | null {
+  if (!value) return null;
+
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.length > 64) return null;
+
+  if (isIP(trimmed)) return trimmed;
+
+  const bracketedIpv6 = trimmed.match(/^\[([^\]]+)\](?::\d{1,5})?$/);
+  if (bracketedIpv6 && isIP(bracketedIpv6[1])) {
+    return bracketedIpv6[1];
+  }
+
+  const ipv4WithPort = trimmed.match(/^(\d{1,3}(?:\.\d{1,3}){3})(?::\d{1,5})?$/);
+  if (ipv4WithPort && isIP(ipv4WithPort[1])) {
+    return ipv4WithPort[1];
+  }
+
+  return null;
+}
+
+export function getClientIpFromHeaders(headers: Pick<Headers, 'get'>): string {
+  const realIp = normalizeIpCandidate(headers.get('x-real-ip'));
+  if (realIp) return realIp;
+
+  const forwardedFor = headers.get('x-forwarded-for');
+  if (forwardedFor) {
+    const candidates = forwardedFor
+      .split(',')
+      .map((part) => normalizeIpCandidate(part))
+      .filter((part): part is string => Boolean(part));
+
+    // The right-most entry is the hop most recently written by our trusted proxy when
+    // nginx appends to XFF; the left-most entry may be attacker supplied.
+    if (candidates.length > 0) return candidates[candidates.length - 1];
+  }
+
+  return 'Unknown';
 }
 
 async function sendToTelegramWithRetry(message: string): Promise<void> {
@@ -122,15 +163,17 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Слишком большой запрос' }, { status: 413 });
     }
 
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-      || request.headers.get('x-real-ip')
-      || 'Unknown';
+    const ip = getClientIpFromHeaders(request.headers);
     const serverUA = request.headers.get('user-agent') || '';
 
-    // Check IP rate limit
-    const ipAllowed = await checkRateLimitRedis(`ratelimit:ip:${ip}`, IP_RATE_LIMIT, IP_RATE_WINDOW_MS);
-    if (!ipAllowed) {
-      return NextResponse.json({ error: 'Слишком много запросов с вашего IP. Попробуйте через 10 минут.' }, { status: 429 });
+    // Check IP rate limit — skip when we have no real client IP. Otherwise every
+    // header-less request shares one "ratelimit:ip:Unknown" bucket and 5 requests
+    // total would 429 all bookings. Phone rate limit + risk scoring still apply.
+    if (ip !== 'Unknown') {
+      const ipAllowed = await checkRateLimitRedis(`ratelimit:ip:${ip}`, IP_RATE_LIMIT, IP_RATE_WINDOW_MS);
+      if (!ipAllowed) {
+        return NextResponse.json({ error: 'Слишком много запросов с вашего IP. Попробуйте через 10 минут.' }, { status: 429 });
+      }
     }
 
     const rawBody: unknown = await request.json();
@@ -259,7 +302,15 @@ export async function POST(request: NextRequest) {
       const err = telegramError instanceof Error ? telegramError : new Error(String(telegramError));
       console.error('Telegram API failed after retries, saving to fallback:', err.message);
       await logBookingError(err, data, ip, logMeta);
-      await saveFailedBooking({ ...data, ip, message, requestId, score: risk.score });
+      await saveFailedBooking({
+        name: data.name,
+        phone: data.phone,
+        service: data.service,
+        ip,
+        message,
+        requestId,
+        score: risk.score,
+      });
       return NextResponse.json({ success: true, fallback: true });
     }
   } catch (error) {

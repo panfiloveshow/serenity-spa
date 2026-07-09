@@ -105,7 +105,7 @@ export function ContactsSection() {
           <circle cx="12" cy="10" r="3" />
         </svg>
       ),
-      label: 'Адрес',
+      label: dictionary.contacts.addressLabel,
       value: dictionary.contacts.address,
       href: MAP_LINKS.googleRoute,
     },
@@ -116,7 +116,7 @@ export function ContactsSection() {
           <polyline points="12 6 12 12 16 14" />
         </svg>
       ),
-      label: 'Часы работы',
+      label: dictionary.contacts.hoursLabel,
       value: dictionary.contacts.hours,
     },
     {
@@ -162,12 +162,12 @@ export function ContactsSection() {
           viewport={MOTION.viewport.once}
         >
           <motion.span className="text-[#C8956C] uppercase tracking-[0.25em] text-xs block mb-4" variants={staggerChild}>
-            Свяжитесь с нами
+            {dictionary.contacts.eyebrow}
           </motion.span>
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <KineticText className="text-5xl md:text-7xl font-light text-[#E8DFD0] tracking-tight">{dictionary.contacts.sectionTitle}</KineticText>
             <motion.p className="text-[#A0B0C8] max-w-sm text-sm leading-relaxed md:text-right" variants={staggerChild}>
-              Мы находимся в Ташкенте и работаем ежедневно. Ждём вас!
+              {dictionary.contacts.subtitle}
             </motion.p>
           </div>
         </motion.div>
@@ -354,7 +354,7 @@ export function ContactsSection() {
                     className="hidden sm:flex flex-none items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-[#1F4268]/80 border border-[#7A8BA8]/10 text-[#E8DFD0]/70 text-[11px] font-medium hover:border-[#C8956C]/25 hover:text-[#C8956C] transition-all duration-300"
                   >
                     <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17L17 7M17 7H7M17 7V17" /></svg>
-                    2ГИС
+                    2GIS
                   </a>
                   <a
                     href={MAP_LINKS.yandexRoute}
