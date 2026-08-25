@@ -32,6 +32,13 @@ function parseDurationMinutes(raw: string): string | undefined {
   return `PT${minutes}M`;
 }
 
+function compactDescription(raw?: string) {
+  if (!raw) return undefined;
+  const sentence = raw.split(/[.!?]/)[0]?.trim();
+  if (!sentence) return undefined;
+  return sentence.length > 150 ? `${sentence.slice(0, 147).trim()}...` : sentence;
+}
+
 /**
  * Single OfferCatalog JSON-LD merged into the business node via @id.
  * One script tag instead of one per service; Google shows no rich results
@@ -49,7 +56,7 @@ export async function ServicesJsonLd({ lang }: { lang: Locale }) {
       const dictItem = dictCat?.items[i];
       const itemName = dictItem?.name ?? item.name;
       const itemDuration = dictItem?.duration ?? item.duration;
-      const itemDesc = dictItem?.desc ?? item.desc;
+      const itemDesc = compactDescription(dictItem?.desc ?? item.desc);
       const price = parsePrice(item.price);
       // Parse ISO duration from the RU constant (мин/час are always parseable).
       const duration = parseDurationMinutes(item.duration);
@@ -61,7 +68,7 @@ export async function ServicesJsonLd({ lang }: { lang: Locale }) {
         itemOffered: {
           '@type': 'Service',
           name: `${catTitle} — ${itemName} (${itemDuration})`,
-          description: itemDesc || `${itemName}, ${itemDuration}`,
+          description: itemDesc ?? `${itemName}, ${itemDuration}`,
           category: catTitle,
           serviceType: catTitle,
           areaServed,
@@ -74,6 +81,7 @@ export async function ServicesJsonLd({ lang }: { lang: Locale }) {
   const packageOffers = PACKAGES.map((pkg, pi) => {
     const dictPkg = dict.packages.items[pi];
     const price = parsePrice(pkg.price);
+    const description = compactDescription(dictPkg?.description ?? pkg.description);
     return {
       '@type': 'Offer',
       ...(price && { price, priceCurrency: CURRENCY }),
@@ -82,7 +90,7 @@ export async function ServicesJsonLd({ lang }: { lang: Locale }) {
       itemOffered: {
         '@type': 'Service',
         name: dictPkg?.title ?? pkg.title,
-        description: dictPkg?.description ?? pkg.description,
+        ...(description && { description }),
         category: 'Spa Package',
         serviceType: SPA_PACKAGE_LABEL[lang] ?? SPA_PACKAGE_LABEL.ru,
         areaServed,

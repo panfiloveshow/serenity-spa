@@ -17,6 +17,12 @@ const organicPages = ORGANIC_SLUGS.map((slug) => ({
   priority: 0.82,
 }));
 
+const machineReadablePages = [
+  { path: '/llms.txt', changeFrequency: 'monthly' as const, priority: 0.2 },
+  { path: '/services.md', changeFrequency: 'monthly' as const, priority: 0.2 },
+  { path: '/pricing.md', changeFrequency: 'monthly' as const, priority: 0.2 },
+];
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
   const languages = Object.fromEntries(
@@ -37,6 +43,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
         },
       });
     }
+  }
+
+  for (const page of machineReadablePages) {
+    entries.push({
+      url: `${BASE_URL}${page.path}`,
+      changeFrequency: page.changeFrequency,
+      priority: page.priority,
+    });
   }
 
   return entries;

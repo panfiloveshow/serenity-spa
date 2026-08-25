@@ -92,6 +92,27 @@ export function LocalSeoJsonLd({ lang }: { lang: Locale }) {
       inLanguage: content.languageTag,
       publisher: businessRef,
     },
+  ];
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@graph': graph,
+        }),
+      }}
+    />
+  );
+}
+
+export function HomeSeoJsonLd({ lang }: { lang: Locale }) {
+  const content = getSeoContent(lang);
+  const pageUrl = `${SITE_URL}/${lang}`;
+  const businessRef = { '@id': BUSINESS_ID };
+
+  const graph = [
     {
       '@type': 'WebPage',
       '@id': `${pageUrl}#webpage`,

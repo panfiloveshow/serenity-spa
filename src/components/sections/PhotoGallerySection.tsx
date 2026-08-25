@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useBooking } from '@/lib/booking-context';
@@ -390,13 +391,12 @@ export function PhotoGallerySection() {
             className="group relative min-h-[280px] overflow-hidden rounded-[20px] bg-[#0E2135] text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#C8956C] md:min-h-[360px] lg:min-h-[450px]"
             aria-label={`${selectedItem.label[locale]}: ${selectedItem.title[locale]}`}
           >
-            <img
+            <Image
               key={selectedItem.slug}
               src={imagePath('thumb', selectedItem.slug)}
               alt={selectedItem.alt[locale]}
-              width={920}
-              height={614}
-              loading="lazy"
+              fill
+              sizes="(min-width: 1024px) 55vw, 100vw"
               decoding="async"
               className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-[1.018]"
               style={{ objectPosition: selectedItem.focus ?? 'center' }}
@@ -459,12 +459,11 @@ export function PhotoGallerySection() {
                         : 'border-[#7A8BA8]/12 hover:border-[#C8956C]/60'
                     }`}
                   >
-                    <img
+                    <Image
                       src={imagePath('thumb', item.slug)}
                       alt={item.alt[locale]}
-                      width={920}
-                      height={614}
-                      loading="lazy"
+                      fill
+                      sizes="(min-width: 768px) 180px, 50vw"
                       decoding="async"
                       className="absolute inset-0 h-full w-full object-cover transition duration-300 group-hover:scale-[1.025]"
                       style={{ objectPosition: item.focus ?? 'center' }}
@@ -502,12 +501,11 @@ export function PhotoGallerySection() {
                         isSelected ? 'border-[#C8956C]' : 'border-white/10 opacity-70 hover:opacity-100'
                       }`}
                     >
-                      <img
+                      <Image
                         src={imagePath('thumb', item.slug)}
                         alt=""
-                        width={920}
-                        height={614}
-                        loading="lazy"
+                        fill
+                        sizes="80px"
                         decoding="async"
                         className="h-full w-full object-cover"
                         style={{ objectPosition: item.focus ?? 'center' }}
@@ -560,14 +558,14 @@ export function PhotoGallerySection() {
                 </button>
                 <figure className="order-1 mx-auto grid w-full max-w-6xl gap-4 md:order-none" onClick={(event) => event.stopPropagation()}>
                   <div className="relative h-[54vh] overflow-hidden rounded-xl bg-white/5 md:h-[76vh]">
-                    <img
-                    src={imagePath('full', lightboxItem.slug)}
-                    alt={lightboxItem.alt[locale]}
-                    width={1440}
-                    height={960}
-                    className="h-full w-full object-contain"
-                    decoding="async"
-                  />
+                    <Image
+                      src={imagePath('full', lightboxItem.slug)}
+                      alt={lightboxItem.alt[locale]}
+                      fill
+                      sizes="100vw"
+                      className="h-full w-full object-contain"
+                      decoding="async"
+                    />
                   </div>
                   <figcaption className="flex items-center justify-between gap-4">
                     <span className="text-xs font-bold uppercase tracking-[0.14em] text-white/70">

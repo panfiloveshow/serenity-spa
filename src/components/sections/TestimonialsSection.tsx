@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { useLang } from '@/lib/lang-context';
-import { BUSINESS_ID, BUSINESS_NAME } from '@/lib/seo';
 import type { Locale } from '@/types/i18n';
 
 const DATE_LOCALES: Record<Locale, string> = {
@@ -140,25 +139,6 @@ export function TestimonialsSection({ testimonials }: {
           ))}
         </div>
 
-        {/* Schema.org aggregate rating */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'AggregateRating',
-              itemReviewed: {
-                '@type': 'LocalBusiness',
-                '@id': BUSINESS_ID,
-                name: BUSINESS_NAME,
-              },
-              ratingValue: avgRating.toFixed(1),
-              reviewCount: data.length,
-              bestRating: 5,
-              worstRating: 1,
-            }),
-          }}
-        />
       </div>
     </section>
   );

@@ -6,7 +6,6 @@ import { GA4_ID, GOOGLE_ADS_ID, GTM_ID, YM_ID } from '@/lib/analytics';
 import { getDictionary } from '@/lib/i18n';
 import { LangProvider } from '@/lib/lang-context';
 import { LanguagePreferenceModal } from '@/components/ui/LanguagePreferenceModal';
-import { ServicesJsonLd } from '@/components/seo/ServicesJsonLd';
 import { LocalSeoJsonLd } from '@/components/seo/LocalSeoJsonLd';
 import { SITE_URL } from '@/lib/seo';
 import type { Locale } from '@/types/i18n';
@@ -113,6 +112,8 @@ export default async function LangLayout({
   const hasGoogleAds = Boolean(GOOGLE_ADS_ID);
   const hasGa4 = Boolean(GA4_ID);
   const hasYm = Boolean(YM_ID);
+  const hasStandaloneGtag = !hasGtm && (hasGoogleAds || hasGa4);
+  const enableWebvisor = process.env.NEXT_PUBLIC_YANDEX_WEBVISOR === 'true';
 
   return (
     <html lang={lang} data-scroll-behavior="smooth">
@@ -132,17 +133,17 @@ export default async function LangLayout({
             }}
           />
         )}
-        {(hasGoogleAds || hasGa4) && (
+        {hasStandaloneGtag && (
           <Script
             id="gtag-src"
             src={`https://www.googletagmanager.com/gtag/js?id=${hasGa4 ? GA4_ID : GOOGLE_ADS_ID}`}
-            strategy="afterInteractive"
+            strategy="lazyOnload"
           />
         )}
-        {(hasGoogleAds || hasGa4) && (
+        {hasStandaloneGtag && (
           <Script
             id="gtag-init"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             dangerouslySetInnerHTML={{
               __html: `
                 window.dataLayer = window.dataLayer || [];
@@ -157,7 +158,7 @@ export default async function LangLayout({
         {hasYm && (
           <Script
             id="ym-init"
-            strategy="afterInteractive"
+            strategy="lazyOnload"
             dangerouslySetInnerHTML={{
               __html: `
                 (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -165,7 +166,7 @@ export default async function LangLayout({
                 for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
                 k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
                 })(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=${YM_ID}','ym');
-                ym(${YM_ID},'init',{ssr:true,webvisor:true,clickmap:true,ecommerce:"dataLayer",accurateTrackBounce:true,trackLinks:true});
+                ym(${YM_ID},'init',{ssr:true,webvisor:${enableWebvisor},clickmap:true,ecommerce:"dataLayer",accurateTrackBounce:true,trackLinks:true});
               `,
             }}
           />
@@ -178,7 +179,6 @@ export default async function LangLayout({
           <link rel="dns-prefetch" href="https://mc.yandex.ru" />
         )}
         <LocalSeoJsonLd lang={lang} />
-        <ServicesJsonLd lang={lang} />
       </head>
       <body className={`${manrope.variable} ${cormorant.variable} antialiased font-sans`}>
         {hasGtm && (

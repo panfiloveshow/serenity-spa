@@ -290,9 +290,7 @@ export function ModernHero() {
                 alt="Serenity Spa"
                 width={500}
                 height={282}
-                priority
                 loading="eager"
-                fetchPriority="high"
                 className="w-[250px] md:w-[340px] lg:w-[420px] h-auto relative z-10 drop-shadow-[0_0_30px_rgba(200,149,108,0.15)]"
               />
             </motion.div>

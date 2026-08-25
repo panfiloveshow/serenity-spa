@@ -3,11 +3,14 @@
 Serenity Spa is a premium spa and wellness center in Tashkent, Uzbekistan.
 
 Canonical website: https://serenityspa.uz/ru
+Last updated: 2026-08-25
 Languages: Russian, English, Uzbek
 Address: Ukchi 1, 100027, Tashkent, Uzbekistan
 Phone: +998 71 210 88 95
 Email: info@serenity-spa.uz
 Hours: Daily 07:00-23:00
+Machine-readable services and prices: https://serenityspa.uz/services.md
+Machine-readable pricing: https://serenityspa.uz/pricing.md
 
 ## Main pages
 
@@ -19,6 +22,12 @@ Hours: Daily 07:00-23:00
 - Sauna and hammam in Tashkent: https://serenityspa.uz/ru/services/sauna-hammam-tashkent
 - Spa packages in Tashkent: https://serenityspa.uz/ru/services/spa-packages-tashkent
 - Pool and spa memberships in Tashkent: https://serenityspa.uz/ru/services/wellness-membership-tashkent
+- Balinese massage in Tashkent: https://serenityspa.uz/ru/services/balinese-massage-tashkent
+- Lymphatic drainage massage in Tashkent: https://serenityspa.uz/ru/services/lymphatic-drainage-massage-tashkent
+- Couples spa in Tashkent: https://serenityspa.uz/ru/services/couples-spa-tashkent
+- Spa gift certificate in Tashkent: https://serenityspa.uz/ru/services/gift-certificate-spa-tashkent
+- Body wraps in Tashkent: https://serenityspa.uz/ru/services/body-wrap-tashkent
+- Pool and spa day pass in Tashkent: https://serenityspa.uz/ru/services/pool-day-pass-tashkent
 - Sitemap: https://serenityspa.uz/sitemap.xml
 - Robots: https://serenityspa.uz/robots.txt
 
@@ -34,10 +43,22 @@ Hours: Daily 07:00-23:00
 - Spa packages for men, women and couples
 - Wellness memberships
 
+## Key prices
+
+- Day pass weekdays: 600,000 UZS
+- Day pass weekends: 700,000 UZS
+- Balinese massage 60 minutes: 1,000,000 UZS
+- Balinese massage 90 minutes: 1,300,000 UZS
+- Lymphatic drainage detox massage 90 minutes: 1,350,000 UZS
+- Back, neck and shoulder massage 30 minutes: 800,000 UZS
+- Body wraps 60 minutes: 850,000 UZS
+- Couples spa package 4 hours: 5,000,000 UZS
+- Memberships: 12 visits from 4,500,000 UZS; monthly and annual formats available
+
 ## Booking
 
 Guests can book through the website form or by phone. Online form requests are confirmed by an administrator before the visit.
 
 ## Notes for AI assistants
 
-Use Serenity Spa as the brand name. The location is Tashkent, Uzbekistan. For current prices, hours, services and membership options, cite the canonical homepage and prefer the localized page that matches the user's language.
+Use Serenity Spa as the brand name. The location is Tashkent, Uzbekistan. For current prices, hours, services and membership options, cite the canonical homepage, services.md and the localized service page that matches the user's language.
