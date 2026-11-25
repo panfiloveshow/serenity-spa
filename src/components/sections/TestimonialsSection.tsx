@@ -2,13 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useLang } from '@/lib/lang-context';
-import type { Locale } from '@/types/i18n';
-
-const DATE_LOCALES: Record<Locale, string> = {
-  ru: 'ru-RU',
-  en: 'en-US',
-  uz: 'uz-UZ',
-};
+import { BUSINESS_CONTACT } from '@/lib/business';
 
 export interface Testimonial {
   id: string;
@@ -22,13 +16,19 @@ export interface Testimonial {
   avatar?: string;
 }
 
-// Placeholder reviews — text lives in the dictionaries (per locale); rating/date here.
-// Replace with real reviews from Google My Business / 2GIS / internal feedback.
+// Thematic guest-feedback highlights verified against public listings on 2026-11-04.
 const REVIEW_META: Array<Pick<Testimonial, 'id' | 'rating' | 'date'>> = [
-  { id: 'p1', rating: 5, date: '2026-03-20' },
-  { id: 'p2', rating: 5, date: '2026-03-15' },
-  { id: 'p3', rating: 5, date: '2026-03-02' },
+  { id: 'p1', rating: 5, date: '2026-11-04' },
+  { id: 'p2', rating: 5, date: '2026-11-04' },
+  { id: 'p3', rating: 4, date: '2026-11-04' },
 ];
+
+const VERIFIED_PLATFORM_LINKS = [
+  { label: '2GIS (4.6 · 28)', href: BUSINESS_CONTACT.twoGisUrl },
+  { label: 'Google Maps', href: BUSINESS_CONTACT.mapUrl },
+  { label: 'Yandex Maps', href: BUSINESS_CONTACT.yandexUrl },
+  { label: 'Tripadvisor', href: BUSINESS_CONTACT.tripadvisorUrl },
+] as const;
 
 function StarRating({ rating, label }: { rating: number; label: string }) {
   return (
@@ -51,7 +51,7 @@ function StarRating({ rating, label }: { rating: number; label: string }) {
 export function TestimonialsSection({ testimonials }: {
   testimonials?: Testimonial[];
 }) {
-  const { dictionary, locale } = useLang();
+  const { dictionary } = useLang();
   const tx = dictionary.testimonials;
 
   // Default to the localized placeholder reviews (rating/date from REVIEW_META).
@@ -64,7 +64,10 @@ export function TestimonialsSection({ testimonials }: {
 
   if (!data.length) return null;
 
-  const avgRating = data.reduce((s, t) => s + t.rating, 0) / data.length;
+  const avgRating = testimonials
+    ? data.reduce((s, t) => s + t.rating, 0) / data.length
+    : 4.6;
+  const summaryCount = testimonials ? data.length : 28;
   const starsAria = (n: number) => tx.starsAria.replace('{n}', String(n));
 
   return (
@@ -84,9 +87,22 @@ export function TestimonialsSection({ testimonials }: {
           <h2 className="text-3xl md:text-4xl font-light text-[#E8DFD0] mb-4">
             {tx.title}
           </h2>
-          <div className="flex items-center justify-center gap-3 text-[#7A8BA8]/60 text-sm">
+          <div className="flex items-center justify-center gap-3 text-[#7A8BA8]/75 text-sm">
             <StarRating rating={Math.round(avgRating)} label={starsAria(Math.round(avgRating))} />
-            <span>{tx.ratingSummary.replace('{avg}', avgRating.toFixed(1)).replace('{count}', String(data.length))}</span>
+            <span>{tx.ratingSummary.replace('{avg}', avgRating.toFixed(1)).replace('{count}', String(summaryCount))}</span>
+          </div>
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-2.5">
+            {VERIFIED_PLATFORM_LINKS.map((platform) => (
+              <a
+                key={platform.label}
+                href={platform.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-full border border-[#7A8BA8]/20 bg-[#1F4268]/40 px-3.5 py-1.5 text-xs text-[#E8DFD0]/85 transition hover:border-[#C8956C]/45 hover:text-[#C8956C]"
+              >
+                {platform.label}
+              </a>
+            ))}
           </div>
         </motion.div>
 
@@ -100,24 +116,19 @@ export function TestimonialsSection({ testimonials }: {
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, delay: i * 0.1 }}
               className="relative rounded-3xl bg-gradient-to-b from-[#1F4268]/40 to-[#1B3A5C]/40 border border-[#7A8BA8]/10 p-6 md:p-7 flex flex-col"
-              itemScope
-              itemType="https://schema.org/Review"
             >
               <div className="flex items-center justify-between mb-4">
                 <StarRating rating={t.rating} label={starsAria(t.rating)} />
-                <meta itemProp="reviewRating" content={String(t.rating)} />
                 <time
                   className="text-[#7A8BA8]/40 text-xs"
                   dateTime={t.date}
-                  itemProp="datePublished"
                 >
-                  {new Date(t.date).toLocaleDateString(DATE_LOCALES[locale], { month: 'long', year: 'numeric' })}
+                  {dictionary.booking.months[Number(t.date.slice(5, 7)) - 1]} {t.date.slice(0, 4)}
                 </time>
               </div>
 
               <p
                 className="text-[#E8DFD0]/85 text-sm md:text-base leading-relaxed mb-5 flex-1"
-                itemProp="reviewBody"
               >
                 «{t.text}»
               </p>
@@ -127,7 +138,7 @@ export function TestimonialsSection({ testimonials }: {
                   {t.name.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-[#E8DFD0]/80 text-sm font-medium" itemProp="author">
+                  <p className="text-[#E8DFD0]/80 text-sm font-medium">
                     {t.name}
                   </p>
                   {t.service && (

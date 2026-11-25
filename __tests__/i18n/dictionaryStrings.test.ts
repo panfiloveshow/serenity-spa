@@ -60,11 +60,12 @@ const localeArb = fc.constantFrom(...SUPPORTED_LOCALES);
 describe('Property 6: Компоненты используют строки словаря текущей локали', () => {
   /**
    * Service items may have an intentionally empty `desc` when a duration
-   * variant shares the description with another variant (e.g. 90-min
-   * version of the same massage). These paths are excluded from the
-   * non-empty check.
+   * variant shares the description with another variant, and peel items
+   * (`categories[1].items[4..7]`) have an intentionally empty `duration`
+   * until confirmed by the spa (see QUESTIONS_FOR_SPA.md).
    */
-  const ALLOWED_EMPTY_PATTERN = /^services\.categories\[\d+\]\.items\[\d+\]\.desc$/;
+  const ALLOWED_EMPTY_PATTERN =
+    /^services\.categories\[\d+\]\.items\[\d+\]\.desc$|^services\.categories\[1\]\.items\[[4-7]\]\.duration$/;
 
   it('все строковые значения словаря непусты для любой локали', () => {
     fc.assert(

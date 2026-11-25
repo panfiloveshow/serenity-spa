@@ -4,7 +4,7 @@ import { ORGANIC_SLUGS, getOrganicPage } from '@/lib/organic-pages';
 
 export function SeoAnswersSection({ lang }: { lang: Locale }) {
   const content = getSeoContent(lang);
-  const visibleFaqs = content.faqs.slice(0, 4);
+  const visibleFaqs = content.faqs;
   const organicLinks = ORGANIC_SLUGS.map((slug) => getOrganicPage(slug, lang)).filter(Boolean);
 
   return (

@@ -114,19 +114,13 @@ describe('assessRisk — traffic source', () => {
 });
 
 describe('assessRisk — repeat submissions', () => {
-  it('3+ submissions from same phone flagged', () => {
-    const r = assessRisk(baseInput({ phoneSubmissionsLast24h: 3 }));
-    expect(r.flags.some(f => /3 заявок/.test(f.reason))).toBe(true);
+  it('does not penalize ordinary contact or IP follow-ups', () => {
+    expect(assessRisk(baseInput({ phoneSubmissionsLast24h: 8, ipSubmissionsLast24h: 10 })).score).toBe(0);
   });
-
-  it('2nd submission from same phone has mild flag', () => {
-    const r = assessRisk(baseInput({ phoneSubmissionsLast24h: 2 }));
-    expect(r.flags.some(f => /2-я/.test(f.reason))).toBe(true);
-  });
-
-  it('5+ submissions from same IP heavily flagged', () => {
-    const r = assessRisk(baseInput({ ipSubmissionsLast24h: 6 }));
-    expect(r.flags.some(f => /6 заявок/.test(f.reason))).toBe(true);
+  it('adds exactly 30 risk points from the second device submission in 10 minutes', () => {
+    expect(assessRisk(baseInput({ deviceSubmissionsLast10m: 2 })).score).toBe(30);
+    expect(assessRisk(baseInput({ deviceSubmissionsLast10m: 5 })).score).toBe(30);
+    expect(assessRisk(baseInput({ deviceSubmissionsLast10m: 1 })).score).toBe(0);
   });
 });
 
@@ -148,6 +142,87 @@ describe('assessRisk — geo signals', () => {
     const r = assessRisk(baseInput({
       geo: { ...geoBase, countryCode: 'US', proxy: true },
     }));
+    expect(r.flags.some(f => /прокси|VPN/i.test(f.reason))).toBe(true);
+  });
+
+  it('does not penalize a confirmed Private Relay address for proxy or hosting', () => {
+    const r = assessRisk(baseInput({
+      privateRelay: 'listed',
+      geo: { ...geoBase, countryCode: 'UZ', proxy: true, hosting: true },
+      traffic: analyzeTrafficSource({ referrer: 'https://www.google.com/' }),
+      comment: 'На два человека',
+    }));
+    expect(r.score).toBeLessThan(25);
+    expect(r.title).toContain('✅');
+    expect(r.flags.some(f => /прокси|VPN|хостинг/i.test(f.reason))).toBe(false);
+  });
+
+  it('keeps independent spam signals for a confirmed Private Relay address', () => {
+    const r = assessRisk(baseInput({
+      privateRelay: 'listed',
+      geo: { ...geoBase, countryCode: 'UZ', proxy: true },
+      comment: 'asdfghjkl',
+    }));
+    expect(r.score).toBe(30);
+    expect(r.flags.some(f => /комментарий/i.test(f.reason))).toBe(true);
+  });
+
+  it('does not penalize hosting or proxy in the Private Relay fallback case', () => {
+    const r = assessRisk(baseInput({
+      privateRelay: 'fallback',
+      geo: { ...geoBase, countryCode: 'UZ', proxy: true, hosting: true },
+    }));
+    expect(r.score).toBe(0);
+    expect(r.flags.some(f => /прокси|VPN/i.test(f.reason))).toBe(false);
+    expect(r.flags.some(f => /хостинг/i.test(f.reason))).toBe(false);
+  });
+
+  it.each([
+    'Uzbektelekom Joint Stock Company', 'UNITEL LLC', 'Beeline Uzbekistan',
+    'Coscom LLC', 'Ucell', 'UzMobile', 'Perfectum', 'Turon Telecom',
+    'Sarkor Telecom', 'TPS', 'EVO', 'Comnet',
+  ])('does not treat a domestic operator as hosting: %s', isp => {
+    const r = assessRisk(baseInput({ geo: { ...geoBase, countryCode: 'UZ', isp, hosting: true } }));
+    expect(r.score).toBe(0);
+    expect(r.flags.some(f => /хостинг/i.test(f.reason))).toBe(false);
+  });
+
+  it('identifies Uzbektelekom by ASN even if the organization name is absent', () => {
+    expect(assessRisk(baseInput({ geo: { ...geoBase, countryCode: 'UZ', asName: 'AS8193', hosting: true } })).score).toBe(0);
+  });
+
+  it('does not treat an unidentified hosting flag alone as proof of a data centre', () => {
+    expect(assessRisk(baseInput({ geo: { ...geoBase, countryCode: 'UZ', isp: 'Some local ISP', hosting: true } })).score).toBe(0);
+  });
+
+  it.each(['Amazon Web Services', 'Google Cloud', 'Microsoft Azure', 'DigitalOcean', 'Hetzner', 'OVH', 'Contabo'])('identifies a cloud or data centre: %s', isp => {
+    const r = assessRisk(baseInput({ geo: { ...geoBase, countryCode: 'UZ', isp, hosting: true } }));
+    expect(r.flags.some(f => /хостинг/i.test(f.reason))).toBe(true);
+  });
+
+  it.each(['Cloudflare', 'Akamai'])('does not penalize %s with Apple Safari', isp => {
+    const r = assessRisk(baseInput({
+      serverUA: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Version/17.0 Mobile/15E148 Safari/604.1',
+      geo: { ...geoBase, countryCode: 'UZ', isp, proxy: true, hosting: true },
+    }));
+    expect(r.score).toBe(0);
+  });
+
+  it('does not treat a foreign Private Relay exit as the visitor’s location', () => {
+    const r = assessRisk(baseInput({
+      privateRelay: 'listed',
+      geo: { ...geoBase, countryCode: 'DE', country: 'Germany', isp: 'Akamai', proxy: true, hosting: true },
+    }));
+    expect(r.score).toBe(0);
+  });
+
+  it('recognizes a hosted Google network even when the provider uses its legal name', () => {
+    const r = assessRisk(baseInput({ geo: { ...geoBase, countryCode: 'UZ', isp: 'Google LLC', hosting: true } }));
+    expect(r.flags.some(f => /хостинг/i.test(f.reason))).toBe(true);
+  });
+
+  it('still flags a Cloudflare proxy on Android', () => {
+    const r = assessRisk(baseInput({ geo: { ...geoBase, countryCode: 'UZ', isp: 'Cloudflare', proxy: true, hosting: true } }));
     expect(r.flags.some(f => /прокси|VPN/i.test(f.reason))).toBe(true);
   });
 
@@ -200,6 +275,12 @@ describe('assessRisk — User-Agent', () => {
 });
 
 describe('assessRisk — level thresholds', () => {
+  it('marks 50-point suspicious submissions with the red warning', () => {
+    const r = assessRisk(baseInput({ formFillDurationMs: 2000 }));
+    expect(r).toMatchObject({ score: 50, level: 'suspicious' });
+    expect(r.title).toContain('🚨');
+  });
+
   it('score >=85 → reject level', () => {
     const r = assessRisk(baseInput({
       traffic: analyzeTrafficSource({ referrer: 'https://apps.2kings.ru/' }),
@@ -231,5 +312,58 @@ describe('assessRisk — level thresholds', () => {
     }));
     expect(r.score).toBeLessThanOrEqual(100);
     expect(r.score).toBeGreaterThanOrEqual(0);
+  });
+});
+
+
+describe('assessRisk — booking quality signals', () => {
+  it('does not penalize a foreign phone on its own', () => {
+    const r = assessRisk(baseInput({ phone: analyzePhone('+44 7700 900123') }));
+    expect(r.score).toBe(0);
+    expect(r.flags).toEqual([]);
+  });
+
+  it.each(['asdfghjkl', 'qwertyuiop', 'фывапролдж', 'aaaaaaaaaaaa', 'asdasdasdasd', 'bskdfjghrt'])('raises risk for gibberish: %s', comment => {
+    expect(assessRisk(baseInput({ comment })).score).toBeGreaterThan(0);
+  });
+
+  it.each([
+    ['Jurtek', 'Gxhd'],
+    ['Jurtek', 'Jurtek'],
+    ['Abdullah', 'Gshkjf\nName Surname'],
+    ['Shoxruz', 'Robux\nYutib olish'],
+    ['ARTUR', 'Uyin.uynask'],
+  ])('keeps the historical %s spam pattern at least 50 points', (name, comment) => {
+    const r = assessRisk(baseInput({ name, comment, traffic: analyzeTrafficSource({ gad_source: '5' }), sessionSeconds: 120 }));
+    expect(r.score).toBeGreaterThanOrEqual(50);
+    expect(r.title).toContain('🚨');
+  });
+
+  it('does not penalize a name-only comment without another suspicious traffic signal', () => {
+    expect(assessRisk(baseInput({ name: 'Aziza', comment: 'Aziza' })).score).toBe(0);
+  });
+
+  it.each(['', 'Hi', 'OK', 'Please contact me on WhatsApp', 'Массаж для двоих', "Ertaga massajga yozilmoqchiman", '我们想预约按摩'])('does not flag a meaningful or empty comment: %s', comment => {
+    expect(assessRisk(baseInput({ comment })).flags).toEqual([]);
+  });
+
+  it('raises risk for gclid together with a session under 60 seconds', () => {
+    expect(assessRisk(baseInput({ gclid: 'ad-click', sessionSeconds: 59 })).score).toBeGreaterThan(0);
+    expect(assessRisk(baseInput({ gclid: 'ad-click', sessionSeconds: 60 })).score).toBe(0);
+    expect(assessRisk(baseInput({ gclid: 'ad-click', sessionSeconds: null })).score).toBe(0);
+    expect(assessRisk(baseInput({ sessionSeconds: 59 })).score).toBe(0);
+  });
+
+  it.each([19, 20, 23, 0])('does not add risk at UTC hour %i (00–06 Tashkent)', hour => {
+    expect(assessRisk(baseInput({ submittedAt: new Date(Date.UTC(2026, 9, 26, hour)) })).score).toBe(0);
+  });
+
+  it.each([18, 1, 7])('does not add night risk at UTC hour %i', hour => {
+    expect(assessRisk(baseInput({ submittedAt: new Date(Date.UTC(2026, 9, 26, hour)) })).score).toBe(0);
+  });
+
+  it('raises risk for gad_source=5', () => {
+    const r = assessRisk(baseInput({ traffic: analyzeTrafficSource({ gad_source: '5' }) }));
+    expect(r.score).toBeGreaterThan(0);
   });
 });

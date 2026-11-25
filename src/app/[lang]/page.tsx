@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic';
+import { ForGuestsSection } from '@/components/sections/ForGuestsSection';
 import { IslandNavbar } from '@/components/layout/IslandNavbar';
 import { Footer } from '@/components/layout/Footer';
 import { ModernHero } from '@/components/sections/ModernHero';
@@ -103,6 +104,8 @@ export default async function Home({
 
         <main id="main" tabIndex={-1} className="relative z-10">
           <ModernHero />
+
+          {lang === 'en' && <ForGuestsSection />}
 
           <ScrollSection3D effect="rise">
             <BentoInfrastructure />

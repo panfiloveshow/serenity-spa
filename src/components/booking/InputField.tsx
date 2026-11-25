@@ -10,6 +10,9 @@ export function InputField({
   onChange,
   placeholder,
   error,
+  hint,
+  maxLength,
+  autoComplete,
 }: {
   label: string;
   required?: boolean;
@@ -18,10 +21,14 @@ export function InputField({
   onChange: (v: string) => void;
   placeholder?: string;
   error?: string;
+  hint?: string;
+  maxLength?: number;
+  autoComplete?: string;
 }) {
   const reactId = useId();
   const inputId = `${reactId}-input`;
   const errorId = `${reactId}-error`;
+  const hintId = `${reactId}-hint`;
 
   return (
     <div>
@@ -38,14 +45,17 @@ export function InputField({
         value={value}
         onChange={e => onChange(e.target.value)}
         placeholder={placeholder}
+        maxLength={maxLength}
+        autoComplete={autoComplete}
         aria-invalid={!!error}
-        aria-describedby={error ? errorId : undefined}
+        aria-describedby={[hint ? hintId : '', error ? errorId : ''].filter(Boolean).join(' ') || undefined}
         className={`w-full px-4 py-3 rounded-2xl bg-[#1F4268]/40 border text-[#E8DFD0] text-sm placeholder:text-[#A0B0C8]/70 focus:outline-none focus:ring-1 transition-all duration-300 ${
           error
             ? 'border-red-500/50 focus:border-red-500/70 focus:ring-red-500/20'
             : 'border-[#7A8BA8]/10 focus:border-[#C8956C]/30 focus:ring-[#C8956C]/15'
         }`}
       />
+      {hint && <p id={hintId} className="mt-1.5 ml-1 text-[#A0B0C8] text-xs">{hint}</p>}
       {error && (
         <p id={errorId} role="alert" aria-live="polite" className="mt-1.5 ml-1 text-red-400 text-xs">{error}</p>
       )}

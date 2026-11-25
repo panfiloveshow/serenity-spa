@@ -102,23 +102,75 @@ const nextConfig: NextConfig = {
         headers: [{ key: 'Cache-Control', value: 'no-store, max-age=0' }],
       });
     }
-    headers.push({
-      // API must never be cached — responses contain per-request state
-      source: '/api/:path*',
-      headers: [{ key: 'Cache-Control', value: 'no-store, max-age=0' }],
-    });
+    headers.push(
+      {
+        source: '/((?!api(?:/|$)).*)',
+        headers: [
+          { key: 'Content-Signal', value: 'search=yes, ai-input=yes, ai-train=yes' },
+        ],
+      },
+      {
+        // API must never be cached — responses contain per-request state
+        source: '/api/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, max-age=0' },
+          { key: 'Content-Signal', value: 'search=no, ai-input=no, ai-train=no' },
+        ],
+      },
+      {
+        source: '/:file(services|pricing).md',
+        headers: [
+          { key: 'Content-Type', value: 'text/markdown; charset=utf-8' },
+        ],
+      },
+      {
+        source: '/:file(llms|7f4c9e2a8b1d6035e9c4a2f817d3b6e0).txt',
+        headers: [
+          { key: 'Content-Type', value: 'text/plain; charset=utf-8' },
+        ],
+      },
+    );
     return headers;
   },
   async redirects() {
+    const wwwHost = [{ type: 'host' as const, value: 'www.serenityspa.uz' }];
+    const metadataAssets = [
+      { route: 'opengraph-image', file: 'og-image.jpg' },
+      { route: 'twitter-image', file: 'og-image.jpg' },
+      { route: 'icon', file: 'icon.png' },
+      { route: 'apple-icon', file: 'icon.png' },
+    ];
     return [
+      // Legacy metadata URLs also exist under /ru in Google's crawl history.
+      // Run before the host redirect so www aliases reach the image in one hop.
+      ...metadataAssets.flatMap(({ route, file }) =>
+        ['', '/ru', '/en', '/uz'].map(prefix => ({
+          source: `${prefix}/${route}`,
+          destination: `https://serenityspa.uz/${file}`,
+          permanent: true,
+        })),
+      ),
+      {
+        source: '/',
+        has: wwwHost,
+        destination: 'https://serenityspa.uz/ru',
+        permanent: true,
+      },
+      {
+        source: '/services/:path*',
+        has: wwwHost,
+        destination: 'https://serenityspa.uz/ru/services/:path*',
+        permanent: true,
+      },
+      {
+        source: '/:page(privacy|terms)',
+        has: wwwHost,
+        destination: 'https://serenityspa.uz/ru/:page',
+        permanent: true,
+      },
       {
         source: '/:path*',
-        has: [
-          {
-            type: 'host',
-            value: 'www.serenityspa.uz',
-          },
-        ],
+        has: wwwHost,
         destination: 'https://serenityspa.uz/:path*',
         permanent: true,
       },

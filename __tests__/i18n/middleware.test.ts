@@ -13,6 +13,7 @@ import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@/types/i18n';
 
 let lastRedirectUrl: string | null = null;
 let lastResponseType: 'next' | 'redirect' | null = null;
+let lastRedirectStatus: number | null = null;
 
 vi.mock('next/server', () => ({
   NextResponse: {
@@ -20,9 +21,10 @@ vi.mock('next/server', () => ({
       lastResponseType = 'next';
       return { type: 'next' };
     },
-    redirect: (url: { pathname: string }) => {
+    redirect: (url: { pathname: string }, status: number) => {
       lastResponseType = 'redirect';
       lastRedirectUrl = url.pathname;
+      lastRedirectStatus = status;
       return { type: 'redirect', url };
     },
   },
@@ -67,6 +69,7 @@ describe('Property 3: Редирект middleware для отсутствующ�
   beforeEach(() => {
     lastRedirectUrl = null;
     lastResponseType = null;
+    lastRedirectStatus = null;
   });
 
   it('URL без валидного языкового префикса → redirect на /ru + путь', () => {
@@ -107,7 +110,14 @@ describe('Property 3: Редирект middleware для отсутствующ�
     middleware(req);
 
     expect(lastResponseType).toBe('redirect');
-    expect(lastRedirectUrl).toBe(`/${DEFAULT_LOCALE}/`);
+    expect(lastRedirectUrl).toBe(`/${DEFAULT_LOCALE}`);
+    expect(lastRedirectStatus).toBe(308);
+  });
+
+  it.each(['/opengraph-image', '/twitter-image', '/icon', '/apple-icon', '/icon/123'])('не добавляет язык к файловому маршруту %s', pathname => {
+    middleware(createMockRequest(pathname));
+    expect(lastResponseType).toBe('next');
+    expect(lastRedirectUrl).toBeNull();
   });
 
   it('URL со статическим файлом (содержит точку) → пропускается', () => {

@@ -16,6 +16,8 @@ import { TimePicker } from '@/components/booking/TimePicker';
 import { ServiceSelector, type BookingTab } from '@/components/booking/ServiceSelector';
 import { ErrorView } from '@/components/booking/ErrorView';
 import { SuccessView } from '@/components/booking/SuccessView';
+import { analyzePhone, normalizePhone } from '@/lib/phone-info';
+import { isValidContact } from '@/lib/contact-info';
 
 type Step = 'select' | 'form' | 'sending' | 'success' | 'error';
 type Tab = BookingTab;
@@ -38,6 +40,8 @@ export function BookingModal() {
   const [selectedLabel, setSelectedLabel] = useState('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [contact, setContact] = useState('');
+  const [contactError, setContactError] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [comment, setComment] = useState('');
@@ -48,6 +52,7 @@ export function BookingModal() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const submittingRef = useRef(false);
 
   // If opened with a pre-selection, skip to form
   useEffect(() => {
@@ -79,6 +84,8 @@ export function BookingModal() {
         setSelectedLabel('');
         setName('');
         setPhone('');
+        setContact('');
+        setContactError('');
         setDate('');
         setTime('');
         setComment('');
@@ -155,10 +162,12 @@ export function BookingModal() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (submittingRef.current) return;
     
     // Clear previous errors
     setNameError('');
     setPhoneError('');
+    setContactError('');
     
     // Validate name: letters (Cyrillic/Latin/Uzbek), spaces, hyphens, apostrophe-like chars (oʻ, gʻ)
     const nameRegex = /^[а-яА-ЯёЁa-zA-Zʻʼʽ''`\s\-]+$/;
@@ -172,28 +181,35 @@ export function BookingModal() {
       return;
     }
     
-    // Validate phone: must be exactly +998 XX XXX XX XX (12 digits total)
-    const phoneDigits = phone.replace(/\D/g, '');
-    if (phoneDigits.length !== 12) {
+    if (!phone.trim() && !contact.trim()) {
+      setPhoneError(b.contactRequiredError);
+      return;
+    }
+    if (phone.trim() && !analyzePhone(phone).valid) {
       setPhoneError(b.phoneError);
       return;
     }
+    if (contact.trim() && !isValidContact(contact)) {
+      setContactError(b.contactError);
+      return;
+    }
     
+    submittingRef.current = true;
     setStep('sending');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
     try {
       const visitor = collectVisitorData();
-      
-      // Add timeout to fetch
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
       
       const res = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: trimmedName,
-          phone,
-          service: selectedLabel || b.notSelected,
+          phone: normalizePhone(phone),
+          contact,
+          service: selection?.type === 'package' && selection.price
+            ? `${selectedLabel} — ${selection.price}` : selectedLabel || b.notSelected,
           date: date || undefined,
           time: time || undefined,
           comment: comment || undefined,
@@ -211,6 +227,8 @@ export function BookingModal() {
         const errorData = await res.json().catch(() => ({ error: b.unknownError }));
         throw new Error(errorData.error || 'Failed');
       }
+      const result = await res.json();
+      if (result.success !== true) throw new Error('Booking was not accepted');
       
       // Success — fire confetti unless the user prefers reduced motion.
       // canvas-confetti is ~100KB; lazy-load only on the happy path.
@@ -229,7 +247,9 @@ export function BookingModal() {
         });
       }
       trackBookingFormSubmission({
-        service: selectedLabel || b.notSelected,
+        result,
+        service: selection?.type === 'package' && selection.price
+          ? `${selectedLabel} — ${selection.price}` : selectedLabel || b.notSelected,
         date,
         time,
         hasComment: Boolean(comment),
@@ -244,6 +264,9 @@ export function BookingModal() {
       // We cannot fake success here: the server never saw the request, so the fallback
       // queue on the server side is not triggered.
       setStep('error');
+    } finally {
+      clearTimeout(timeoutId);
+      submittingRef.current = false;
     }
   };
 
@@ -345,8 +368,11 @@ export function BookingModal() {
                     {/* Name + Phone row */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <InputField label={b.nameLabel} required value={name} onChange={setName} placeholder={b.namePlaceholder} error={nameError} />
-                      <PhoneInput label={b.phoneLabel} value={phone} onChange={setPhone} error={phoneError} />
+                      <PhoneInput label={b.phoneLabel} value={phone} onChange={value => { setPhone(value); setPhoneError(''); }} error={phoneError} required={!isValidContact(contact)} />
                     </div>
+
+                    <InputField label={b.contactLabel} value={contact} onChange={setContact}
+                      placeholder={b.contactPlaceholder} hint={b.contactHint} error={contactError} maxLength={254} />
 
                     {/* Date + Time */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -410,7 +436,7 @@ export function BookingModal() {
                   </motion.form>
                 )}
                 {step === 'success' && <SuccessView key="success" />}
-                {step === 'error' && <ErrorView key="error" onRetry={() => setStep('form')} onTelegram={() => { const msg = [`🌿 Новая заявка — Serenity Spa`, ``, `👤 ${name}`, `📱 ${phone}`, `💆 ${selectedLabel || b.notSelected}`, date ? `📅 ${date}` : '', time ? `⏰ ${time}` : '', comment ? `💬 ${comment}` : ''].filter(Boolean).join('\n'); window.open(`${CONTACTS.social.telegramUrl}?text=${encodeURIComponent(msg)}`, '_blank'); }} />}
+                {step === 'error' && <ErrorView key="error" onRetry={() => setStep('form')} onTelegram={() => { const msg = [`🌿 Новая заявка — Serenity Spa`, ``, `👤 ${name}`, phone ? `📱 ${normalizePhone(phone)}` : '', contact ? `💬 WhatsApp / Telegram / E-mail: ${contact}` : '', `💆 ${selectedLabel || b.notSelected}`, date ? `📅 ${date}` : '', time ? `⏰ ${time}` : '', comment ? `💬 ${comment}` : ''].filter(Boolean).join('\n'); window.open(`${CONTACTS.social.telegramUrl}?text=${encodeURIComponent(msg)}`, '_blank'); }} />}
               </AnimatePresence>
             </div>
           </motion.div>

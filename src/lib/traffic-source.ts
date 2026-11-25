@@ -66,8 +66,56 @@ function isFraudIndicator(host: string): boolean {
   return FRAUD_INDICATOR_HOSTS.some(t => host === t || host.endsWith('.' + t));
 }
 
+function matchesHost(host: string, domain: string): boolean {
+  return host === domain || host.endsWith(`.${domain}`);
+}
+
+// Country domains may have one or two suffix labels; the brand must be the
+// registrable label immediately before the suffix, never part of another host.
+function matchesCountryDomain(host: string, brand: string): boolean {
+  return new RegExp(`(?:^|\\.)${brand}\\.(?:com|[a-z]{2}|co\\.[a-z]{2}|com\\.[a-z]{2})$`).test(host);
+}
+
+function knownReferrerLabel(host: string, referrer: string): string | undefined {
+  const hasMapsPath = (() => {
+    try { return /^\/maps(?:\/|$)/i.test(new URL(referrer).pathname); } catch { return false; }
+  })();
+
+  if (matchesHost(host, 'chatgpt.com') || matchesHost(host, 'chat.openai.com')) return 'ChatGPT (ИИ-ассистент)';
+  if (matchesHost(host, 'perplexity.ai')) return 'ИИ-ассистент (Perplexity)';
+  if (matchesHost(host, 'gemini.google.com')) return 'ИИ-ассистент (Gemini)';
+  if (matchesHost(host, 'copilot.microsoft.com')) return 'ИИ-ассистент (Copilot)';
+  if (matchesHost(host, 'claude.ai')) return 'ИИ-ассистент (Claude)';
+  if (matchesCountryDomain(host, 'tripadvisor')) return 'TripAdvisor (бесплатно)';
+  if (matchesHost(host, 'maps.app.goo.gl') ||
+      (matchesCountryDomain(host, 'google') && (/(?:^|\.)maps\.google\./.test(host) || hasMapsPath))) return 'Google Карты';
+  if (matchesCountryDomain(host, 'yandex') && hasMapsPath) return 'Яндекс Карты';
+  if (matchesCountryDomain(host, '2gis')) return '2ГИС';
+  if (matchesCountryDomain(host, 'google')) return 'Google (поиск)';
+  if (matchesCountryDomain(host, 'yandex')) return 'Яндекс (поиск)';
+  if (matchesHost(host, 'instagram.com')) return 'Instagram';
+  if (matchesHost(host, 'facebook.com') || matchesHost(host, 'fb.com')) return 'Facebook';
+  if (matchesHost(host, 't.me') || matchesHost(host, 'telegram.org') || matchesHost(host, 'telegram.me')) return 'Telegram';
+  if (matchesHost(host, 'booking.com')) return 'Booking.com';
+  if (matchesHost(host, 'hilton.com')) return 'Hilton';
+  if (matchesHost(host, 'youtube.com') || matchesHost(host, 'youtu.be')) return 'YouTube';
+  if (matchesHost(host, 'tiktok.com')) return 'TikTok';
+  return undefined;
+}
+
 function humanizeUtm(source: string, medium: string): string {
   const src = source.toLowerCase();
+  const knownSources: Record<string, string> = {
+    tripadvisor: 'TripAdvisor (бесплатно)', chatgpt: 'ChatGPT (ИИ-ассистент)',
+    perplexity: 'ИИ-ассистент (Perplexity)', gemini: 'ИИ-ассистент (Gemini)',
+    copilot: 'ИИ-ассистент (Copilot)', claude: 'ИИ-ассистент (Claude)',
+    'google maps': 'Google Карты', 'google_maps': 'Google Карты',
+    'yandex maps': 'Яндекс Карты', 'yandex_maps': 'Яндекс Карты', '2gis': '2ГИС',
+    booking: 'Booking.com', hilton: 'Hilton',
+  };
+  if (knownSources[src]) return knownSources[src];
+  const domainLabel = knownReferrerLabel(src, `https://${src}/`);
+  if (domainLabel && domainLabel !== 'Google (поиск)' && domainLabel !== 'Яндекс (поиск)') return domainLabel;
   if (src.includes('google')) return medium ? `Google (${medium})` : 'Google';
   if (src.includes('yandex')) return medium ? `Яндекс (${medium})` : 'Яндекс';
   if (src.includes('instagram') || src === 'ig') return 'Instagram';
@@ -85,6 +133,8 @@ export function analyzeTrafficSource(input: {
   utm_campaign?: string;
   gad_source?: string;
   gclid?: string;
+  gbraid?: string;
+  wbraid?: string;
   landingPage?: string;
   ownDomain?: string;
 }): TrafficAnalysis {
@@ -115,36 +165,21 @@ export function analyzeTrafficSource(input: {
   else if (input.utm_source) {
     label = humanizeUtm(input.utm_source, input.utm_medium ?? '');
   }
-  // 4. Google Ads click without utm (has gclid)
-  else if (input.gclid && gadInfo) {
+  // 4. Google Ads click without utm (has gclid / gbraid / wbraid)
+  else if ((input.gclid || input.gbraid || input.wbraid) && gadInfo) {
     label = `Google Реклама · ${gadInfo.label}`;
   }
-  else if (input.gclid) {
+  else if (input.gclid || input.gbraid || input.wbraid) {
     label = 'Google Реклама';
   }
   // 5. Referrer-based
   else if (referrerHost) {
-    if (isTrustedHost(referrerHost, ownDomain)) {
+    const knownLabel = knownReferrerLabel(referrerHost, input.referrer ?? '');
+    if (knownLabel || isTrustedHost(referrerHost, ownDomain)) {
       if (isOwn) {
         label = 'Переход внутри сайта';
-      } else if (referrerHost.includes('google')) {
-        label = 'Google (поиск)';
-      } else if (referrerHost.includes('yandex')) {
-        label = 'Яндекс (поиск)';
-      } else if (referrerHost.includes('instagram')) {
-        label = 'Instagram';
-      } else if (referrerHost.includes('facebook') || referrerHost.includes('fb.com')) {
-        label = 'Facebook';
-      } else if (referrerHost.includes('youtube')) {
-        label = 'YouTube';
-      } else if (referrerHost.includes('t.me') || referrerHost.includes('telegram')) {
-        label = 'Telegram';
-      } else if (referrerHost.includes('tiktok')) {
-        label = 'TikTok';
-      } else if (referrerHost.includes('2gis')) {
-        label = '2GIS';
       } else {
-        label = referrerHost;
+        label = knownLabel ?? referrerHost;
       }
     } else {
       // Unknown external domain — suspicious

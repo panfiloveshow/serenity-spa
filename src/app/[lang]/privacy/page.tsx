@@ -24,6 +24,7 @@ export async function generateMetadata({
     title: dict.privacy.metaTitle,
     description: dict.privacy.metaDescription,
     metadataBase: new URL(BASE_URL),
+    robots: { index: false, follow: true, googleBot: { index: false, follow: true } },
     alternates: {
       canonical: `${BASE_URL}/${lang}/privacy`,
       languages,

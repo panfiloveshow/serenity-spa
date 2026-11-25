@@ -23,6 +23,7 @@ const UZ_OPERATOR_PREFIXES: Record<string, string> = {
   '50': 'Perfectum / UzMobile',
   '77': 'UzMobile',
   '88': 'UzMobile',
+  '20': 'Мобильный оператор UZ',
 };
 
 function detectPattern(digits: string): { suspicious: boolean; reason?: string } {
@@ -53,14 +54,24 @@ function detectPattern(digits: string): { suspicious: boolean; reason?: string }
 }
 
 export function analyzePhone(raw: string): PhoneInfo {
-  const digits = (raw ?? '').replace(/\D/g, '');
+  const value = (raw ?? '').trim().replace(/^00/, '+');
+  let digits = value.replace(/\D/g, '');
+  const safeCharacters = /^\+?[1-9][\d\s().-]*$/.test(value);
+  // Common local input, including an accidental leading + before the operator code.
+  if (safeCharacters && digits.length === 9 && UZ_OPERATOR_PREFIXES[digits.slice(0, 2)]) {
+    digits = `998${digits}`;
+  }
+  const isUzbek = digits.startsWith('998');
+  const valid = safeCharacters && (isUzbek
+    ? digits.length === 12
+    : value.startsWith('+') && digits.length >= 10 && digits.length <= 15);
 
-  if (digits.length !== 12 || !digits.startsWith('998')) {
+  if (!valid || !isUzbek) {
     return {
-      valid: false,
+      valid,
       digits,
-      formatted: raw,
-      countryCode: digits.slice(0, 3),
+      formatted: valid ? `+${digits}` : raw,
+      countryCode: valid ? 'INTL' : '',
       operatorHint: '',
       isMobile: false,
       suspiciousPattern: false,
@@ -85,4 +96,10 @@ export function analyzePhone(raw: string): PhoneInfo {
     suspiciousPattern: pattern.suspicious,
     patternReason: pattern.reason,
   };
+}
+
+/** Canonical value for the API, notifications, history matching and integrations. */
+export function normalizePhone(raw: string): string {
+  const info = analyzePhone(raw);
+  return info.valid ? `+${info.digits}` : raw.trim();
 }

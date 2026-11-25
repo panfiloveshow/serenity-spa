@@ -1,9 +1,10 @@
 'use client';
 
 import { motion, useScroll, useTransform, useReducedMotion, MotionValue } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { CTAButton } from '../ui/CTAButton';
 import { PACKAGES } from '@/lib/constants';
+import { getPackageOptions } from '@/lib/package-options';
 import { KineticText } from '../ui/KineticText';
 import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useBooking } from '@/lib/booking-context';
@@ -84,6 +85,10 @@ function PackageCard({ pkg, dictPkg, bookLabel, index }: PackageCardProps) {
   const prefersReducedMotion = useReducedMotion();
   const isMobile = useIsMobile();
   const { openBooking } = useBooking();
+  const { dictionary } = useLang();
+  const [optionIndex, setOptionIndex] = useState(0);
+  const options = getPackageOptions(pkg, dictPkg.title, dictionary.packages);
+  const selectedOption = options[optionIndex] ?? options[0];
 
   const { scrollYProgress } = useScroll({
     target: cardRef,
@@ -96,7 +101,7 @@ function PackageCard({ pkg, dictPkg, bookLabel, index }: PackageCardProps) {
   return (
     <div
       ref={cardRef}
-      className="relative h-[80vh] md:h-[70vh]"
+      className="relative min-h-[80vh] md:min-h-[70vh] pb-8"
       style={{ zIndex: index + 1 }}
     >
       <div className="sticky" style={{ top: stickyTop }}>
@@ -133,14 +138,26 @@ function PackageCard({ pkg, dictPkg, bookLabel, index }: PackageCardProps) {
                   {dictPkg.description}
                 </p>
                 
-                <div className="flex items-baseline gap-2 mb-8">
-                  <span className="text-2xl md:text-3xl font-light text-[#C8956C]">{dictPkg.price}</span>
+                {options.length > 1 && (
+                  <div className="flex gap-2 mb-5" role="group" aria-label={dictPkg.title}>
+                    {options.map((option, optionNumber) => (
+                      <button key={option.name} type="button" aria-pressed={optionIndex === optionNumber}
+                        onClick={() => setOptionIndex(optionNumber)}
+                        className={`flex-1 rounded-xl border px-3 py-2.5 text-left text-xs transition-colors cursor-pointer ${optionIndex === optionNumber ? 'border-[#C8956C] bg-[#C8956C]/15 text-[#E8DFD0]' : 'border-[#7A8BA8]/25 text-[#A0B0C8]'}`}>
+                        <span className="block mb-1">{option.label}</span>
+                        <span className="block text-[#C8956C] tabular-nums">{option.price}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                <div className="flex items-baseline gap-2 mb-8" aria-live="polite">
+                  <span className="text-2xl md:text-3xl font-light text-[#C8956C]">{selectedOption.price}</span>
                 </div>
 
                 <CTAButton variant="primary" onClick={() => openBooking({
                   type: 'package',
-                  name: dictPkg.title,
-                  price: dictPkg.price,
+                  name: selectedOption.name,
+                  price: selectedOption.price,
                   duration: dictPkg.duration,
                 })}>{bookLabel}</CTAButton>
               </div>

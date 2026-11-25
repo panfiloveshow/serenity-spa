@@ -1,14 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { randomUUID } from 'crypto';
+import { createHash, randomUUID } from 'crypto';
 import { isIP } from 'net';
 import { logBookingSuccess, logBookingError, saveFailedBooking } from '@/lib/logger';
 import { checkRateLimitRedis, incrDailyCounter } from '@/lib/redis';
 import { bookingSchema, detectBot, type BookingData } from '@/lib/validation';
+import { bookingHistory } from '@/lib/booking-history';
 import { analyzePhone } from '@/lib/phone-info';
+import { contactPhone } from '@/lib/contact-info';
 import { analyzeTrafficSource } from '@/lib/traffic-source';
 import { getGeoInfo } from '@/lib/geoip';
+import { getPrivateRelayStatus } from '@/lib/private-relay';
 import { assessRisk } from '@/lib/risk-score';
-import { buildBookingMessage, type MessageContext } from '@/lib/booking-message';
+import { buildBookingMessage, extractCardBody, type MessageContext } from '@/lib/booking-message';
+import { buildTelegramMessageUrl } from '@/lib/bot/card';
+import { buildInitialKeyboard } from '@/lib/bot/keyboards';
+import type { InlineKeyboardMarkup } from '@/lib/bot/telegram-api';
+import { isGoogleSheetsConfiguredSync, syncLeadToSheets } from '@/lib/integrations/google-sheets';
+import { resolveServiceInfo } from '@/lib/leads/catalog-price';
+import { getLeadsStore } from '@/lib/leads/store';
+import { parseFlexibleDateToYmd } from '@/lib/leads/time';
+import { STATUS_LABELS, type LeadRecord } from '@/lib/leads/types';
 
 const TG_BOT_TOKEN = process.env.TG_BOT_TOKEN;
 const TG_CHAT_ID = process.env.TG_CHAT_ID;
@@ -97,7 +108,10 @@ export function getClientIpFromHeaders(headers: Pick<Headers, 'get'>): string {
   return 'Unknown';
 }
 
-async function sendToTelegramWithRetry(message: string): Promise<void> {
+async function sendToTelegramWithRetry(
+  message: string,
+  replyMarkup?: InlineKeyboardMarkup,
+): Promise<{ messageId: number | null }> {
   let lastError: Error | null = null;
 
   for (let attempt = 0; attempt < TELEGRAM_MAX_RETRIES; attempt++) {
@@ -105,15 +119,20 @@ async function sendToTelegramWithRetry(message: string): Promise<void> {
     const timeoutId = setTimeout(() => controller.abort(), TELEGRAM_TIMEOUT_MS);
 
     try {
+      const payload: Record<string, unknown> = {
+        chat_id: TG_CHAT_ID as string,
+        text: message,
+        parse_mode: 'HTML',
+        disable_web_page_preview: true,
+      };
+      if (replyMarkup) {
+        payload.reply_markup = replyMarkup;
+      }
+
       const tgResponse = await fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN as string}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: TG_CHAT_ID as string,
-          text: message,
-          parse_mode: 'HTML',
-          disable_web_page_preview: true,
-        }),
+        body: JSON.stringify(payload),
         signal: controller.signal,
       });
 
@@ -128,7 +147,9 @@ async function sendToTelegramWithRetry(message: string): Promise<void> {
         throw new Error(`Telegram API error: ${JSON.stringify(tgResult)}`);
       }
 
-      return; // Success
+      const resultObj = tgResult.result as { message_id?: unknown } | undefined;
+      const messageId = typeof resultObj?.message_id === 'number' ? resultObj.message_id : null;
+      return { messageId }; // Success
     } catch (error) {
       lastError = error instanceof Error ? error : new Error(String(error));
       if (attempt < TELEGRAM_MAX_RETRIES - 1) {
@@ -187,17 +208,19 @@ export async function POST(request: NextRequest) {
 
     const data = parsed.data;
 
-    // --- Phone format hard check (Uzbekistan) ---
-    const phoneInfo = analyzePhone(data.phone);
-    if (!phoneInfo.valid) {
-      return NextResponse.json({ error: 'Некорректный номер телефона. Введите полный номер в формате +998 XX XXX XX XX' }, { status: 400 });
-    }
+    // The shared schema validates both fields. WhatsApp-only guests still get
+    // country hints; email/Telegram guests must not share an empty phone bucket.
+    const phoneInfo = analyzePhone(data.phone || contactPhone(data.contact));
+    const contactKey = phoneInfo.valid ? `phone:${phoneInfo.digits}`
+      : `contact:${createHash('sha256').update(data.contact.toLowerCase()
+        .replace(/^(?:https:\/\/)?(?:t\.me|telegram\.me)\//, '@').replace(/\/$/, '')).digest('hex')}`;
+    const submittedAt = new Date();
 
     // --- Hard bot detection (honeypot + <1s) — silent reject ---
     const botCheck = detectBot({
       website: data.website,
       formOpenedAt: data.formOpenedAt,
-      submittedAt: Date.now(),
+      submittedAt: submittedAt.getTime(),
     });
 
     if (botCheck.isBot) {
@@ -207,28 +230,44 @@ export async function POST(request: NextRequest) {
         ip,
         { requestId, serverUA, level: 'reject', score: 100, flags: [botCheck.reason ?? 'bot'] },
       );
-      // Silent reject — don't let bot know it was detected
-      return NextResponse.json({ success: true });
+      // Keep the generic success UI while excluding the rejected request from analytics.
+      return NextResponse.json({ success: true, accepted: false, score: 100, level: 'reject' });
     }
 
     // --- Check phone rate limit (prevent one number spamming) ---
     const phoneAllowed = await checkRateLimitRedis(
-      `ratelimit:phone:${phoneInfo.digits}`,
+      `ratelimit:${contactKey}`,
       PHONE_RATE_LIMIT,
       PHONE_RATE_WINDOW_MS,
     );
     if (!phoneAllowed) {
       return NextResponse.json(
-        { error: 'С этого номера уже отправлено несколько заявок. Попробуйте через час или позвоните нам.' },
+        { error: 'С этого контакта уже отправлено несколько заявок. Попробуйте через час или позвоните нам.' },
         { status: 429 },
       );
     }
 
+    const leadsStore = getLeadsStore();
+    const [history, previousLead] = await Promise.all([
+      bookingHistory.reserve({
+        phone: data.phone || contactPhone(data.contact), name: data.name,
+        service: data.service, date: data.date, deviceId: data.visitor.deviceId, submittedAt,
+      }),
+      leadsStore.findFirstLeadForClient({
+        phone: data.phone || contactPhone(data.contact),
+        contact: data.contact,
+        name: data.name,
+        service: data.service,
+        date: data.date,
+      }),
+    ]);
+
     // --- Gather enrichment data in parallel ---
-    const [geo, ipSubmissionsLast24h, phoneSubmissionsLast24h] = await Promise.all([
+    const [geo, privateRelay, ipSubmissionsLast24h, phoneSubmissionsLast24h] = await Promise.all([
       getGeoInfo(ip),
+      getPrivateRelayStatus(ip, serverUA),
       incrDailyCounter(`daily:ip:${ip}`),
-      incrDailyCounter(`daily:phone:${phoneInfo.digits}`),
+      incrDailyCounter(`daily:${contactKey}`),
     ]);
 
     const traffic = analyzeTrafficSource({
@@ -238,6 +277,8 @@ export async function POST(request: NextRequest) {
       utm_campaign: data.visitor.utm_campaign,
       gad_source: data.visitor.gad_source,
       gclid: data.visitor.gclid,
+      gbraid: data.visitor.gbraid,
+      wbraid: data.visitor.wbraid,
       landingPage: data.visitor.landingPage,
       ownDomain: OWN_DOMAIN,
     });
@@ -246,14 +287,32 @@ export async function POST(request: NextRequest) {
       phone: phoneInfo,
       traffic,
       geo,
+      privateRelay,
       clientUA: `${data.visitor.browser} / ${data.visitor.os}`,
       serverUA,
       formFillDurationMs: botCheck.formFillDurationMs,
       ipSubmissionsLast24h,
       phoneSubmissionsLast24h,
+      deviceSubmissionsLast10m: history.deviceSubmissionsLast10m,
       pagesViewed: data.visitor.pagesViewed,
       sessionSeconds: data.visitor.sessionSeconds ?? null,
+      name: data.name,
+      comment: data.comment,
+      gclid: data.visitor.gclid,
+      submittedAt,
     });
+
+    const repeatFirstSubmittedAt = history.firstSubmittedAt ?? previousLead?.createdAt ?? null;
+    const repeatLead = previousLead
+      ? {
+          id: previousLead.id,
+          statusLabel: STATUS_LABELS[previousLead.status] ?? previousLead.status,
+          messageUrl: buildTelegramMessageUrl(
+            previousLead.telegramChatId || TG_CHAT_ID,
+            previousLead.telegramMessageId,
+          ),
+        }
+      : null;
 
     const messageContext: MessageContext = {
       ip,
@@ -261,10 +320,14 @@ export async function POST(request: NextRequest) {
       phone: phoneInfo,
       traffic,
       geo,
+      privateRelay,
       risk,
       formFillDurationMs: botCheck.formFillDurationMs,
       ipSubmissionsLast24h,
       phoneSubmissionsLast24h,
+      repeatFirstSubmittedAt,
+      repeatLead,
+      submittedAt,
       requestId,
     };
 
@@ -287,22 +350,81 @@ export async function POST(request: NextRequest) {
         ip,
         logMeta,
       );
-      // Return success so fraud actor doesn't tune their approach
-      return NextResponse.json({ success: true });
+      // Keep the generic success UI while excluding the rejected request from analytics.
+      return NextResponse.json({ success: true, accepted: false, score: risk.score, level: risk.level });
     }
 
     const message = buildBookingMessage(data as BookingData, messageContext);
+    const serviceRaw = data.service?.trim() || 'не выбрана';
+    const requestedDate = data.date?.trim() || null;
+    const requestedTime = data.time?.trim() || null;
+    const visitDateYmd = parseFlexibleDateToYmd(requestedDate, submittedAt);
+    const serviceInfo = resolveServiceInfo(serviceRaw, visitDateYmd);
+
+    const buildLeadRecord = (telegramMessageId: number | null): LeadRecord => ({
+      id: requestId,
+      createdAt: submittedAt.toISOString(),
+      updatedAt: submittedAt.toISOString(),
+      name: data.name,
+      phone: data.phone || '',
+      contact: data.contact || '',
+      service: serviceRaw,
+      serviceCategory: serviceInfo.category,
+      servicePriceUzs: serviceInfo.priceUzs,
+      requestedDate,
+      requestedTime,
+      source: traffic.label,
+      campaign: data.visitor.utm_campaign || '',
+      network: traffic.gadSourceLabel || data.visitor.gad_source || '',
+      gclid: data.visitor.gclid?.trim() || null,
+      gbraid: data.visitor.gbraid?.trim() || null,
+      wbraid: data.visitor.wbraid?.trim() || null,
+      adClickAt: data.visitor.adClickAt?.trim() || null,
+      riskScore: risk.score,
+      riskLevel: risk.level,
+      initialTitle: risk.title,
+      repeatOfLeadId: previousLead?.id ?? null,
+      status: 'new',
+      appointmentDate: null,
+      appointmentTime: null,
+      bookedAt: null,
+      visitedAt: null,
+      rejectReason: null,
+      callAttempts: 0,
+      handledByUserId: null,
+      handledByName: null,
+      firstRespondedAt: null,
+      firstResponseMinutes: null,
+      history: [],
+      telegramChatId: telegramMessageId ? (TG_CHAT_ID as string) : null,
+      telegramMessageId,
+      cardBodyHtml: extractCardBody(message),
+      reminded15mAt: null,
+      reminded60mAt: null,
+      nextCallRetryRemindAt: null,
+      nextThinkingRemindAt: null,
+      visitCheckSentForSlot: null,
+      visitCheckMessageId: null,
+      sheetsRowNumber: null,
+      sheetsSyncedUpdatedAt: null,
+      adsConversionsSent: {},
+    });
 
     // Send to Telegram with retry
     try {
-      await sendToTelegramWithRetry(message);
+      const sent = await sendToTelegramWithRetry(message, buildInitialKeyboard(requestId));
+      await bookingHistory.confirm(history.reservationId);
+      await leadsStore.createLead(buildLeadRecord(sent.messageId));
+      if (isGoogleSheetsConfiguredSync()) {
+        await syncLeadToSheets(requestId);
+      }
       await logBookingSuccess(data, ip, logMeta);
-      return NextResponse.json({ success: true });
+      return NextResponse.json({ success: true, accepted: true, score: risk.score, level: risk.level });
     } catch (telegramError: unknown) {
       const err = telegramError instanceof Error ? telegramError : new Error(String(telegramError));
       console.error('Telegram API failed after retries, saving to fallback:', err.message);
       await logBookingError(err, data, ip, logMeta);
-      await saveFailedBooking({
+      const savedPath = await saveFailedBooking({
         name: data.name,
         phone: data.phone,
         service: data.service,
@@ -311,7 +433,15 @@ export async function POST(request: NextRequest) {
         requestId,
         score: risk.score,
       });
-      return NextResponse.json({ success: true, fallback: true });
+      if (!savedPath) {
+        return NextResponse.json({ error: 'Не удалось сохранить заявку. Попробуйте ещё раз.' }, { status: 503 });
+      }
+      await bookingHistory.confirm(history.reservationId);
+      await leadsStore.createLead(buildLeadRecord(null));
+      if (isGoogleSheetsConfiguredSync()) {
+        await syncLeadToSheets(requestId);
+      }
+      return NextResponse.json({ success: true, accepted: true, fallback: true, score: risk.score, level: risk.level });
     }
   } catch (error) {
     console.error(`Booking API error [${requestId}]:`, error);

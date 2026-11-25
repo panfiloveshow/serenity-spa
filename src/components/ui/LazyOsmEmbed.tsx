@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { BUSINESS_CONTACT } from '@/lib/business';
 
-const OSM_EMBED_SRC =
-  'https://www.openstreetmap.org/export/embed.html?bbox=69.2717%2C41.3066%2C69.2877%2C41.3156&layer=mapnik&marker=41.3111%2C69.2797';
+const { latitude, longitude } = BUSINESS_CONTACT;
+const OSM_EMBED_SRC = `https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.004}%2C${latitude - 0.0025}%2C${longitude + 0.004}%2C${latitude + 0.0025}&layer=mapnik&marker=${latitude}%2C${longitude}`;
 
 type LazyOsmEmbedProps = {
   title: string;

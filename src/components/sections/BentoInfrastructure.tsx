@@ -54,19 +54,22 @@ function AnimatedCounter({ value, suffix = '', animate = true }: { value: string
   const canAnimate = animate && Boolean(numericMatch && !value.includes('/'));
   const parsedValue = canAnimate ? Number.parseInt(numericMatch?.[1] ?? value, 10) : Number.NaN;
   const metricSuffix = suffix || (canAnimate ? numericMatch?.[2] ?? '' : '');
-  const [display, setDisplay] = useState(() => (canAnimate ? '0' : value));
-  
+  const [display, setDisplay] = useState(() => (canAnimate && !Number.isNaN(parsedValue) ? String(parsedValue) : value));
+
   useEffect(() => {
     if (!isInView) return;
     if (!canAnimate || Number.isNaN(parsedValue)) return;
-    
+    if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
     let start = 0;
-    const duration = 1500;
+    const duration = 1200;
     const step = (timestamp: number) => {
       if (!start) start = timestamp;
       const progress = Math.min((timestamp - start) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(Math.floor(eased * parsedValue).toString());
+      setDisplay(Math.round(eased * parsedValue).toString());
       if (progress < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
@@ -133,7 +136,7 @@ export function BentoInfrastructure() {
             <TiltCard className="h-full" tiltAmount={4} glowColor="#C8956C">
               <div className="relative h-full rounded-2xl border border-[#7A8BA8]/10 bg-gradient-to-br from-[#1F4268] to-[#234A72] overflow-hidden group cursor-pointer">
                 {/* Background image */}
-                <Image src={INFRA_IMAGES[items[0].id]} alt={items[0].title} fill className="object-cover opacity-40 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700" sizes="(min-width: 768px) 66vw, 100vw" loading="lazy" />
+                <Image src={INFRA_IMAGES[items[0].id]} alt={`${items[0].title} — Serenity Spa, Hilton Tashkent City`} fill className="object-cover opacity-40 group-hover:opacity-55 group-hover:scale-105 transition-all duration-700" sizes="(min-width: 768px) 66vw, 100vw" loading="lazy" />
                 {/* Noise texture */}
                 <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1B3A5C] via-[#1B3A5C]/40 to-transparent opacity-90" />
@@ -166,7 +169,7 @@ export function BentoInfrastructure() {
               <motion.div key={item.id} className="h-[220px] md:flex-1" variants={staggerChild}>
                 <TiltCard className="h-full" tiltAmount={5} glowColor="#C8956C">
                   <div className="relative h-full rounded-2xl border border-[#7A8BA8]/10 bg-gradient-to-br from-[#1F4268]/80 to-[#263A5E]/60 overflow-hidden group cursor-pointer backdrop-blur-sm">
-                    <Image src={INFRA_IMAGES[item.id]} alt={item.title} fill className="object-cover opacity-35 group-hover:opacity-50 group-hover:scale-105 transition-all duration-700" sizes="(min-width: 768px) 33vw, 100vw" loading="lazy" />
+                    <Image src={INFRA_IMAGES[item.id]} alt={`${item.title} — Serenity Spa, Hilton Tashkent City`} fill className="object-cover opacity-35 group-hover:opacity-50 group-hover:scale-105 transition-all duration-700" sizes="(min-width: 768px) 33vw, 100vw" loading="lazy" />
                     <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#1B3A5C] via-[#1B3A5C]/50 to-transparent" />
                     
@@ -177,8 +180,8 @@ export function BentoInfrastructure() {
                         
                         {/* Hover reveal */}
                         <div className="overflow-hidden">
-                          <div className="translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out flex items-baseline gap-3 pt-3 mt-2 border-t border-[#C8956C]/15">
-                            <span className="text-2xl font-light text-[#C8956C]">
+                          <div className="translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 ease-out flex flex-wrap items-baseline gap-x-3 gap-y-1 pt-3 mt-2 border-t border-[#C8956C]/15">
+                            <span className={`${item.id === 'gym' ? 'text-lg' : 'text-2xl'} whitespace-nowrap font-light text-[#C8956C]`}>
                               <AnimatedCounter value={item.metrics} animate={false} />
                             </span>
                             <span className="text-[#A0B0C8] text-xs">{item.metricLabel}</span>
@@ -196,7 +199,7 @@ export function BentoInfrastructure() {
           <motion.div className="md:col-span-3 h-[200px] md:h-[180px]" variants={staggerChild}>
             <TiltCard className="h-full" tiltAmount={3} glowColor="#C8956C">
               <div className="relative h-full rounded-2xl border border-[#7A8BA8]/10 bg-gradient-to-r from-[#1F4268] to-[#234A72] overflow-hidden group cursor-pointer">
-                <Image src={INFRA_IMAGES[items[3].id]} alt={items[3].title} fill className="object-cover object-[30%_75%] opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" sizes="100vw" loading="lazy" />
+                <Image src={INFRA_IMAGES[items[3].id]} alt={`${items[3].title} — Serenity Spa, Hilton Tashkent City`} fill className="object-cover object-[30%_75%] opacity-60 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700" sizes="100vw" loading="lazy" />
                 <div className="absolute inset-0 opacity-[0.04] mix-blend-overlay pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")` }} />
                 <div className="absolute inset-0 bg-gradient-to-r from-[#1B3A5C]/70 via-transparent to-[#1B3A5C]/60" />
                 
@@ -213,7 +216,7 @@ export function BentoInfrastructure() {
                     {[
                       { val: '1200', suffix: 'м²', label: infra.stats.area },
                       { val: '7', suffix: '', label: infra.stats.zones },
-                      { val: '12', suffix: infra.stats.hoursSuffix, label: infra.stats.hours },
+                      { val: '16', suffix: infra.stats.hoursSuffix, label: infra.stats.hours },
                     ].map((m, i) => (
                       <div key={i} className="text-center">
                         <p className="text-2xl font-light text-[#C8956C]">

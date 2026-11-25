@@ -81,11 +81,58 @@ describe('analyzeTrafficSource — trusted hosts', () => {
     ['https://t.me/channel', /Telegram/i],
     ['https://www.youtube.com/watch', /YouTube/i],
     ['https://www.tiktok.com/@user', /TikTok/i],
-    ['https://2gis.uz/place', /2GIS/i],
+    ['https://2gis.uz/place', /2ГИС/i],
   ])('classifies %s as not suspicious', (url, expectedLabel) => {
     const r = analyzeTrafficSource({ referrer: url });
     expect(r.suspicious).toBe(false);
     expect(r.label).toMatch(expectedLabel);
+  });
+});
+
+describe('requested booking sources', () => {
+  it.each([
+    ['https://www.tripadvisor.ru/Hotel_Review', 'TripAdvisor (бесплатно)'],
+    ['https://www.tripadvisor.co.uk/', 'TripAdvisor (бесплатно)'],
+    ['https://chatgpt.com/', 'ChatGPT (ИИ-ассистент)'],
+    ['https://chat.openai.com/', 'ChatGPT (ИИ-ассистент)'],
+    ['https://www.perplexity.ai/', 'ИИ-ассистент (Perplexity)'],
+    ['https://gemini.google.com/', 'ИИ-ассистент (Gemini)'],
+    ['https://copilot.microsoft.com/', 'ИИ-ассистент (Copilot)'],
+    ['https://claude.ai/', 'ИИ-ассистент (Claude)'],
+    ['https://www.google.com/maps/place/spa', 'Google Карты'],
+    ['https://maps.google.co.uk/?q=spa', 'Google Карты'],
+    ['https://maps.app.goo.gl/123', 'Google Карты'],
+    ['https://yandex.uz/maps/10335/', 'Яндекс Карты'],
+    ['https://2gis.uz/tashkent', '2ГИС'],
+    ['https://l.instagram.com/', 'Instagram'],
+    ['https://www.facebook.com/', 'Facebook'],
+    ['https://t.me/channel', 'Telegram'],
+    ['https://www.booking.com/', 'Booking.com'],
+    ['https://www.hilton.com/', 'Hilton'],
+  ])('recognizes %s', (referrer, label) => {
+    expect(analyzeTrafficSource({ referrer })).toMatchObject({ label, suspicious: false });
+  });
+
+  it.each([
+    'https://tripadvisor.attacker.com/',
+    'https://chatgpt.com.attacker.com/',
+    'https://gemini.google.com.attacker.com/',
+    'https://maps.app.goo.gl.attacker.com/',
+  ])('does not trust a lookalike domain: %s', referrer => {
+    expect(analyzeTrafficSource({ referrer }).suspicious).toBe(true);
+  });
+
+  it('recognizes ChatGPT recorded as a UTM source with no referrer', () => {
+    expect(analyzeTrafficSource({ utm_source: 'chatgpt.com' })).toMatchObject({
+      label: 'ChatGPT (ИИ-ассистент)', suspicious: false,
+    });
+  });
+
+  it.each([
+    ['gemini.google.com', 'ИИ-ассистент (Gemini)'],
+    ['maps.google.co.uk', 'Google Карты'],
+  ])('recognizes the known UTM domain %s', (utm_source, label) => {
+    expect(analyzeTrafficSource({ utm_source })).toMatchObject({ label, suspicious: false });
   });
 });
 

@@ -8,7 +8,10 @@
     "analyze": "ANALYZE=true next build --webpack",
     "analyze:turbo": "next experimental-analyze -o",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "prebuild": "node scripts/generate-ai-files.mjs",
+    "check:ai-files": "node scripts/generate-ai-files.mjs --check",
+    "indexnow": "node scripts/submit-indexnow.mjs"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",

@@ -8,12 +8,13 @@ import { LazyOsmEmbed } from '../ui/LazyOsmEmbed';
 import { MOTION, staggerContainer, staggerChild, NOISE_BG } from '@/lib/motion';
 import { useBooking } from '@/lib/booking-context';
 import { useLang } from '@/lib/lang-context';
+import { BUSINESS_CONTACT } from '@/lib/business';
 import type { Locale } from '@/types/i18n';
 
 const MAP_LINKS = {
-  twoGis: 'https://2gis.uz/tashkent/firm/70000001046378221',
-  googleRoute: 'https://www.google.com/maps/dir/?api=1&destination=41.3111,69.2797',
-  yandexRoute: 'https://yandex.uz/maps/?rtext=~41.3111,69.2797&rtt=auto',
+  twoGis: BUSINESS_CONTACT.twoGisUrl,
+  googleRoute: BUSINESS_CONTACT.mapUrl,
+  yandexRoute: BUSINESS_CONTACT.yandexUrl,
 };
 
 const MAP_DETAILS: Record<Locale, {
@@ -30,37 +31,37 @@ const MAP_DETAILS: Record<Locale, {
 }> = {
   ru: {
     openMap: 'Открыть Serenity Spa в 2ГИС',
-    ratingLabel: 'по данным 2ГИС',
-    ratingValue: '4.9 / 24 оценки',
+    ratingLabel: 'по данным 2ГИС на 04.11.2026',
+    ratingValue: '4.6 / 28 оценок',
     placeTitle: 'Hilton Tashkent City',
-    placeSubtitle: 'Укчи 1, 3–4 этажи',
-    features: ['27 м бассейн', 'Хаммам и финская парная', 'SPA-процедуры', '24/7 фитнес'],
+    placeSubtitle: 'Укчи 1, 4-й этаж · вход через Hilton',
+    features: ['27 м бассейн', 'Хаммам и финская парная', 'SPA-процедуры', 'Фитнес 07:00–23:00'],
     facilityTitle: 'На месте',
-    facilityItems: ['Wi‑Fi', 'Полотенца и тапочки', 'Бесплатная парковка'],
+    facilityItems: ['Полотенца, халаты и тапочки', 'Парковка: 100 000 сум / 2 часа'],
     landmark: 'Ориентир: Tashkent City Mall ~600 м',
     sourceLabel: '2ГИС · Tripadvisor',
   },
   en: {
     openMap: 'Open Serenity Spa in 2GIS',
-    ratingLabel: 'via 2GIS',
-    ratingValue: '4.9 / 24 ratings',
+    ratingLabel: '2GIS, as of 4 Nov 2026',
+    ratingValue: '4.6 / 28 ratings',
     placeTitle: 'Hilton Tashkent City',
-    placeSubtitle: 'Ukchi 1, floors 3–4',
-    features: ['27 m pool', 'Hammam and Finnish sauna', 'Spa treatments', '24/7 gym'],
+    placeSubtitle: 'Ukchi 1, 4th floor · main Hilton entrance',
+    features: ['27 m pool', 'Hammam and Finnish sauna', 'Spa treatments', 'Gym 07:00–23:00'],
     facilityTitle: 'On site',
-    facilityItems: ['Wi‑Fi', 'Towels and slippers', 'Free parking'],
+    facilityItems: ['Towels, bathrobes and slippers', 'Parking: 100,000 UZS / 2 hours'],
     landmark: 'Landmark: Tashkent City Mall ~600 m',
     sourceLabel: '2GIS · Tripadvisor',
   },
   uz: {
     openMap: 'Serenity Spa ni 2GIS da ochish',
-    ratingLabel: '2GIS maʼlumoti',
-    ratingValue: '4.9 / 24 baho',
+    ratingLabel: '2GIS, 04.11.2026 holatiga',
+    ratingValue: '4.6 / 28 baho',
     placeTitle: 'Hilton Tashkent City',
-    placeSubtitle: "O'qchi 1, 3–4-qavatlar",
-    features: ['27 m basseyn', 'Hammom va fin saunasi', 'SPA muolajalari', '24/7 fitnes'],
+    placeSubtitle: 'Ukchi 1, 4-qavat · Hilton asosiy kirishi',
+    features: ['27 m basseyn', 'Hammom va fin saunasi', 'SPA muolajalari', 'Fitnes 07:00–23:00'],
     facilityTitle: 'Joyida',
-    facilityItems: ['Wi‑Fi', 'Sochiq va shippak', 'Bepul parking'],
+    facilityItems: ['Sochiq, xalat va shippak', 'Turargoh: 100 000 so‘m / 2 soat'],
     landmark: 'Moʻljal: Tashkent City Mall ~600 m',
     sourceLabel: '2GIS · Tripadvisor',
   },
@@ -140,6 +141,16 @@ export function ContactsSection() {
       value: CONTACTS.email,
       href: `mailto:${CONTACTS.email}`,
     },
+    {
+      icon: (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 11.5a8.4 8.4 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.4 8.4 0 0 1-3.8-.9L3 21l1.9-5.7a8.4 8.4 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.4 8.4 0 0 1 3.8-.9h.5a8.5 8.5 0 0 1 8 8v.5z" />
+        </svg>
+      ),
+      label: 'WhatsApp',
+      value: BUSINESS_CONTACT.whatsappDisplay,
+      href: BUSINESS_CONTACT.whatsappUrl,
+    },
   ];
 
   return (
@@ -196,7 +207,7 @@ export function ContactsSection() {
                     </div>
                     <div className="min-w-0">
                       <p className="text-[#7A8BA8]/50 text-[10px] uppercase tracking-[0.2em] mb-0.5">{item.label}</p>
-                      <p className="text-[#E8DFD0] text-sm font-light group-hover:text-[#C8956C] transition-colors duration-300 truncate">
+                      <p className="text-[#E8DFD0] text-sm font-light group-hover:text-[#C8956C] transition-colors duration-300 break-words">
                         {item.value}
                       </p>
                     </div>
@@ -232,6 +243,14 @@ export function ContactsSection() {
                   </div>
                 </a>
               ))}
+            </motion.div>
+
+            <motion.div className="mt-3 flex flex-wrap gap-3 text-xs text-[#C8956C]" variants={staggerChild}>
+              {[
+                { label: 'Google Maps', href: BUSINESS_CONTACT.mapUrl },
+                { label: 'Facebook', href: BUSINESS_CONTACT.facebookUrl },
+                { label: 'Tripadvisor', href: BUSINESS_CONTACT.tripadvisorUrl },
+              ].map(link => <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">{link.label}</a>)}
             </motion.div>
 
             {/* CTA */}
@@ -306,7 +325,7 @@ export function ContactsSection() {
             </div>
 
             {/* Custom pin — centered */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-30 pointer-events-none flex flex-col items-center">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-30 pointer-events-none hidden sm:flex flex-col items-center">
               {/* Tooltip card */}
               <motion.div
                 className="hidden"

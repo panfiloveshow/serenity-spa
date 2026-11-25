@@ -162,9 +162,9 @@ export function ModernHero() {
           {/* Pre-optimized art-directed hero image. next/image cannot switch sources by media query. */}
           <img
             src="/hero-pool.webp"
-            alt="Serenity Spa pool"
+            alt={dictionary.hero.imageAlt}
             width={1800}
-            height={1201}
+            height={1202}
             fetchPriority="high"
             decoding="async"
             className="h-full w-full object-cover object-[63%_50%] brightness-[1.12] contrast-[1.08] saturate-[1.04] md:object-[58%_50%] lg:object-center"
@@ -267,24 +267,21 @@ export function ModernHero() {
       >
         <div className="container mx-auto px-6 md:px-12 lg:px-20">
           <div className="max-w-xl lg:max-w-lg">
-            {/* H1 — primary page heading (also serves as visible tagline) */}
-            <motion.h1
+            {/* H1 — primary page heading rendered at full opacity immediately for LCP & crawlability */}
+            <h1
               className="block text-[#C8956C] tracking-[0.18em] md:tracking-[0.35em] uppercase text-[10px] md:text-xs mb-6 md:mb-8 font-medium"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.3 }}
               style={{ textShadow: '0 0 30px rgba(200,149,108,0.3)' }}
             >
-              Serenity Spa — {dictionary.hero.tagline}
-            </motion.h1>
+              {dictionary.hero.h1}
+            </h1>
 
-            {/* Logo with glow effect */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1.2, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-8 relative"
-            >
+            {/* Description — rendered without JS opacity delay */}
+            <p className="text-[#E8DFD0]/75 text-base md:text-lg font-normal leading-relaxed mb-10">
+              {dictionary.hero.description}
+            </p>
+
+            {/* Logo — painted immediately without hydration delay */}
+            <div className="mb-8 relative">
               <Image
                 src="/logo.svg"
                 alt="Serenity Spa"
@@ -293,48 +290,18 @@ export function ModernHero() {
                 loading="eager"
                 className="w-[250px] md:w-[340px] lg:w-[420px] h-auto relative z-10 drop-shadow-[0_0_30px_rgba(200,149,108,0.15)]"
               />
-            </motion.div>
+            </div>
 
-            {/* Animated divider */}
-            <motion.div
-              className="flex items-center gap-3 mb-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-            >
-              <motion.div
-                className="h-px bg-gradient-to-r from-[#C8956C] to-[#C8956C]/0 flex-1 max-w-[60px]"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: 1 }}
-                transition={{ duration: 1, delay: 0.9 }}
-                style={{ transformOrigin: 'left' }}
-              />
-              <motion.div
-                className="w-1.5 h-1.5 rounded-full bg-[#C8956C]/60"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.5, delay: 1.2 }}
-              />
-            </motion.div>
+            {/* Divider */}
+            <div className="flex items-center gap-3 mb-8" aria-hidden="true">
+              <div className="h-px bg-gradient-to-r from-[#C8956C] to-[#C8956C]/0 flex-1 max-w-[60px]" />
+              <div className="w-1.5 h-1.5 rounded-full bg-[#C8956C]/60" />
+            </div>
 
-            {/* Description with blur reveal */}
-            <motion.p
-              className="text-[#E8DFD0]/75 text-base md:text-lg font-normal leading-relaxed mb-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1 }}
-            >
-              {dictionary.hero.description}
-            </motion.p>
-
-            {/* CTA with enhanced styling */}
-            <motion.div
-              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-            >
+            {/* CTA — interactive immediately */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
               <button
+                type="button"
                 onClick={() => openBooking()}
                 className="group relative px-8 py-4 bg-[#C8956C] text-[#152E4A] rounded-full text-sm font-semibold tracking-wide overflow-hidden transition-all duration-500 hover:shadow-[0_0_40px_rgba(200,149,108,0.4)] cursor-pointer"
               >
@@ -347,7 +314,7 @@ export function ModernHero() {
               >
                 {dictionary.hero.ctaPackages}
               </a>
-            </motion.div>
+            </div>
           </div>
         </div>
       </motion.div>

@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { CONTACTS } from '@/lib/constants';
 import { MOTION } from '@/lib/motion';
 import { useLang } from '@/lib/lang-context';
+import { LOCALE_LABELS, SUPPORTED_LOCALES } from '@/types/i18n';
 
 const SOCIAL = [
   {
@@ -30,9 +31,23 @@ const SOCIAL = [
   },
 ];
 
-export function Footer() {
+export interface FooterProps {
+  isSubpage?: boolean;
+  langSwitchBasePath?: string;
+}
+
+export function Footer({
+  isSubpage = false,
+  langSwitchBasePath = '',
+}: FooterProps) {
   const { locale, dictionary } = useLang();
   const year = new Date().getFullYear();
+
+  const resolveNavHref = (href: string) => {
+    if (href.startsWith('/')) return `/${locale}${href}`;
+    if (href.startsWith('#') && isSubpage) return `/${locale}${href}`;
+    return href;
+  };
 
   const navColumns = [
     {
@@ -73,12 +88,12 @@ export function Footer() {
             {/* Nav columns */}
             {navColumns.map((col) => (
               <div key={col.title}>
-                <h4 className="text-[10px] uppercase tracking-[0.25em] text-[#C8956C]/60 mb-6">{col.title}</h4>
+                <h3 className="text-[10px] uppercase tracking-[0.25em] text-[#C8956C]/60 mb-6">{col.title}</h3>
                 <ul className="space-y-3">
                   {col.links.map((link) => (
                     <li key={link.label}>
                       <a
-                        href={link.href.startsWith('/') ? `/${locale}${link.href}` : link.href}
+                        href={resolveNavHref(link.href)}
                         className="text-[#E8DFD0]/40 text-sm font-light hover:text-[#E8DFD0] hover:pl-1 transition-all duration-300 block py-2 -my-2"
                       >
                         {link.label}
@@ -125,12 +140,48 @@ export function Footer() {
             {/* Thin line */}
             <div className="h-px bg-gradient-to-r from-transparent via-[#7A8BA8]/8 to-transparent mb-6" />
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
               <p className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase">
                 &copy; {year} {dictionary.footer.copyright}
               </p>
 
-              <div className="flex items-center gap-6">
+              <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+                <nav
+                  aria-label={locale === 'en' ? 'Languages' : locale === 'uz' ? 'Tillar' : 'Языки'}
+                  className="flex items-center gap-3"
+                >
+                  {SUPPORTED_LOCALES.map((loc) => (
+                    <a
+                      key={loc}
+                      href={`/${loc}${langSwitchBasePath}`}
+                      hrefLang={loc}
+                      lang={loc}
+                      aria-current={loc === locale ? 'page' : undefined}
+                      className={`text-[10px] tracking-[0.15em] uppercase transition-colors duration-300 ${
+                        loc === locale ? 'text-[#C8956C]/70' : 'text-[#7A8BA8]/25 hover:text-[#7A8BA8]/60'
+                      }`}
+                    >
+                      {LOCALE_LABELS[loc]}
+                    </a>
+                  ))}
+                </nav>
+                <span className="w-0.5 h-0.5 rounded-full bg-[#7A8BA8]/15" />
+                <a
+                  href="/services.md"
+                  type="text/markdown"
+                  className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300"
+                >
+                  Services (MD)
+                </a>
+                <span className="w-0.5 h-0.5 rounded-full bg-[#7A8BA8]/15" />
+                <a
+                  href="/pricing.md"
+                  type="text/markdown"
+                  className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300"
+                >
+                  Pricing (MD)
+                </a>
+                <span className="w-0.5 h-0.5 rounded-full bg-[#7A8BA8]/15" />
                 <a href={`/${locale}/privacy`} className="text-[#7A8BA8]/20 text-[10px] tracking-[0.15em] uppercase hover:text-[#7A8BA8]/50 transition-colors duration-300">
                   {dictionary.footer.privacyLink}
                 </a>
@@ -142,8 +193,44 @@ export function Footer() {
             </div>
           </div>
 
+          {/* Compact ZORR Agency credit banner */}
+          <div className="flex justify-center mt-6">
+            <a
+              href={dictionary.footer.agencyCredit.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2.5 min-h-[36px] rounded-full border border-[#E8DFD0]/12 bg-[#0E2238]/75 px-4 py-1.5 text-[10px] uppercase tracking-[0.16em] text-[#E8DFD0]/70 transition-colors duration-300 hover:border-[#FD591B]/50 hover:bg-[#102741] hover:text-[#E8DFD0] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#FD591B] motion-reduce:transition-none"
+            >
+              <span
+                aria-hidden="true"
+                className="w-1.5 h-1.5 rounded-full bg-[#FD591B] shrink-0"
+              />
+              <span>{dictionary.footer.agencyCredit.label}</span>
+              <Image
+                src="/zorr-logo-light.svg"
+                alt="ZORR Agency"
+                width={62}
+                height={15}
+                className="h-[13px] w-auto opacity-85 group-hover:opacity-100 transition-opacity duration-300 motion-reduce:transition-none"
+              />
+              <svg
+                aria-hidden="true"
+                className="w-3 h-3 text-[#E8DFD0]/45 transition-all duration-300 group-hover:text-[#FD591B] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none motion-reduce:transform-none"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M7 17 17 7" />
+                <path d="M7 7h10v10" />
+              </svg>
+            </a>
+          </div>
+
           {/* Scroll to top */}
-          <div className="flex justify-center mt-10">
+          <div className="flex justify-center mt-8">
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               aria-label={dictionary.footer.scrollTop}

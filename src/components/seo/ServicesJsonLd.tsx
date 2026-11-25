@@ -1,4 +1,5 @@
 import { SERVICES, PACKAGES } from '@/lib/constants';
+import { getPackageOptions } from '@/lib/package-options';
 import { BUSINESS_ID, BUSINESS_NAME, SITE_URL, getLocality } from '@/lib/seo';
 import { getDictionary } from '@/lib/i18n';
 import type { Locale } from '@/types/i18n';
@@ -23,20 +24,18 @@ function parsePrice(raw: string): string | undefined {
   return digits || undefined;
 }
 
-function parseDurationMinutes(raw: string): string | undefined {
-  const m = raw.match(/(\d+(?:[.,]\d+)?)\s*(час|h|мин|min)/i);
-  if (!m) return undefined;
-  const value = parseFloat(m[1].replace(',', '.'));
-  const unit = m[2].toLowerCase();
-  const minutes = /час|h/i.test(unit) ? Math.round(value * 60) : Math.round(value);
-  return `PT${minutes}M`;
-}
-
 function compactDescription(raw?: string) {
   if (!raw) return undefined;
-  const sentence = raw.split(/[.!?]/)[0]?.trim();
-  if (!sentence) return undefined;
-  return sentence.length > 150 ? `${sentence.slice(0, 147).trim()}...` : sentence;
+  const trimmed = raw.trim();
+  if (!trimmed) return undefined;
+  const sentences = trimmed.match(/[^.!?]+[.!?]?/g)?.map((s) => s.trim()).filter(Boolean) ?? [];
+  if (!sentences.length) return undefined;
+  let result = sentences[0];
+  if (result.endsWith('?') && sentences[1]) {
+    result = `${result} ${sentences[1]}`;
+  }
+  result = result.replace(/[.]+$/, '').trim();
+  return result.length > 155 ? `${result.slice(0, 152).trim()}...` : result;
 }
 
 /**
@@ -58,8 +57,6 @@ export async function ServicesJsonLd({ lang }: { lang: Locale }) {
       const itemDuration = dictItem?.duration ?? item.duration;
       const itemDesc = compactDescription(dictItem?.desc ?? item.desc);
       const price = parsePrice(item.price);
-      // Parse ISO duration from the RU constant (мин/час are always parseable).
-      const duration = parseDurationMinutes(item.duration);
       return {
         '@type': 'Offer',
         ...(price && { price, priceCurrency: CURRENCY }),
@@ -67,35 +64,35 @@ export async function ServicesJsonLd({ lang }: { lang: Locale }) {
         url: `${BASE_URL}/${lang}#services`,
         itemOffered: {
           '@type': 'Service',
-          name: `${catTitle} — ${itemName} (${itemDuration})`,
-          description: itemDesc ?? `${itemName}, ${itemDuration}`,
+          provider: { '@id': BUSINESS_ID },
+          name: `${catTitle} — ${itemName}${itemDuration ? ` (${itemDuration})` : ''}`,
+          description: itemDesc ?? itemName,
           category: catTitle,
           serviceType: catTitle,
           areaServed,
-          ...(duration && { duration }),
         },
       };
     });
   });
 
-  const packageOffers = PACKAGES.map((pkg, pi) => {
+  const packageOffers = PACKAGES.flatMap((pkg, pi) => {
     const dictPkg = dict.packages.items[pi];
-    const price = parsePrice(pkg.price);
     const description = compactDescription(dictPkg?.description ?? pkg.description);
-    return {
+    return getPackageOptions(pkg, dictPkg?.title ?? pkg.title, dict.packages).map(option => ({
       '@type': 'Offer',
-      ...(price && { price, priceCurrency: CURRENCY }),
+      price: parsePrice(option.price), priceCurrency: CURRENCY,
       availability: 'https://schema.org/InStock',
       url: `${BASE_URL}/${lang}#packages`,
       itemOffered: {
         '@type': 'Service',
-        name: dictPkg?.title ?? pkg.title,
+        provider: { '@id': BUSINESS_ID },
+        name: option.name,
         ...(description && { description }),
         category: 'Spa Package',
         serviceType: SPA_PACKAGE_LABEL[lang] ?? SPA_PACKAGE_LABEL.ru,
         areaServed,
       },
-    };
+    }));
   });
 
   const catalog = {

@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "title": "Serenity Spa — Toshkentdagi premium spa markaz",
-    "description": "Serenity Spa — Toshkentdagi premium sog'lomlashtirish markazi. Massaj, pilinglar, o'rashlar, basseyn, sauna, hammom, jakuzi. Abonementlar va dasturlar.",
-    "ogTitle": "Serenity Spa — Toshkentdagi premium spa markaz",
-    "ogDescription": "Toshkentdagi premium sog'lomlashtirish markazi. Massaj, pilinglar, o'rashlar, basseyn, sauna, hammom, jakuzi.",
-    "jsonLdDescription": "Serenity Spa — Toshkentdagi premium sog'lomlashtirish markazi. Massaj, pilinglar, o'rashlar, basseyn, sauna, hammom, jakuzi."
+    "title": "Serenity Spa — Hilton Tashkent City spa markazi",
+    "description": "Hilton Tashkent City spa markazi: 27 metrli basseyn, hammom, saunalar, jakuzi va massajlar. Bir kunlik tashrif 600 000 so‘mdan. Har kuni 07:00–23:00.",
+    "ogTitle": "Serenity Spa — Hilton Tashkent City spa markazi",
+    "ogDescription": "Hilton Tashkent City spa markazi: 27 metrli basseyn, hammom, saunalar, jakuzi va massajlar. Bir kunlik tashrif 600 000 so‘mdan. Har kuni 07:00–23:00.",
+    "jsonLdDescription": "Hilton Tashkent City spa markazi: 27 metrli basseyn, hammom, saunalar, jakuzi va massajlar. Bir kunlik tashrif 600 000 so‘mdan. Har kuni 07:00–23:00."
   },
   "nav": {
     "services": "Xizmatlar",
@@ -17,8 +17,10 @@
     "closeMenu": "Menyuni yopish"
   },
   "hero": {
+    "h1": "Serenity Spa — Hilton Tashkent City spa markazi",
+    "imageAlt": "Hilton Tashkent City mehmonxonasidagi Serenity Spa 27 metrli basseyni",
     "tagline": "Sog'lomlashtirish markazi · Toshkent",
-    "description": "Zamonaviy jihozlar bilan jihozlangan dam olish va relaksatsiya markazi. Basseyn, sport zali, saunalar, jakuzi — sog'ligingiz uchun hamma narsa.",
+    "description": "Serenity Spa Hilton Tashkent City mehmonxonasining 4-qavatida (Ukchi 1) joylashgan. Asosiy kirishdan kiring. Barcha mehmonlar oldindan yozilishi kerak.",
     "ctaBook": "Yozilish",
     "ctaPackages": "Dasturlar",
     "scrollHint": "Scroll"
@@ -34,12 +36,12 @@
       },
       "gym": {
         "title": "Sport zali",
-        "description": "Yetakchi ishlab chiqaruvchining zamonaviy jihozlari",
-        "metrics": "24/7"
+        "description": "Sport zali har kuni 07:00 dan 23:00 gacha ishlaydi",
+        "metrics": "07:00–23:00"
       },
       "sauna": {
-        "title": "Saunalar",
-        "description": "To'liq dam olish uchun fin va bug' saunasi",
+        "title": "Saunalar va hammom",
+        "description": "Yumshoq va chuqur isinish uchun fin quruq saunasi hamda bug'li hammom",
         "metrics": "95°"
       },
       "jacuzzi": {
@@ -115,11 +117,11 @@
           },
           {
             "name": "Issiq tosh terapiyasi",
-            "duration": "90 daq",
+            "duration": "120 daq",
             "desc": "Ko'pincha uyqusizlik yoki charchoqni his qilasizmi? Issiq tosh terapiyasi yechim bo'lishi mumkin. Bu mushak tarangligi va og'rig'ini kamaytirish uchun eng yaxshi muolajalardan biridir, chunki toshlarning issiqligi massaj ta'sirini kuchaytiradi. Ushbu terapiyada ishlatiladigan toshlar issiqlikni uzoqroq saqlagani uchun, insonning bo'shashishi va kuchini tiklashiga yordam beradi."
           },
           {
-            "name": "O'simlik SPA massaji",
+            "name": "Teri va hislar uchun mayin joziba",
             "duration": "120 daq",
             "desc": "O'simlik SPA massaji qadimiy Siam shifobaxsh an'analaridan kelib chiqqan. Zig'ir matoga o'ralgan nafis tanlangan o'tlar to'plami teri bo'ylab yumshoq sirpanadi. Siz Siam tabiatining issiqligi va hayotiy quvvati teringizga taralayotganini his qilasiz. Go'yo o'simliklar jannatidan kelgan nozik parvarish qon aylanishini yaxshilaydi, mushak tarangligini bo'shatadi, teringizga g'ayrioddiy farovonlik hissini beradi va ruhingizni erkalaydi."
           }
@@ -132,22 +134,42 @@
           {
             "name": "Lavanda o'rashi",
             "duration": "60 daq",
-            "desc": "Tabiiy lavanda bilan dam olish o'rashi"
+            "desc": "Lavanda iforli bo'shashtiruvchi tana o'rashi terini yumshatadi, yig'ilgan taranglikni yengillashtiradi va spa ritualni sokin dam bilan yakunlaydi."
           },
           {
             "name": "Shokolad o'rashi",
             "duration": "60 daq",
-            "desc": "Shokolad bilan terini oziqlantirish va namlantirish"
+            "desc": "Oziqlantiruvchi shokoladli tana o'rashi teriga baxmaldek mayinlik, iliq kakao ifori va chuqur spa qulayligi hissini beradi."
           },
           {
             "name": "Avokado va ipak",
             "duration": "60 daq",
-            "desc": "Chuqur oziqlantirish va terining ipakday silliqligini ta'minlash"
+            "desc": "Terini oziqlantiruvchi va namlovchi nozik o'rash silliqlik hamda mayinlik beradi; alohida muolaja yoki juftlik dasturi tarkibida tanlanadi."
           },
           {
             "name": "Detoks o'rashi",
             "duration": "60 daq",
-            "desc": "Toksinlarni chiqarish va terini tozalash"
+            "desc": "Tetiklantiruvchi detoks o'rashi terini yangilaydi, yengillik hissini qo'llab-quvvatlaydi hamda limfodrenaj yoki termal zona bilan uyg'unlashadi."
+          },
+          {
+            "name": "Lavanda pilingi",
+            "duration": "",
+            "desc": "Tinchlantiruvchi lavanda iforli yumshoq tana pilingi teri sirtini tekislaydi va uni oziqlantiruvchi o'rash yoki massajga tayyorlaydi."
+          },
+          {
+            "name": "Yalpiz va tuz pilingi",
+            "duration": "",
+            "desc": "Yalpiz iforli tetiklantiruvchi tuzli piling terini ehtiyotkorlik bilan yangilaydi va ikki kishilik Serenity dasturi tarkibiga kiradi."
+          },
+          {
+            "name": "Shokolad pilingi",
+            "duration": "",
+            "desc": "Iliq shokolad iforli nozik skrab terini yumshoq tozalaydi va mayinlashtiradi hamda massaj yoki asosiy parvarishdan oldin silliqlik beradi."
+          },
+          {
+            "name": "Detoks pilingi",
+            "duration": "",
+            "desc": "Tozalovchi spa piling teri yuzasini yangilashga, silliqlik va tetiklikni tiklashga yordam beradi hamda kompleks tana parvarishini to'ldiradi."
           }
         ]
       },
@@ -158,7 +180,7 @@
           {
             "name": "Ipak nafisligi",
             "duration": "45 daq",
-            "desc": "Parafin terapiyasi tufayli qo'llarning ajoyib silliqligi"
+            "desc": "Iliq parafin terapiyasi qo'l terisini chuqur yumshatadi va namlaydi, quruqlikni ketkazib, 45 daqiqada ipakdek mayinlik baxsh etadi."
           }
         ]
       }
@@ -191,15 +213,14 @@
         "includes": [
           "Shokolad pilingi",
           "An'anaviy bali massaji",
-          "Tanlangan muolaja (bosh massaji / qo'l parvarishi)",
-          "Basseyn",
+          "Tanlangan muolaja (bosh va bo‘yin massaji, 30 daqiqa / «Ipak nafisligi» qo‘l parvarishi / basseynga kirish)",
           "Choy marosimi"
         ],
         "popularLabel": "Mashhur"
       },
       {
         "title": "Mualliflik Serenity paketi",
-        "price": "5 500 000 UZS",
+        "price": "3 000 000 UZS",
         "duration": "4,5 soat",
         "description": "Premium dastur: lavanda pilingi, aroma vanna, mualliflik massaji, o'rash va choy marosimi.",
         "includes": [
@@ -211,10 +232,10 @@
         ]
       },
       {
-        "title": "Juftliklar paketi",
+        "title": "Ikki kishi uchun Serenity paketi",
         "price": "5 000 000 UZS",
         "duration": "4 soat",
-        "description": "Ikki kishi uchun romantik dastur: basseyn, termal kompleks, piling, massaj, o'rash va choy.",
+        "description": "Ikki mehmon uchun dastur: basseyn, termal kompleks, yalpiz va tuz pilingi, an’anaviy Bali massaji, avokado va ipak o‘rashi hamda choy marosimi. Ikki kishi uchun umumiy narx — 5 000 000 so‘m; davomiyligi — 4 soat.",
         "includes": [
           "Basseyn",
           "Termal kompleks",
@@ -224,7 +245,9 @@
           "Choy marosimi"
         ]
       }
-    ]
+    ],
+    "forOne": "Bir kishi uchun",
+    "forTwo": "Ikki kishi uchun"
   },
   "membership": {
     "sectionTitle": "Abonementlar",
@@ -284,7 +307,7 @@
           "Bug' saunasi",
           "Fin saunasi",
           "Jakuzi",
-          "Kosmetikaga 5% chegirma",
+          "Premium kosmetikaga 5% chegirma",
           "Wi-Fi",
           "Detoks suv",
           "Massajyor",
@@ -302,7 +325,7 @@
           "Fin saunasi",
           "Jakuzi",
           "Tana spa uchun 10% chegirma",
-          "Kosmetikaga 5% chegirma",
+          "Premium kosmetikaga 5% chegirma",
           "1 mehmon tashrifi",
           "Wi-Fi",
           "Detoks suv",
@@ -321,8 +344,8 @@
           "Fin saunasi",
           "Jakuzi",
           "Tana spa uchun 20% chegirma",
-          "Kosmetikaga 5% chegirma",
-          "3 mehmon tashrifi",
+          "Premium kosmetikaga 5% chegirma",
+          "Bir mehmonni uch martagacha taklif qilish imkoniyati",
           "Wi-Fi",
           "Detoks suv",
           "Massajyor",
@@ -367,13 +390,13 @@
   },
   "contacts": {
     "sectionTitle": "Aloqa",
-    "address": "O'qchi 1, 100027, Toshkent",
+    "address": "Ukchi 1, Hilton Tashkent City, 4-qavat, 100027, Toshkent",
     "hours": "Har kuni 07:00 — 23:00",
     "phoneLabel": "Telefon",
     "emailLabel": "Email",
     "mapButton": "Yo'nalish",
     "eyebrow": "Biz bilan bogʻlaning",
-    "subtitle": "Biz Toshkentdamiz va har kuni ishlaymiz. Sizni kutamiz!",
+    "subtitle": "Serenity Spa Hilton Tashkent City mehmonxonasining 4-qavatida (Ukchi 1) joylashgan. Asosiy kirishdan kiring. Barcha mehmonlar oldindan yozilishi kerak.",
     "addressLabel": "Manzil",
     "hoursLabel": "Ish vaqti"
   },
@@ -385,6 +408,10 @@
     "privacyLink": "Maxfiylik",
     "termsLink": "Shartlar",
     "scrollTop": "Yuqoriga",
+    "agencyCredit": {
+      "label": "Ishlab chiqilgan:",
+      "href": "https://zorr.uz/uz/services/website-support"
+    },
     "navLinks": [
       {
         "label": "Infratuzilma",
@@ -446,6 +473,11 @@
     "nameLabel": "Ismingiz",
     "namePlaceholder": "Ism",
     "phoneLabel": "Telefon",
+    "contactLabel": "WhatsApp / Telegram / E-mail",
+    "contactHint": "O‘zbekiston raqami bo‘lmagan mehmonlar uchun",
+    "contactPlaceholder": "+44… / @username / e-mail",
+    "contactRequiredError": "Telefon, WhatsApp, Telegram yoki e-mail kiriting",
+    "contactError": "WhatsApp raqamini mamlakat kodi bilan, Telegram (@username) yoki e-mail kiriting",
     "dateLabel": "Kerakli sana",
     "datePlaceholder": "Sanani tanlang",
     "timeLabel": "Kerakli vaqt",
@@ -462,7 +494,7 @@
     "membershipPrefix": "Abonement:",
     "nameMinError": "Ism kamida 2 ta belgidan iborat bo'lishi kerak",
     "nameCharsError": "Ism faqat harflar, bo'shliqlar va defislardan iborat bo'lishi mumkin",
-    "phoneError": "Iltimos, to'liq telefon raqamini kiriting",
+    "phoneError": "Raqamni tekshiring: +998 90 123 45 67 yoki +44… xalqaro formatida",
     "digitsOf": "9 raqamdan",
     "months": [
       "Yanvar",
@@ -524,7 +556,7 @@
       },
       {
         "title": "4. Aloqa",
-        "content": "Ma'lumotlarni qayta ishlash bo'yicha savollar uchun +998 71 210 88 95 telefon raqamiga yoki info@serenity-spa.uz elektron pochtasiga murojaat qiling."
+        "content": "Ma'lumotlarni qayta ishlash bo'yicha savollar uchun +998 71 210 88 95 telefon raqamiga yoki spa@hilton-tashkent.com elektron pochtasiga murojaat qiling."
       }
     ]
   },
@@ -547,7 +579,7 @@
       },
       {
         "title": "4. Aloqa",
-        "content": "Sayt va yozilish bo'yicha savollar uchun +998 71 210 88 95 telefon raqamiga yoki info@serenity-spa.uz elektron pochtasiga murojaat qiling."
+        "content": "Sayt va yozilish bo'yicha savollar uchun +998 71 210 88 95 telefon raqamiga yoki spa@hilton-tashkent.com elektron pochtasiga murojaat qiling."
       }
     ]
   },
@@ -571,25 +603,25 @@
     "call": "Qoʻngʻiroq qilish"
   },
   "testimonials": {
-    "eyebrow": "Sharhlar",
-    "title": "Mehmonlarimiz nima deydi",
-    "ratingSummary": "5 dan {avg} · {count} ta sharh",
+    "eyebrow": "Mustaqil platformalardagi fikrlar",
+    "title": "Mehmonlar Serenity Spa haqida nimalarni taʼkidlaydi",
+    "ratingSummary": "5 dan {avg} · 2GIS’da {count} ta baho (04.11.2026 holatiga)",
     "starsAria": "5 yulduzdan {n}",
     "reviews": [
       {
-        "name": "Madina R.",
-        "service": "Signature of Serenity",
-        "text": "Ajoyib muhit va ustalarning professionalligi. Kun boʻyi jannatda his qildim. Albatta yana kelaman."
+        "name": "Basseyn va termal zona mehmonlari",
+        "service": "2GIS fikrlari asosida · Basseyn va saunalar",
+        "text": "Mehmonlar Hilton Tashkent City 4-qavatidagi panoramali oynali 27 metrli yopiq basseynni, toza kiyinish xonalarini hamda fin saunasi, bugʻ xonasi va jakuzi uygʻunligini qayd etadi."
       },
       {
-        "name": "Aziz K.",
-        "service": "Erkaklar paketi",
-        "text": "Toshkentdagi eng yaxshi spa. «Tananing nafasi» massaji shunchaki ajoyib. Hammasi yuqori darajada."
+        "name": "Massaj va parvarish mehmonlari",
+        "service": "Tripadvisor fikrlari asosida · Massajlar",
+        "text": "Xonalarning sokin muhiti, seans oldidan bosim kuchini kelishib olish hamda anʼanaviy Bali massaji va Signature of Serenity dasturidan keyingi yengillik alohida eʼtirof etiladi."
       },
       {
-        "name": "Nilufar A.",
-        "service": "Ikki kishilik Serenity",
-        "text": "Turmush oʻrtogʻimga yubiley uchun sovgʻa qildik — juda mamnun boʻldik. Premium darajadagi xizmat va tafsilotlarga eʼtibor."
+        "name": "Juftlik va kunlik dastur mehmonlari",
+        "service": "Google Maps fikrlari asosida · Spa dasturlar",
+        "text": "Xalat, sochiq va choy marosimi kiritilgan tayyor dam olish ssenariysi yuqori baholanadi; kechki vaqt va dam olish kunlari uchun oldindan yozilish tavsiya etiladi."
       }
     ]
   }

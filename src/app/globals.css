@@ -228,6 +228,10 @@ html.lenis body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .section-contain {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 /* Ускорение рендера для анимированных элементов */

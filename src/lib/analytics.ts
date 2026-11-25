@@ -63,14 +63,26 @@ export function sanitizePhoneHref(phone: string) {
 }
 
 export function trackBookingFormSubmission(details: {
+  result: { success?: boolean; accepted?: boolean; score?: number; level?: string };
   service?: string;
   date?: string;
   time?: string;
   hasComment?: boolean;
   source?: string;
 }) {
+  const { result } = details;
+  // A 2xx response can be a silent bot rejection. Only delivered or durably queued
+  // bookings count. Never send a separate gtag conversion alongside the GTM tag.
+  if (result.success !== true || result.accepted !== true
+    || typeof result.score !== 'number' || !Number.isFinite(result.score)
+    || result.score < 0 || result.score >= 85
+    || !['clean', 'warning', 'suspicious'].includes(result.level ?? '')) return;
+
   const payload = {
-    event: 'booking_form_submit',
+    event: 'booking_success',
+    score: result.score,
+    risk_level: result.level,
+    lead_qualified: result.level === 'clean' && result.score < 25,
     event_category: 'lead',
     event_label: details.service || 'booking',
     form_name: 'booking_modal',
@@ -82,11 +94,6 @@ export function trackBookingFormSubmission(details: {
   };
 
   pushToDataLayer(payload);
-  trackGtagEvent('generate_lead', payload);
-  trackGoogleAdsConversion(GOOGLE_ADS_FORM_CONVERSION_ID, {
-    value: 1,
-    currency: 'UZS',
-  });
 }
 
 export function trackPhoneClick(details: {

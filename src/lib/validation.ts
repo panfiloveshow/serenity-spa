@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { analyzePhone, normalizePhone } from './phone-info';
+import { isValidContact } from './contact-info';
 
 // Name validation: letters (Cyrillic/Latin/Uzbek), spaces, hyphens, apostrophe-like chars (oʻ, gʻ)
 const nameRegex = /^[а-яА-ЯёЁa-zA-Zʻʼʽ''`\s\-]+$/;
@@ -13,8 +15,16 @@ export const bookingSchema = z.object({
   
   phone: z
     .string()
-    .min(1, 'Телефон обязателен')
-    .max(30, 'Телефон слишком длинный'),
+    .trim()
+    .max(40, 'Телефон слишком длинный')
+    .refine(value => !value || analyzePhone(value).valid, 'Проверьте номер: +998 90 123 45 67 или международный формат +44…')
+    .transform(normalizePhone)
+    .optional()
+    .default(''),
+
+  contact: z.string().trim().max(254, 'Контакт слишком длинный')
+    .refine(value => !value || isValidContact(value), 'Введите WhatsApp, Telegram (@username) или e-mail')
+    .optional().default(''),
   
   service: z
     .string()
@@ -55,11 +65,15 @@ export const bookingSchema = z.object({
     utm_campaign: z.string(),
     utm_content: z.string(),
     utm_term: z.string(),
-    // Google Ads click ID + network source (gad_source=1|5|7|...)
-    gclid: z.string().optional(),
+    // Google Ads click IDs + network source (gad_source=1|5|7|...)
+    gclid: z.string().max(256).optional(),
+    gbraid: z.string().max(256).optional(),
+    wbraid: z.string().max(256).optional(),
     gad_source: z.string().optional(),
     gad_campaignid: z.string().optional(),
+    adClickAt: z.string().max(64).optional(),
     device: z.string(),
+    deviceId: z.string().uuid().optional(),
     browser: z.string(),
     os: z.string(),
     screenResolution: z.string(),
@@ -73,6 +87,9 @@ export const bookingSchema = z.object({
     pagesViewed: z.number(),
     trafficSource: z.string(),
   }),
+}).refine(data => Boolean(data.phone || data.contact), {
+  path: ['phone'],
+  message: 'Укажите телефон, WhatsApp, Telegram или e-mail',
 });
 
 export type BookingData = z.infer<typeof bookingSchema>;

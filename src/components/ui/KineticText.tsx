@@ -1,5 +1,6 @@
 'use client';
 
+import { Fragment } from 'react';
 import { motion } from 'framer-motion';
 import { MOTION, staggerContainer } from '@/lib/motion';
 
@@ -11,29 +12,29 @@ interface KineticTextProps {
 }
 
 const wordVariants = {
-  initial: { 
-    y: '110%', 
+  initial: {
+    y: '110%',
     rotateX: 45,
     opacity: 0,
   },
-  animate: { 
-    y: '0%', 
+  animate: {
+    y: '0%',
     rotateX: 0,
     opacity: 1,
-    transition: { 
-      duration: MOTION.duration.slow, 
+    transition: {
+      duration: MOTION.duration.slow,
       ease: MOTION.ease.out,
     },
   },
 };
 
-export function KineticText({ 
-  children, 
-  className = '', 
+export function KineticText({
+  children,
+  className = '',
   as: Tag = 'h2',
   split = true,
 }: KineticTextProps) {
-  const words = children.split(' ');
+  const words = children.trim().split(/\s+/);
 
   if (!split) {
     return (
@@ -60,16 +61,22 @@ export function KineticText({
       whileInView="animate"
       viewport={MOTION.viewport.once}
     >
-      <Tag className={`${className} flex flex-wrap`} aria-label={children}>
+      <Tag className={`${className} flex flex-wrap`}>
         {words.map((word, i) => (
-          <span key={i} className="overflow-hidden inline-block mr-[0.3em]" style={{ perspective: '400px' }} aria-hidden="true">
-            <motion.span
-              className="inline-block origin-bottom"
-              variants={wordVariants}
+          <Fragment key={i}>
+            <span
+              className={`overflow-hidden inline-block${i < words.length - 1 ? ' mr-[0.3em]' : ''}`}
+              style={{ perspective: '400px' }}
             >
-              {word}
-            </motion.span>
-          </span>
+              <motion.span
+                className="inline-block origin-bottom"
+                variants={wordVariants}
+              >
+                {word}
+              </motion.span>
+            </span>
+            {i < words.length - 1 ? ' ' : null}
+          </Fragment>
         ))}
       </Tag>
     </motion.div>

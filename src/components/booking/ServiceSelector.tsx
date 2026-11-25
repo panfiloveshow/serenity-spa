@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLang } from '@/lib/lang-context';
 import { SERVICES, PACKAGES, MEMBERSHIP_TIERS } from '@/lib/constants';
+import { getPackageOptions } from '@/lib/package-options';
 
 export type BookingTab = 'services' | 'packages' | 'memberships';
 
@@ -77,6 +78,7 @@ export function ServiceSelector({
                 const dictItem = dictCategories[activeServiceCat]?.items[i];
                 const itemName = dictItem?.name ?? item.name;
                 const itemDescription = dictItem?.desc ?? item.desc;
+                const itemDuration = dictItem?.duration ?? item.duration;
                 const catTitle = dictCategories[activeServiceCat]?.title ?? SERVICES[activeServiceCat].title;
                 return (
                   <motion.button
@@ -84,12 +86,12 @@ export function ServiceSelector({
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.03 }}
-                    onClick={() => onPick(`${catTitle} — ${itemName} (${item.duration})`)}
+                    onClick={() => onPick(`${catTitle} — ${itemName}${itemDuration ? ` (${itemDuration})` : ''}`)}
                     className="w-full group flex items-start gap-3 px-4 py-3.5 rounded-2xl border border-[#7A8BA8]/10 bg-[#1F4268]/30 hover:bg-[#C8956C]/8 hover:border-[#C8956C]/20 transition-all duration-300 cursor-pointer text-left"
                   >
                     <div className="flex-1 min-w-0">
                       <p className="text-[#E8DFD0] text-sm sm:text-[15px] leading-snug group-hover:text-[#E8DFD0] transition-colors">{itemName}</p>
-                      <p className="text-[#C8956C]/70 text-[11px] mt-1 font-medium">{item.duration}</p>
+                      {itemDuration && <p className="text-[#C8956C]/70 text-[11px] mt-1 font-medium">{itemDuration}</p>}
                       {itemDescription && (
                         <p className="text-[#A0B0C8]/80 text-xs leading-relaxed mt-1.5">
                           {itemDescription}
@@ -110,31 +112,31 @@ export function ServiceSelector({
         {activeTab === 'packages' && (
           <motion.div key="pkg" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}>
             <div className="space-y-2 max-h-[45vh] overflow-y-auto pr-1 scrollbar-none">
-              {PACKAGES.map((pkg, i) => {
+              {PACKAGES.flatMap((pkg, i) => {
                 const dictPkg = dictPackages[i];
                 const pkgTitle = dictPkg?.title ?? pkg.title;
-                return (
+                return getPackageOptions(pkg, pkgTitle, dictionary.packages).map(option => (
                   <motion.button
-                    key={pkg.id}
+                    key={`${pkg.id}-${option.name}`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    onClick={() => onPick(`${b.programPrefix} ${pkgTitle}`)}
+                    onClick={() => onPick(`${b.programPrefix} ${option.name} — ${option.price}`)}
                     className="w-full group p-4 rounded-2xl border border-[#7A8BA8]/8 bg-[#1F4268]/25 hover:bg-[#C8956C]/8 hover:border-[#C8956C]/20 transition-all duration-300 cursor-pointer text-left"
                   >
                     <div className="flex items-start justify-between gap-3 mb-2">
                       <div>
-                        <p className="text-[#E8DFD0] text-sm font-medium group-hover:text-[#E8DFD0] transition-colors">{pkgTitle}</p>
-                        <p className="text-[#7A8BA8]/40 text-[10px] mt-0.5">{pkg.duration}</p>
+                        <p className="text-[#E8DFD0] text-sm font-medium group-hover:text-[#E8DFD0] transition-colors">{option.name}</p>
+                        <p className="text-[#7A8BA8]/40 text-[10px] mt-0.5">{dictPkg?.duration ?? pkg.duration}</p>
                       </div>
-                      <span className="text-[#C8956C] text-sm font-medium whitespace-nowrap">{pkg.price}</span>
+                      <span className="text-[#C8956C] text-sm font-medium whitespace-nowrap">{option.price}</span>
                     </div>
                     <p className="text-[#7A8BA8]/40 text-[11px] leading-relaxed line-clamp-2">{dictPkg?.description ?? pkg.description}</p>
                     {pkg.isPopular && (
                       <span className="inline-block mt-2 px-2.5 py-0.5 rounded-full bg-[#C8956C]/15 text-[#C8956C] text-[9px] uppercase tracking-wider font-medium">{b.popularLabel}</span>
                     )}
                   </motion.button>
-                );
+                ));
               })}
             </div>
           </motion.div>
@@ -161,7 +163,7 @@ export function ServiceSelector({
                   >
                     <p className="text-[#E8DFD0] text-sm font-medium mb-1">{tierName}</p>
                     <p className="text-[#C8956C]/70 text-xs font-medium mb-1">{tier.price}</p>
-                    <p className="text-[#7A8BA8]/40 text-[10px]">{tier.period}</p>
+                    <p className="text-[#7A8BA8]/40 text-[10px]">{dictTier?.period ?? tier.period}</p>
                     {tier.isPopular && <span className="inline-block mt-1.5 w-1.5 h-1.5 rounded-full bg-[#C8956C]" />}
                   </motion.button>
                 );

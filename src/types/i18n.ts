@@ -8,6 +8,12 @@ export const OG_LOCALES: Record<Locale, string> = {
   uz: 'uz_UZ',
 };
 
+export const LOCALE_LABELS: Record<Locale, string> = {
+  ru: 'Рус',
+  en: 'Eng',
+  uz: 'O‘zb',
+};
+
 export interface Dictionary {
   metadata: {
     title: string;
@@ -31,6 +37,8 @@ export interface Dictionary {
     call: string;
   };
   hero: {
+    h1: string;
+    imageAlt: string;
     tagline: string;
     description: string;
     ctaBook: string;
@@ -67,6 +75,8 @@ export interface Dictionary {
   packages: {
     sectionTitle: string;
     sectionSubtitle: string;
+    forOne: string;
+    forTwo: string;
     items: Array<{
       title: string;
       price: string;
@@ -116,6 +126,10 @@ export interface Dictionary {
     privacyLink: string;
     termsLink: string;
     scrollTop: string;
+    agencyCredit: {
+      label: string;
+      href: string;
+    };
     navLinks: Array<{ label: string; href: string }>;
     serviceLinks: Array<{ label: string; href: string }>;
   };
@@ -135,6 +149,11 @@ export interface Dictionary {
     nameLabel: string;
     namePlaceholder: string;
     phoneLabel: string;
+    contactLabel: string;
+    contactHint: string;
+    contactPlaceholder: string;
+    contactRequiredError: string;
+    contactError: string;
     dateLabel: string;
     datePlaceholder: string;
     timeLabel: string;

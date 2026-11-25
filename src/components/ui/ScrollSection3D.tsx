@@ -40,20 +40,18 @@ export function ScrollSection3D({
 }: ScrollSection3DProps) {
   const prefersReducedMotion = useReducedMotion();
 
-  if (prefersReducedMotion) {
-    return <div className={`section-contain section-deferred ${className}`}>{children}</div>;
-  }
-
   const initial = initialByEffect[effect];
   const animate = { opacity: 1, y: 0, x: 0, scale: 1 };
 
   return (
     <motion.div
       className={`section-contain section-deferred ${className}`}
-      initial={initial}
-      whileInView={animate}
+      initial={prefersReducedMotion ? false : initial}
+      animate={prefersReducedMotion ? animate : undefined}
+      whileInView={prefersReducedMotion ? undefined : animate}
+      style={prefersReducedMotion ? { opacity: 1, transform: 'none' } : undefined}
       viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
     </motion.div>

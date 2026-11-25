@@ -10,6 +10,7 @@ export function proxy(request: NextRequest) {
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
+    /^\/(?:opengraph-image|twitter-image|icon|apple-icon)(?:\/|$)/.test(pathname) ||
     pathname.includes('.')
   ) {
     return NextResponse.next();
@@ -23,10 +24,10 @@ export function proxy(request: NextRequest) {
   }
 
   const url = request.nextUrl.clone();
-  url.pathname = `/${DEFAULT_LOCALE}${pathname}`;
+  url.pathname = pathname === '/' ? `/${DEFAULT_LOCALE}` : `/${DEFAULT_LOCALE}${pathname}`;
   return NextResponse.redirect(url, 308);
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|.*\\..*).*)'],
+  matcher: ['/((?!_next|api|(?:opengraph-image|twitter-image|icon|apple-icon)(?:/|$)|.*\\..*).*)'],
 };

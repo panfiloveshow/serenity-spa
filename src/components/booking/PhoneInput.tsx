@@ -1,44 +1,26 @@
 'use client';
 
-import { useCallback, useId } from 'react';
-import { useLang } from '@/lib/lang-context';
+import { useId } from 'react';
+import { analyzePhone, normalizePhone } from '@/lib/phone-info';
 
 export function PhoneInput({
   label,
   value,
   onChange,
   error,
+  required = true,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   error?: string;
+  required?: boolean;
 }) {
-  const { dictionary } = useLang();
-  const b = dictionary.booking;
   const reactId = useId();
   const inputId = `${reactId}-phone`;
   const errorId = `${reactId}-phone-error`;
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    let raw = e.target.value.replace(/\D/g, '');
-    if (!raw.startsWith('998')) {
-      raw = '998' + raw.replace(/^998/, '');
-    }
-    raw = raw.slice(0, 12);
-
-    let formatted = '+998';
-    const after = raw.slice(3);
-    if (after.length > 0) formatted += ' ' + after.slice(0, 2);
-    if (after.length > 2) formatted += ' ' + after.slice(2, 5);
-    if (after.length > 5) formatted += ' ' + after.slice(5, 7);
-    if (after.length > 7) formatted += ' ' + after.slice(7, 9);
-    onChange(formatted);
-  }, [onChange]);
-
-  const phoneDigits = value.replace(/\D/g, '');
-  const progress = phoneDigits.length > 3 ? phoneDigits.length - 3 : 0;
-  const isComplete = phoneDigits.length === 12;
+  const isComplete = analyzePhone(value).valid;
 
   return (
     <div>
@@ -46,12 +28,7 @@ export function PhoneInput({
         htmlFor={inputId}
         className="block text-[#A0B0C8] text-[10px] uppercase tracking-[0.15em] mb-1.5 ml-1"
       >
-        {label} *
-        {!isComplete && progress > 0 && (
-          <span className="ml-2 text-[#A0B0C8]/80 text-[9px] font-normal normal-case tracking-normal">
-            {progress} {b.digitsOf}
-          </span>
-        )}
+        {label}{required && ' *'}
         {isComplete && (
           <span className="ml-2 text-[#C8956C] text-[9px] font-normal" aria-label="complete">✓</span>
         )}
@@ -59,11 +36,14 @@ export function PhoneInput({
       <input
         id={inputId}
         type="tel"
-        required
-        value={value || '+998'}
-        onChange={handleChange}
-        placeholder="+998 XX XXX XX XX"
-        inputMode="numeric"
+        required={required}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        onBlur={() => { if (isComplete) onChange(normalizePhone(value)); }}
+        placeholder="+998 / +44 / +1 …"
+        inputMode="tel"
+        autoComplete="tel"
+        maxLength={40}
         aria-invalid={!!error}
         aria-describedby={error ? errorId : undefined}
         className={`w-full px-4 py-3 rounded-2xl bg-[#1F4268]/40 border text-[#E8DFD0] text-sm placeholder:text-[#A0B0C8]/70 focus:outline-none focus:ring-1 transition-all duration-300 tabular-nums tracking-wide ${

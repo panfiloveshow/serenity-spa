@@ -140,9 +140,9 @@ const GALLERY_ITEMS: GalleryItem[] = [
     title: { ru: 'Комната восстановления', en: 'Recovery room', uz: 'Tiklanish xonasi' },
     variant: 'square',
     alt: {
-      ru: 'Treatment room с круглой ванной и массажной зоной',
-      en: 'Treatment room with a round tub and massage area',
-      uz: 'Dumaloq vanna va massaj hududiga ega muolaja xonasi',
+      ru: 'Кабинет для процедур с круглой ванной и двумя массажными кушетками',
+      en: 'Treatment room with a round bath and two massage beds',
+      uz: 'Dumaloq vanna va ikkita massaj kushetkasi bor muolaja xonasi',
     },
   },
   {
@@ -221,10 +221,10 @@ const GALLERY_ITEMS: GalleryItem[] = [
     slug: 'treatment-suite',
     category: 'treatment',
     label: { ru: 'Процедуры', en: 'Treatments', uz: 'Muolajalar' },
-    title: { ru: 'Treatment suite', en: 'Treatment suite', uz: 'Muolaja xonasi' },
+    title: { ru: 'Массажный кабинет', en: 'Treatment suite', uz: 'Muolaja xonasi' },
     variant: 'square',
     alt: {
-      ru: 'Спокойная treatment-комната с массажной кушеткой',
+      ru: 'Массажный кабинет с кушеткой и приглушённым светом',
       en: 'Calm treatment room with a massage bed',
       uz: 'Massaj kushetkali sokin muolaja xonasi',
     },
@@ -503,7 +503,7 @@ export function PhotoGallerySection() {
                     >
                       <Image
                         src={imagePath('thumb', item.slug)}
-                        alt=""
+                        alt={item.alt[locale]}
                         fill
                         sizes="80px"
                         decoding="async"

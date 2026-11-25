@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import fc from 'fast-check';
-import { analyzePhone } from '@/lib/phone-info';
+import { analyzePhone, normalizePhone } from '@/lib/phone-info';
 
 describe('analyzePhone — format validation', () => {
   it('accepts valid Uzbekistan number in full format', () => {
@@ -17,9 +17,9 @@ describe('analyzePhone — format validation', () => {
     expect(r.digits).toBe('998901234567');
   });
 
-  it('rejects numbers with wrong country code', () => {
-    expect(analyzePhone('+7 912 345 67 89').valid).toBe(false);
-    expect(analyzePhone('+1 555 123 4567').valid).toBe(false);
+  it('accepts international country codes', () => {
+    expect(analyzePhone('+7 912 345 67 89').valid).toBe(true);
+    expect(analyzePhone('+1 555 123 4567').valid).toBe(true);
   });
 
   it('rejects numbers that are too short', () => {
@@ -120,5 +120,23 @@ describe('analyzePhone — property-based', () => {
       ),
       { numRuns: 30 },
     );
+  });
+});
+
+
+describe('Local phone normalization contract', () => {
+  it.each(['909989881', '+909989881', '998909989881', '+998 90 998 98 81'])('normalizes %s to the same reachable number', value => {
+    expect(normalizePhone(value)).toBe('+998909989881');
+    expect(analyzePhone(value)).toMatchObject({ valid: true, countryCode: 'UZ', digits: '998909989881' });
+  });
+  it.each(['90', '91', '93', '94', '95', '97', '98', '99', '33', '88', '77', '50', '20'])('normalizes local operator prefix %s', prefix => {
+    expect(normalizePhone(prefix + '5357487')).toBe('+998' + prefix + '5357487');
+  });
+  it.each(['12345', '+123456789', '447700900123', '+99890998988', '+9989099898812', '+0447700900123', '++998909989881', 'phone909989881', '123456789'])('rejects %s', value => {
+    expect(analyzePhone(value).valid).toBe(false);
+  });
+  it.each(['+447700900123', '+14155552671', '+79123456789', '+1234567890', '+123456789012345'])('keeps an international number %s', value => {
+    expect(normalizePhone(value)).toBe(value);
+    expect(analyzePhone(value).valid).toBe(true);
   });
 });

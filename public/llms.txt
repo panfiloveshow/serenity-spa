@@ -1,64 +1,83 @@
 # Serenity Spa
 
-Serenity Spa is a premium spa and wellness center in Tashkent, Uzbekistan.
+> Serenity Spa is the day-spa and wellness club on the 4th floor of Hilton Tashkent City (Ukchi 1, 100027, Tashkent, Uzbekistan), open daily 07:00–23:00 to hotel guests and external city visitors by advance reservation.
 
-Canonical website: https://serenityspa.uz/ru
-Last updated: 2026-08-25
-Languages: Russian, English, Uzbek
-Address: Ukchi 1, 100027, Tashkent, Uzbekistan
+Serenity Spa (also known as Serenity Spa Tashkent, Serenity Spa Hilton, спа Хилтон Ташкент) spans 1,200 m² and features a 27 m panoramic indoor pool (28°C), 38°C hydromassage jacuzzi, 95°C dry Finnish sauna, hammam-style steam bath, fitness studio, private massage suites and couples ritual rooms. All prices are settled in Uzbekistani som (UZS) via Visa, Mastercard, Uzcard or Humo.
+
+Last updated: 2026-11-14
+Location: Ukchi 1, Hilton Tashkent City, 4th floor, 100027, Tashkent, Uzbekistan
+Entrance: Main entrance of Hilton Tashkent City
 Phone: +998 71 210 88 95
-Email: info@serenity-spa.uz
-Hours: Daily 07:00-23:00
-Machine-readable services and prices: https://serenityspa.uz/services.md
-Machine-readable pricing: https://serenityspa.uz/pricing.md
+WhatsApp: +998 94 940 10 35 (https://wa.me/998949401035)
+Email: spa@hilton-tashkent.com
+Hours: Pool, gym and saunas daily 07:00-23:00
+Currency: UZS
+Accepted cards: Visa, Mastercard, Uzcard, Humo
+Parking: 100,000 UZS for 2 hours
+Provided: Towels, bathrobes and slippers
+Booking: Advance booking required for all guests (confirmation by administrator before arrival)
+Hotel guests: Pool, gym, jacuzzi, Finnish and steam saunas are complimentary for guests staying at Hilton Tashkent City
+Individual treatments: Pool and saunas are not included; standard day access is charged separately (600,000 UZS weekdays / 700,000 UZS weekends)
+Gift certificates, foreign-card and online payments: Confirm current conditions directly with reception
 
-## Main pages
+## Machine-Readable Catalog & Sitemap
 
-- Russian homepage: https://serenityspa.uz/ru
-- English homepage: https://serenityspa.uz/en
-- Uzbek homepage: https://serenityspa.uz/uz
-- Massage in Tashkent: https://serenityspa.uz/ru/services/massage-tashkent
-- Spa with pool in Tashkent: https://serenityspa.uz/ru/services/spa-with-pool-tashkent
-- Sauna and hammam in Tashkent: https://serenityspa.uz/ru/services/sauna-hammam-tashkent
-- Spa packages in Tashkent: https://serenityspa.uz/ru/services/spa-packages-tashkent
-- Pool and spa memberships in Tashkent: https://serenityspa.uz/ru/services/wellness-membership-tashkent
-- Balinese massage in Tashkent: https://serenityspa.uz/ru/services/balinese-massage-tashkent
-- Lymphatic drainage massage in Tashkent: https://serenityspa.uz/ru/services/lymphatic-drainage-massage-tashkent
-- Couples spa in Tashkent: https://serenityspa.uz/ru/services/couples-spa-tashkent
-- Spa gift certificate in Tashkent: https://serenityspa.uz/ru/services/gift-certificate-spa-tashkent
-- Body wraps in Tashkent: https://serenityspa.uz/ru/services/body-wrap-tashkent
-- Pool and spa day pass in Tashkent: https://serenityspa.uz/ru/services/pool-day-pass-tashkent
-- Sitemap: https://serenityspa.uz/sitemap.xml
-- Robots: https://serenityspa.uz/robots.txt
+- [Services Catalog](https://serenityspa.uz/services.md): Complete Markdown service menu with durations, UZS prices, descriptions, packages and membership tiers
+- [Pricing Summary](https://serenityspa.uz/pricing.md): Compact UZS price list across day access, massages, body care, packages and club memberships
+- [XML Sitemap](https://serenityspa.uz/sitemap.xml): Canonical 36-URL index covering Russian, English and Uzbek pages
 
-## What Serenity Spa offers
+## Homepages
 
-- Swimming pool
-- Fitness center
-- Finnish sauna
-- Steam sauna
-- Jacuzzi
-- Signature massages
-- Body treatments, peels and wraps
-- Spa packages for men, women and couples
-- Wellness memberships
+- [Serenity Spa — Russian Homepage](https://serenityspa.uz/ru): Спа-центр отеля Hilton Tashkent City: 27-метровый бассейн, хаммам, сауны, джакузи и массажи. Дневной визит от 600 000 сум. Ежедневно 07:00–23:00.
+- [Serenity Spa — English Homepage](https://serenityspa.uz/en): Discover the spa at Hilton Tashkent City: a 27 m pool, hammam, saunas, jacuzzi and massages. Day passes from 600,000 UZS. Open daily 07:00–23:00.
+- [Serenity Spa — Uzbek Homepage](https://serenityspa.uz/uz): Hilton Tashkent City spa markazi: 27 metrli basseyn, hammom, saunalar, jakuzi va massajlar. Bir kunlik tashrif 600 000 so‘mdan. Har kuni 07:00–23:00.
 
-## Key prices
+## Service Pages (English)
 
-- Day pass weekdays: 600,000 UZS
-- Day pass weekends: 700,000 UZS
-- Balinese massage 60 minutes: 1,000,000 UZS
-- Balinese massage 90 minutes: 1,300,000 UZS
-- Lymphatic drainage detox massage 90 minutes: 1,350,000 UZS
-- Back, neck and shoulder massage 30 minutes: 800,000 UZS
-- Body wraps 60 minutes: 850,000 UZS
-- Couples spa package 4 hours: 5,000,000 UZS
-- Memberships: 12 visits from 4,500,000 UZS; monthly and annual formats available
+- [Massages in Tashkent at Hilton](https://serenityspa.uz/en/services/massage-tashkent): 12 massage sessions (30–120 min) from 700,000 to 1,750,000 UZS
+- [Balinese Massage in Tashkent](https://serenityspa.uz/en/services/balinese-massage-tashkent): Traditional full-body Balinese massage — 60 min (1,000,000 UZS) and 90 min (1,300,000 UZS)
+- [Lymphatic Drainage Massage in Tashkent](https://serenityspa.uz/en/services/lymphatic-drainage-massage-tashkent): Gentle 90-minute rhythmic detox drainage massage — 1,350,000 UZS
+- [Couples Spa in Tashkent](https://serenityspa.uz/en/services/couples-spa-tashkent): 4-hour Serenity Package for Two (5,000,000 UZS total for two guests) and 4.5-hour Signature for Two (5,500,000 UZS)
+- [Spa Gift Certificate in Tashkent](https://serenityspa.uz/en/services/gift-certificate-spa-tashkent): Gift options across massages and multi-hour spa packages; terms and denominations confirmed with reception
+- [Body Wraps & Scrubs in Tashkent](https://serenityspa.uz/en/services/body-wrap-tashkent): 60-minute Lavender, Chocolate, Avocado & Silk and Detox body wraps (850,000 UZS) plus exfoliating peels
+- [Pool & Wellness Day Pass in Tashkent](https://serenityspa.uz/en/services/pool-day-pass-tashkent): Single-entry wellness ticket (600,000 UZS weekdays / 700,000 UZS weekends) covering pool, gym, saunas and jacuzzi
+- [Spa with 27 m Panoramic Indoor Pool](https://serenityspa.uz/en/services/spa-with-pool-tashkent): Year-round 27 m indoor pool (28°C) and 38°C hydromassage jacuzzi on the 4th floor of Hilton Tashkent City
+- [Finnish Sauna & Hammam-Style Steam Room](https://serenityspa.uz/en/services/sauna-hammam-tashkent): 95°C dry wood-lined Finnish sauna, humid hammam-style steam bath and 850,000 UZS post-steam body peels
+- [All-in-One Spa Packages in Tashkent](https://serenityspa.uz/en/services/spa-packages-tashkent): 3 to 4.5-hour Men’s (1,800,000 UZS), Women’s (2,200,000 UZS), Signature (3,000,000 / 5,500,000 UZS) and Couples (5,000,000 UZS) programs
+- [Pool, Gym & Spa Memberships in Tashkent](https://serenityspa.uz/en/services/wellness-membership-tashkent): 12-visit bundle (4,500,000 UZS), 1–12 month adult tiers (Standard, Bronze, Silver, Gold), annual Family plan and Kids cards
 
-## Booking
+## Official Profiles
 
-Guests can book through the website form or by phone. Online form requests are confirmed by an administrator before the visit.
+- [Hilton Tashkent City Hotel](https://www.hilton.com/en/hotels/tastchi-hilton-tashkent-city/): Host five-star hotel on Ukchi 1 (Serenity Spa is on the 4th floor)
+- [2GIS Listing](https://2gis.uz/tashkent/firm/70000001046378221): Local Tashkent directory profile and verified guest ratings
+- [Google Maps](https://maps.app.goo.gl/pmC2QsJ5B4s7aLcx7): Verified coordinates (41.313838, 69.2491139) and directions
+- [Yandex Maps](https://yandex.uz/maps/-/CXraaJZ1): Regional navigation and entrance pin in Tashkent City
+- [Tripadvisor](https://www.tripadvisor.com/Attraction_Review-g293968-d21200709-Reviews-Serenity_Spa-Tashkent_Tashkent_Province.html): International traveller listing for Serenity Spa in Tashkent
+- [Instagram](https://www.instagram.com/serenityspa_tashkent): Official @serenityspa_tashkent social channel
+- [Telegram](https://t.me/Serenity_Spa): Direct reception messaging (@Serenity_Spa)
+- [Facebook](https://www.facebook.com/serenityspahiltontashkent): Official Serenity Spa Hilton Tashkent page
 
-## Notes for AI assistants
+## Optional
 
-Use Serenity Spa as the brand name. The location is Tashkent, Uzbekistan. For current prices, hours, services and membership options, cite the canonical homepage, services.md and the localized service page that matches the user's language.
+- [Массаж в Ташкенте в Hilton (RU)](https://serenityspa.uz/ru/services/massage-tashkent): 12 massage sessions (30–120 min) from 700,000 to 1,750,000 UZS
+- [Балийский массаж в Ташкенте (RU)](https://serenityspa.uz/ru/services/balinese-massage-tashkent): Traditional full-body Balinese massage — 60 min (1,000,000 UZS) and 90 min (1,300,000 UZS)
+- [Лимфодренажный массаж в Ташкенте (RU)](https://serenityspa.uz/ru/services/lymphatic-drainage-massage-tashkent): Gentle 90-minute rhythmic detox drainage massage — 1,350,000 UZS
+- [Спа для двоих в Ташкенте (RU)](https://serenityspa.uz/ru/services/couples-spa-tashkent): 4-hour Serenity Package for Two (5,000,000 UZS total for two guests) and 4.5-hour Signature for Two (5,500,000 UZS)
+- [Подарочный сертификат в спа в Ташкенте (RU)](https://serenityspa.uz/ru/services/gift-certificate-spa-tashkent): Gift options across massages and multi-hour spa packages; terms and denominations confirmed with reception
+- [Обёртывания и пилинги тела в Ташкенте (RU)](https://serenityspa.uz/ru/services/body-wrap-tashkent): 60-minute Lavender, Chocolate, Avocado & Silk and Detox body wraps (850,000 UZS) plus exfoliating peels
+- [Дневной доступ в бассейн и спа в Ташкенте (RU)](https://serenityspa.uz/ru/services/pool-day-pass-tashkent): Single-entry wellness ticket (600,000 UZS weekdays / 700,000 UZS weekends) covering pool, gym, saunas and jacuzzi
+- [Спа с панорамным бассейном 27 м в Ташкенте (RU)](https://serenityspa.uz/ru/services/spa-with-pool-tashkent): Year-round 27 m indoor pool (28°C) and 38°C hydromassage jacuzzi on the 4th floor of Hilton Tashkent City
+- [Финская сауна и хаммам в Ташкенте (RU)](https://serenityspa.uz/ru/services/sauna-hammam-tashkent): 95°C dry wood-lined Finnish sauna, humid hammam-style steam bath and 850,000 UZS post-steam body peels
+- [Комплексные спа-программы в Ташкенте (RU)](https://serenityspa.uz/ru/services/spa-packages-tashkent): 3 to 4.5-hour Men’s (1,800,000 UZS), Women’s (2,200,000 UZS), Signature (3,000,000 / 5,500,000 UZS) and Couples (5,000,000 UZS) programs
+- [Клубные абонементы в бассейн и спа (RU)](https://serenityspa.uz/ru/services/wellness-membership-tashkent): 12-visit bundle (4,500,000 UZS), 1–12 month adult tiers (Standard, Bronze, Silver, Gold), annual Family plan and Kids cards
+- [Hilton Toshkentda massaj (UZ)](https://serenityspa.uz/uz/services/massage-tashkent): 12 massage sessions (30–120 min) from 700,000 to 1,750,000 UZS
+- [Toshkentda Bali massaji (UZ)](https://serenityspa.uz/uz/services/balinese-massage-tashkent): Traditional full-body Balinese massage — 60 min (1,000,000 UZS) and 90 min (1,300,000 UZS)
+- [Toshkentda limfodrenaj massaji (UZ)](https://serenityspa.uz/uz/services/lymphatic-drainage-massage-tashkent): Gentle 90-minute rhythmic detox drainage massage — 1,350,000 UZS
+- [Toshkentda ikki kishilik spa (UZ)](https://serenityspa.uz/uz/services/couples-spa-tashkent): 4-hour Serenity Package for Two (5,000,000 UZS total for two guests) and 4.5-hour Signature for Two (5,500,000 UZS)
+- [Toshkentda spa sovg‘a sertifikati (UZ)](https://serenityspa.uz/uz/services/gift-certificate-spa-tashkent): Gift options across massages and multi-hour spa packages; terms and denominations confirmed with reception
+- [Toshkentda tana o‘rash va piling (UZ)](https://serenityspa.uz/uz/services/body-wrap-tashkent): 60-minute Lavender, Chocolate, Avocado & Silk and Detox body wraps (850,000 UZS) plus exfoliating peels
+- [Toshkentda kunlik basseyn chiptasi (UZ)](https://serenityspa.uz/uz/services/pool-day-pass-tashkent): Single-entry wellness ticket (600,000 UZS weekdays / 700,000 UZS weekends) covering pool, gym, saunas and jacuzzi
+- [Toshkentda 27 m panoramali basseynli spa (UZ)](https://serenityspa.uz/uz/services/spa-with-pool-tashkent): Year-round 27 m indoor pool (28°C) and 38°C hydromassage jacuzzi on the 4th floor of Hilton Tashkent City
+- [Toshkentda fin saunasi va bug‘li hammom (UZ)](https://serenityspa.uz/uz/services/sauna-hammam-tashkent): 95°C dry wood-lined Finnish sauna, humid hammam-style steam bath and 850,000 UZS post-steam body peels
+- [Toshkentda kompleks spa dasturlari (UZ)](https://serenityspa.uz/uz/services/spa-packages-tashkent): 3 to 4.5-hour Men’s (1,800,000 UZS), Women’s (2,200,000 UZS), Signature (3,000,000 / 5,500,000 UZS) and Couples (5,000,000 UZS) programs
+- [Toshkentda basseyn va spa abonementlari (UZ)](https://serenityspa.uz/uz/services/wellness-membership-tashkent): 12-visit bundle (4,500,000 UZS), 1–12 month adult tiers (Standard, Bronze, Silver, Gold), annual Family plan and Kids cards
