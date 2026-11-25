@@ -7,6 +7,7 @@ export interface BotConfig {
   chatId: string;
   ownerUserIds: number[];
   managerUserIds: number[];
+  operatorUserIds: number[];
   allowedUserIds: Set<number>;
   strictAllowlistOnly: boolean;
   workHours: WorkHours;
@@ -46,6 +47,7 @@ export function getBotConfig(): BotConfig {
     ...parseUserIds(process.env.TG_OWNER_USER_IDS),
   ]);
   const managerIds = parseUserIds(process.env.TG_MANAGER_USER_IDS);
+  const operatorIds = parseUserIds(process.env.TG_OPERATOR_USER_IDS);
   const strictAllowlistOnly = Boolean(process.env.TG_MANAGER_USER_IDS?.trim());
   const allowedUserIds = new Set<number>([...ownerIds, ...managerIds]);
 
@@ -68,6 +70,7 @@ export function getBotConfig(): BotConfig {
     chatId,
     ownerUserIds: Array.from(ownerIds),
     managerUserIds: managerIds,
+    operatorUserIds: operatorIds.length > 0 ? operatorIds : managerIds,
     allowedUserIds,
     strictAllowlistOnly,
     workHours: parseWorkHours(

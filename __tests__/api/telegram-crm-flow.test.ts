@@ -92,6 +92,7 @@ beforeEach(async () => {
   vi.stubEnv('TG_CHAT_ID', CHAT_ID);
   vi.stubEnv('TG_OWNER_USER_ID', String(OWNER_ID));
   vi.stubEnv('TG_MANAGER_USER_IDS', `${MANAGER_AZIZ.id},${MANAGER_MALIKA.id}`);
+  vi.stubEnv('TG_OPERATOR_USER_IDS', '');
   vi.stubEnv('TG_WEBHOOK_SECRET', WEBHOOK_SECRET);
   vi.stubEnv('SPA_WORK_HOURS_START', '09:00');
   vi.stubEnv('SPA_WORK_HOURS_END', '22:00');
@@ -368,13 +369,24 @@ describe('Serenity Spa Telegram CRM end-to-end flow', () => {
     expect(tgCalls.length).toBe(callsBeforeMorning); // only 10m of working hours elapsed
 
     await runSchedulerTick(fromTashkentParts(2026, 11, 18, 9, 15, 0));
-    expect(String(lastCall('sendMessage')!.body.text)).toContain('⏰ Заявка <b>Night Booking</b> 15 минут без ответа');
+    expect(lastCall('sendMessage')?.body).toMatchObject({
+      chat_id: CHAT_ID,
+      parse_mode: 'HTML',
+      reply_parameters: { message_id: send3.assignedMessageId },
+      text: '⏰ Заявка <b>Night Booking</b> 15 минут без ответа\n'
+        + `<a href="tg://user?id=${MANAGER_AZIZ.id}">Оператор</a>, <a href="tg://user?id=${MANAGER_MALIKA.id}">Оператор</a>`,
+    });
+
+    const callsAfterReminder = tgCalls.length;
+    await runSchedulerTick(fromTashkentParts(2026, 11, 18, 9, 16, 0));
+    expect(tgCalls.length).toBe(callsAfterReminder);
 
     await runSchedulerTick(fromTashkentParts(2026, 11, 18, 10, 1, 0));
     const ownerAlert = lastCall('sendMessage')!;
     expect(ownerAlert.body.chat_id).toBe(OWNER_ID);
     expect(String(ownerAlert.body.text)).toContain('Night Booking');
     expect(String(ownerAlert.body.text)).toContain('60 минут без ответа');
+    expect(String(ownerAlert.body.text)).not.toContain('tg://user?id=');
 
     // 11. Commands /open and /svodka (week + custom period)
     await sendCmd(fromTashkentParts(2026, 11, 18, 10, 5, 0), STRANGER, '/open');
@@ -420,8 +432,12 @@ describe('Serenity Spa Telegram CRM end-to-end flow', () => {
     expect(String(lastCall('sendMessage')!.body.text)).toContain('Напоминание перезвонить: <b>Night Booking</b>');
   });
 
-  it('authorizes closed-group members automatically via getChatMember, uses 07:00–23:00 site hours, and falls back to group for 60m alert if DM is blocked', async () => {
+  it.each([
+    { label: 'with an operator', operatorIds: '555001,555001,invalid', mention: '\n<a href="tg://user?id=555001">Оператор</a>' },
+    { label: 'without an operator', operatorIds: '', mention: '' },
+  ])('handles group access, working hours and reminders $label', async ({ operatorIds, mention }) => {
     vi.stubEnv('TG_MANAGER_USER_IDS', '');
+    vi.stubEnv('TG_OPERATOR_USER_IDS', operatorIds);
     vi.stubEnv('SPA_WORK_HOURS_START', '');
     vi.stubEnv('SPA_WORK_HOURS_END', '');
 
@@ -519,7 +535,8 @@ describe('Serenity Spa Telegram CRM end-to-end flow', () => {
 
     // At 09:05 Tashkent (65 mins after 08:00 within 07:00-23:00), both 15m and 60m fallback fire in group chat
     await runSchedulerTick(fromTashkentParts(2026, 11, 18, 9, 5, 0));
-    expect(tgCalls.some(c => c.method === 'sendMessage' && String(c.body.text).includes('15 минут без ответа'))).toBe(true);
+    expect(tgCalls.find(c => c.method === 'sendMessage' && String(c.body.text).includes('15 минут без ответа'))?.body.text)
+      .toBe(`⏰ Заявка <b>Group Booking</b> 15 минут без ответа${mention}`);
     expect(tgCalls.some(c => c.method === 'sendMessage' && String(c.body.chat_id) === CHAT_ID && String(c.body.text).includes('60 минут без статуса'))).toBe(true);
 
     // Outsider gets denied via getChatMember

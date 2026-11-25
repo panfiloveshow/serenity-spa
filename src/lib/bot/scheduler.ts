@@ -42,10 +42,14 @@ async function runSchedulerTickInternal(now: Date): Promise<void> {
       && workingMinutesBetween(new Date(lead.createdAt), now, cfg.workHours) >= 15
     ) {
       try {
+        const operatorMentions = cfg.operatorUserIds
+          .map(userId => `<a href="tg://user?id=${userId}">Оператор</a>`)
+          .join(', ');
+        const mentionLine = operatorMentions ? `\n${operatorMentions}` : '';
         await tgSendMessage(cfg.botToken, {
           chatId: targetChatId,
           replyToMessageId: lead.telegramMessageId,
-          text: `⏰ Заявка <b>${escapeHtml(lead.name)}</b> 15 минут без ответа`,
+          text: `⏰ Заявка <b>${escapeHtml(lead.name)}</b> 15 минут без ответа${mentionLine}`,
         });
         await store.updateLead(
           lead.id,
